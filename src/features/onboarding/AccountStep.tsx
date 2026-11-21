@@ -34,6 +34,13 @@ const STRENGTH_TEXT: Record<StrengthLevel, string> = {
 
 const EMAIL_DOMAINS = ['@mail.mcgill.ca', '@mcgill.ca'];
 
+/** A few likely-free alternatives when a username is taken. */
+function usernameSuggestions(name: string): string[] {
+  const base = name.slice(0, 16);
+  const n = ((name.length * 7 + 13) % 90) + 10;
+  return [`${base}${n}`, `${base}_mtl`, `${base}.eats`].filter((s) => s.length <= 20);
+}
+
 /** Step 1: account details with inline validation and a live username check. */
 export function AccountStep() {
   const pushToast = useStore((s) => s.pushToast);
@@ -146,7 +153,7 @@ export function AccountStep() {
         <TextField
           ref={(el) => (refs.current.username = el)}
           label="Username"
-          placeholder="e.g. maya.cooks"
+          placeholder="e.g. noodle.nerd"
           autoComplete="username"
           autoCapitalize="none"
           spellCheck={false}
@@ -159,6 +166,27 @@ export function AccountStep() {
           success={nameCheck === 'available' && !formatErr ? `@${username} is all yours 🌱` : null}
           hint="3–20 characters: letters, numbers, . or _"
         />
+        <AnimatePresence>
+          {nameCheck === 'taken' && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="-mt-2 flex flex-wrap gap-2 overflow-hidden pl-1"
+            >
+              {usernameSuggestions(username).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => set('username')(s)}
+                  className="h-9 rounded-full bg-white px-3 font-display text-sm font-medium text-ink-soft ring-2 ring-cream-300 active:scale-95"
+                >
+                  @{s}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="grid grid-cols-2 gap-3">
           <TextField
             ref={(el) => (refs.current.firstName = el)}

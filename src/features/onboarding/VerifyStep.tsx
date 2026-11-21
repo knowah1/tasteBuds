@@ -82,7 +82,7 @@ export function VerifyStep() {
       title="Check your inbox"
       subtitle={
         <>
-          We sent a 6-digit code to <b className="break-all text-ink">{email}</b>.
+          We sent a 6-digit code to <b className="break-words text-ink">{email}</b>.
         </>
       }
       footer={
