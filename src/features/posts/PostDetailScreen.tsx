@@ -140,7 +140,7 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
           </div>
           <h2 className="mt-2 font-display text-2xl font-bold leading-tight">{post.title}</h2>
           {post.description ? (
-            <p className="mt-2 text-ink-soft">{post.description}</p>
+            <p className="mt-2 break-words text-ink-soft">{post.description}</p>
           ) : (
             <p className="mt-2 text-sm italic text-ink-muted">No description, just good food.</p>
           )}
