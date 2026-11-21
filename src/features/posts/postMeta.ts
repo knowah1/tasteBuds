@@ -209,3 +209,28 @@ export function spotsLabel(left: number): string {
   if (left === 0) return 'Full';
   return left === 1 ? '1 spot left' : `${left} spots left`;
 }
+
+// ─── Joining ────────────────────────────────────────────────────────
+
+/** What the viewer's "Ask to join" area should show for a post. */
+export type JoinState =
+  'host' | 'emergency' | 'ended' | 'none' | 'full' | 'pending' | 'accepted' | 'declined';
+
+export function joinState(input: {
+  post: Post;
+  isHost: boolean;
+  request?: JoinRequest;
+  spotsLeft: number;
+  now: number;
+}): JoinState {
+  const { post, isHost, request, spotsLeft: left, now } = input;
+  if (isHost) return 'host';
+  if (post.type === 'budmergency') return 'emergency';
+  // A decision the viewer already got wins over the event's state.
+  if (request?.status === 'accepted') return 'accepted';
+  if (eventPhase(post, now) === 'ended') return 'ended';
+  if (request?.status === 'declined') return 'declined';
+  if (request?.status === 'pending') return 'pending';
+  if (left <= 0 || post.status === 'full') return 'full';
+  return 'none';
+}
