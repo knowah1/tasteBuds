@@ -1,0 +1,267 @@
+/*
+ * Bud idle loops. Plain CSS (not Framer) so ~20 Buds on the map stay cheap.
+ * Every loop reads --tb-delay so neighbouring Buds don't move in lockstep.
+ */
+
+.tb-bud * {
+  transform-box: view-box;
+}
+
+.tb-anim .tb-body,
+.tb-anim .tb-shadow,
+.tb-anim .tb-foot,
+.tb-anim .tb-blink,
+.tb-anim .tb-sweat,
+.tb-anim .tb-talk,
+.tb-anim .tb-pupils,
+.tb-anim .tb-mitt,
+.tb-anim .tb-ring {
+  animation-delay: var(--tb-delay, 0s);
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+/* ── body loops per state ─────────────────────────────── */
+.tb-body {
+  transform-origin: 50px 92px;
+}
+.tb-anim.tb-idle .tb-body {
+  animation-name: tb-breathe;
+  animation-duration: 2.8s;
+}
+.tb-anim.tb-walking .tb-body {
+  animation-name: tb-hop;
+  animation-duration: 0.7s;
+}
+.tb-anim.tb-hasBubble .tb-body {
+  animation-name: tb-excited;
+  animation-duration: 1.3s;
+}
+.tb-anim.tb-panicked .tb-body {
+  animation-name: tb-shake;
+  animation-duration: 0.32s;
+  animation-timing-function: linear;
+}
+
+.tb-shadow {
+  transform-origin: 50px 95px;
+}
+.tb-anim.tb-walking .tb-shadow {
+  animation-name: tb-shadow;
+  animation-duration: 0.35s;
+}
+.tb-anim.tb-hasBubble .tb-shadow {
+  animation-name: tb-shadow;
+  animation-duration: 1.3s;
+}
+
+/* ── feet ─────────────────────────────────────────────── */
+.tb-anim.tb-walking .tb-foot {
+  animation-name: tb-step;
+  animation-duration: 0.35s;
+}
+.tb-anim.tb-walking .tb-foot-r {
+  animation-direction: reverse;
+}
+.tb-anim.tb-panicked .tb-foot {
+  animation-name: tb-step;
+  animation-duration: 0.18s;
+}
+.tb-anim.tb-panicked .tb-foot-r {
+  animation-direction: reverse;
+}
+
+/* ── face ─────────────────────────────────────────────── */
+.tb-blink {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.tb-anim .tb-blink {
+  animation-name: tb-blink;
+  animation-duration: 4.2s;
+  animation-timing-function: linear;
+}
+.tb-talk {
+  transform-box: fill-box;
+  transform-origin: center top;
+}
+.tb-anim .tb-talk {
+  animation-name: tb-talk;
+  animation-duration: 0.9s;
+}
+.tb-anim .tb-pupils {
+  animation-name: tb-jitter;
+  animation-duration: 0.22s;
+  animation-timing-function: steps(2);
+}
+.tb-anim .tb-sweat {
+  animation-name: tb-sweat;
+  animation-duration: 1.1s;
+  animation-timing-function: ease-in;
+}
+.tb-anim .tb-sweat-2 {
+  animation-duration: 1.4s;
+  animation-delay: calc(var(--tb-delay, 0s) - 0.5s);
+}
+
+/* ── extras ───────────────────────────────────────────── */
+.tb-mitt {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.tb-anim.tb-walking .tb-mitt,
+.tb-anim.tb-panicked .tb-mitt {
+  animation-name: tb-wave;
+  animation-duration: 0.5s;
+}
+.tb-anim.tb-walking .tb-mitt-r,
+.tb-anim.tb-panicked .tb-mitt-r {
+  animation-direction: reverse;
+}
+.tb-ring {
+  transform-origin: 50px 93px;
+}
+.tb-anim .tb-ring {
+  animation-name: tb-ring;
+  animation-duration: 1.8s;
+}
+
+@keyframes tb-breathe {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.025, 0.97);
+  }
+}
+@keyframes tb-hop {
+  0%,
+  50%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-4px) rotate(-4deg);
+  }
+  75% {
+    transform: translateY(-4px) rotate(4deg);
+  }
+}
+@keyframes tb-excited {
+  0%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  15% {
+    transform: translateY(0) scale(1.05, 0.94);
+  }
+  40% {
+    transform: translateY(-5px) scale(0.97, 1.04);
+  }
+  65% {
+    transform: translateY(0) scale(1.02, 0.98);
+  }
+}
+@keyframes tb-shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(-2.2px) rotate(-2deg);
+  }
+  75% {
+    transform: translateX(2.2px) rotate(2deg);
+  }
+}
+@keyframes tb-shadow {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.82);
+    opacity: 0.7;
+  }
+}
+@keyframes tb-step {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2.5px);
+  }
+}
+@keyframes tb-blink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes tb-talk {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.55);
+  }
+}
+@keyframes tb-jitter {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(0.8px, -0.6px);
+  }
+}
+@keyframes tb-sweat {
+  0% {
+    transform: translateY(-2px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(7px);
+    opacity: 0;
+  }
+}
+@keyframes tb-wave {
+  0%,
+  100% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+@keyframes tb-ring {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tb-bud *,
+  .tb-bud {
+    animation: none !important;
+  }
+}
