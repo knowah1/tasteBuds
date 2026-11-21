@@ -42,7 +42,6 @@ export const ThreadCard = memo(function ThreadCard({
       className={cn(
         'relative overflow-hidden',
         urgency === 'critical' && 'ring-2 ring-emergency/40',
-        resolved && 'bg-cream-50',
       )}
     >
       <div className="flex gap-3">
