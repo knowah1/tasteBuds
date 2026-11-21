@@ -1,48 +1,136 @@
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Button, useToast } from '@/components/ui';
-import { api } from '@/mock/api';
-import { useState } from 'react';
+import { Icon, IconButton, ProgressBar } from '@/components/ui';
+import { sanitizeBud } from '@/features/bud';
+import { useStore } from '@/store';
+import { AccountStep } from './AccountStep';
+import { BudStep } from './BudStep';
+import { CelebrationStep } from './CelebrationStep';
+import { CuisineStep } from './CuisineStep';
+import { VerifyStep } from './VerifyStep';
+import { WelcomeStep } from './WelcomeStep';
+import { useOnboardingDraft } from './onboardingDraft';
 
-/** Placeholder — Track A builds the real multi-step onboarding here. */
+type Step = 'welcome' | 'account' | 'verify' | 'cuisines' | 'bud' | 'celebrate';
+
+const ORDER: Step[] = ['welcome', 'account', 'verify', 'cuisines', 'bud', 'celebrate'];
+/** Numbered steps shown in the progress header. */
+const NUMBERED: Step[] = ['account', 'verify', 'cuisines', 'bud'];
+
+/**
+ * First-launch flow: Account → Verify email → Cuisines → Bud → Celebration → Map.
+ * Account and verification state live in the mock API, so a reload resumes at the
+ * right step; cuisines and Bud stay in a draft until the final "Take me to the map".
+ */
 export function OnboardingScreen() {
   const navigate = useNavigate();
-  const toast = useToast();
-  const [loading, setLoading] = useState(false);
+  const me = useStore((s) => s.me);
+  const verified = useStore((s) => !!s.account?.emailVerified);
+  const updateProfile = useStore((s) => s.updateProfile);
+  const pushToast = useStore((s) => s.pushToast);
+  const { draft, update, clear } = useOnboardingDraft();
+  const [preStep, setPreStep] = useState<'welcome' | 'account'>('welcome');
 
-  const quickStart = async () => {
-    setLoading(true);
-    await api.quickStartDemoAccount();
-    toast.success('Welcome to tasteBuds!', 'Signed in with a demo account 🌱');
+  const phase = !me ? 'pre' : !verified ? 'verify' : 'post';
+  const step: Step = phase === 'pre' ? preStep : phase === 'verify' ? 'verify' : draft.step;
+
+  // A fresh start (e.g. after "Reset all data") shouldn't inherit an old draft.
+  useEffect(() => {
+    if (phase === 'pre' && (draft.cuisines.length || draft.step !== 'cuisines')) clear();
+  }, [phase, draft.cuisines.length, draft.step, clear]);
+
+  // Slide forward or back depending on where we came from.
+  const prev = useRef(step);
+  const direction = ORDER.indexOf(step) >= ORDER.indexOf(prev.current) ? 1 : -1;
+  useEffect(() => {
+    prev.current = step;
+  }, [step]);
+
+  const back =
+    step === 'account'
+      ? () => setPreStep('welcome')
+      : step === 'bud'
+        ? () => update({ step: 'cuisines' })
+        : undefined;
+
+  const finish = async () => {
+    await updateProfile({ cuisines: draft.cuisines, bud: sanitizeBud(draft.bud, 1) });
+    clear();
+    pushToast({
+      kind: 'success',
+      emoji: '🎉',
+      title: 'Your Bud just sprouted on the map!',
+      body: 'Tap other Buds to say hi, or hit + to post.',
+      duration: 5000,
+    });
     navigate('/', { replace: true });
   };
 
+  const numbered = NUMBERED.indexOf(step);
+
   return (
-    <div className="pt-safe flex flex-1 flex-col items-center justify-between bg-gradient-to-b from-leaf-100 to-cream px-6 pb-10 sm:pt-16">
-      <div />
-      <div className="flex flex-col items-center text-center">
+    <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
+      {numbered >= 0 && (
+        <header className="pt-safe px-4 pb-2 sm:pt-11">
+          <div className="flex h-11 items-center gap-3">
+            {back ? (
+              <IconButton label="Back" onClick={back}>
+                <Icon name="chevronLeft" size={22} />
+              </IconButton>
+            ) : (
+              <span className="flex h-11 w-11 items-center justify-center text-2xl">🌱</span>
+            )}
+            <div className="flex-1">
+              <div className="mb-1.5 flex justify-between font-display text-xs font-semibold text-ink-muted">
+                <span>
+                  Step {numbered + 1} of {NUMBERED.length}
+                </span>
+                <span>{['Account', 'Verify', 'Cuisines', 'Your Bud'][numbered]}</span>
+              </div>
+              <ProgressBar value={(numbered + 1) / NUMBERED.length} label="Onboarding progress" />
+            </div>
+          </div>
+        </header>
+      )}
+
+      <AnimatePresence mode="popLayout" initial={false} custom={direction}>
         <motion.div
-          initial={{ scale: 0, rotate: -20 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: 'spring', stiffness: 260, damping: 14 }}
+          key={step}
+          custom={direction}
+          variants={{
+            enter: (d: number) => ({ x: d * 60, opacity: 0 }),
+            center: { x: 0, opacity: 1 },
+            exit: (d: number) => ({ x: d * -60, opacity: 0 }),
+          }}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ type: 'spring', stiffness: 420, damping: 38 }}
+          className="flex min-h-0 flex-1 flex-col"
         >
-          <Avatar bud={{ color: 'leaf', type: 'sprout', accessories: ['chefHat'] }} size={160} />
+          {step === 'welcome' && <WelcomeStep onStart={() => setPreStep('account')} />}
+          {step === 'account' && <AccountStep />}
+          {step === 'verify' && <VerifyStep />}
+          {step === 'cuisines' && (
+            <CuisineStep
+              value={draft.cuisines}
+              onChange={(cuisines) => update({ cuisines })}
+              onNext={() => update({ step: 'bud' })}
+            />
+          )}
+          {step === 'bud' && (
+            <BudStep
+              value={draft.bud}
+              onChange={(bud) => update({ bud })}
+              onNext={() => update({ step: 'celebrate' })}
+            />
+          )}
+          {step === 'celebrate' && (
+            <CelebrationStep bud={draft.bud} cuisines={draft.cuisines} onFinish={finish} />
+          )}
         </motion.div>
-        <h1 className="mt-6 font-display text-4xl font-bold">
-          taste<span className="text-mcgill">Buds</span>
-        </h1>
-        <p className="mt-2 max-w-xs text-ink-soft">
-          Learn, teach and cook together with McGill students — one bud at a time.
-        </p>
-      </div>
-      <div className="w-full space-y-3">
-        <Button block size="lg" disabled>
-          Get started (Track A)
-        </Button>
-        <Button block size="lg" variant="secondary" loading={loading} onClick={quickStart}>
-          Explore with a demo account
-        </Button>
-      </div>
+      </AnimatePresence>
     </div>
   );
 }
