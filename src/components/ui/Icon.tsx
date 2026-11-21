@@ -32,7 +32,9 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M17 9h3a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1v2.5L16 19h-4" />
     </>
   ),
-  chat: <path d="M12 3c5 0 9 3.4 9 7.6 0 4.2-4 7.6-9 7.6-1 0-2-.1-2.9-.4L4 20l1.4-4C4 14.6 3 12.7 3 10.6 3 6.4 7 3 12 3Z" />,
+  chat: (
+    <path d="M12 3c5 0 9 3.4 9 7.6 0 4.2-4 7.6-9 7.6-1 0-2-.1-2.9-.4L4 20l1.4-4C4 14.6 3 12.7 3 10.6 3 6.4 7 3 12 3Z" />
+  ),
   user: (
     <>
       <circle cx="12" cy="8" r="4" />
@@ -78,7 +80,9 @@ const PATHS: Record<IconName, JSX.Element> = {
       <path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.9c1.8.7 3 2.4 3.5 5.1" />
     </>
   ),
-  sparkle: <path d="M12 3c.5 4.5 2 6.5 6.5 7-4.5.5-6 2.5-6.5 7-.5-4.5-2-6.5-6.5-7 4.5-.5 6-2.5 6.5-7Z" />,
+  sparkle: (
+    <path d="M12 3c.5 4.5 2 6.5 6.5 7-4.5.5-6 2.5-6.5 7-.5-4.5-2-6.5-6.5-7 4.5-.5 6-2.5 6.5-7Z" />
+  ),
 };
 
 export interface IconProps extends SVGProps<SVGSVGElement> {

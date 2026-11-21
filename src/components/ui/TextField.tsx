@@ -1,4 +1,10 @@
-import { forwardRef, useId, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from 'react';
+import {
+  forwardRef,
+  useId,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type TextareaHTMLAttributes,
+} from 'react';
 import { cn } from '@/lib/cn';
 
 interface FieldChrome {
@@ -19,9 +25,24 @@ function ring(error?: string | null, success?: string | null) {
 }
 
 function Messages({ id, error, success, hint }: { id: string } & FieldChrome) {
-  if (error) return <p id={id} className="mt-1.5 pl-1 text-sm font-semibold text-mcgill">{error}</p>;
-  if (success) return <p id={id} className="mt-1.5 pl-1 text-sm font-semibold text-leaf-600">{success}</p>;
-  if (hint) return <div id={id} className="mt-1.5 pl-1 text-sm text-ink-muted">{hint}</div>;
+  if (error)
+    return (
+      <p id={id} className="mt-1.5 pl-1 text-sm font-semibold text-mcgill">
+        {error}
+      </p>
+    );
+  if (success)
+    return (
+      <p id={id} className="mt-1.5 pl-1 text-sm font-semibold text-leaf-600">
+        {success}
+      </p>
+    );
+  if (hint)
+    return (
+      <div id={id} className="mt-1.5 pl-1 text-sm text-ink-muted">
+        {hint}
+      </div>
+    );
   return null;
 }
 
@@ -37,7 +58,10 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={inputId} className="mb-1.5 block pl-1 font-display text-sm font-medium text-ink-soft">
+        <label
+          htmlFor={inputId}
+          className="mb-1.5 block pl-1 font-display text-sm font-medium text-ink-soft"
+        >
           {label}
         </label>
       )}
@@ -71,7 +95,10 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={inputId} className="mb-1.5 block pl-1 font-display text-sm font-medium text-ink-soft">
+        <label
+          htmlFor={inputId}
+          className="mb-1.5 block pl-1 font-display text-sm font-medium text-ink-soft"
+        >
           {label}
         </label>
       )}

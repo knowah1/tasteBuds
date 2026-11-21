@@ -48,7 +48,9 @@ function ToastItem({ toast }: { toast: Toast }) {
       <div className="min-w-0 flex-1">
         <p className="font-display text-sm font-semibold text-ink">{toast.title}</p>
         {toast.body && (
-          <p className={cn('text-sm text-ink-soft', toast.kind === 'inbox' && 'select-all')}>{toast.body}</p>
+          <p className={cn('text-sm text-ink-soft', toast.kind === 'inbox' && 'select-all')}>
+            {toast.body}
+          </p>
         )}
       </div>
       <button

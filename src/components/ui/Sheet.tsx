@@ -16,7 +16,15 @@ export interface SheetProps {
 }
 
 /** Bottom sheet with backdrop, drag-to-dismiss and Escape to close. */
-export function Sheet({ open, onClose, title, children, footer, className, maxHeight = 0.9 }: SheetProps) {
+export function Sheet({
+  open,
+  onClose,
+  title,
+  children,
+  footer,
+  className,
+  maxHeight = 0.9,
+}: SheetProps) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();

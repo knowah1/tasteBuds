@@ -19,7 +19,9 @@ export type ChatsSegment = 'active' | 'archived';
 
 export interface UISlice {
   toasts: Toast[];
-  pushToast: (toast: Omit<Toast, 'id' | 'duration' | 'kind'> & Partial<Pick<Toast, 'duration' | 'kind'>>) => string;
+  pushToast: (
+    toast: Omit<Toast, 'id' | 'duration' | 'kind'> & Partial<Pick<Toast, 'duration' | 'kind'>>,
+  ) => string;
   dismissToast: (id: string) => void;
   demoPanelOpen: boolean;
   setDemoPanelOpen: (open: boolean) => void;

@@ -8,7 +8,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        cream: { DEFAULT: '#FFF8EE', 50: '#FFFCF7', 100: '#FFF8EE', 200: '#FBEBD3', 300: '#F3DAB5' },
+        cream: {
+          DEFAULT: '#FFF8EE',
+          50: '#FFFCF7',
+          100: '#FFF8EE',
+          200: '#FBEBD3',
+          300: '#F3DAB5',
+        },
         ink: { DEFAULT: '#3B2A20', soft: '#6B5545', muted: '#A08C7C' },
         mcgill: { DEFAULT: '#ED1B2F', dark: '#C41425', light: '#FDE3E5' },
         leaf: {

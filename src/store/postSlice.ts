@@ -21,7 +21,8 @@ export const createPostSlice: SliceCreator<PostSlice> = () => ({
     return post;
   },
   requestToJoin: (postId, message) => api.requestToJoin(postId, message),
-  respondToRequest: async (requestId, accept) => (await api.respondToRequest(requestId, accept)).request,
+  respondToRequest: async (requestId, accept) =>
+    (await api.respondToRequest(requestId, accept)).request,
   endEvent: async (postId, archive) => {
     await api.endEvent(postId, { archive });
   },

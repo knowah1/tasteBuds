@@ -158,10 +158,24 @@ function awardXpIn(
   if (db.account?.userId === userId) {
     emit({ type: 'xp', result });
     if (toLevel > fromLevel) {
-      pushNotificationIn(db, userId, 'levelUp', `Level ${toLevel}! 🎉`, 'Your Bud is growing.', '/profile');
+      pushNotificationIn(
+        db,
+        userId,
+        'levelUp',
+        `Level ${toLevel}! 🎉`,
+        'Your Bud is growing.',
+        '/profile',
+      );
     }
     unlocked.forEach((a) =>
-      pushNotificationIn(db, userId, 'unlock', 'New accessory unlocked!', `You can now wear: ${a}`, '/profile'),
+      pushNotificationIn(
+        db,
+        userId,
+        'unlock',
+        'New accessory unlocked!',
+        `You can now wear: ${a}`,
+        '/profile',
+      ),
     );
   }
   return result;
@@ -295,9 +309,11 @@ export interface RegisterInput {
 
 export async function register(input: RegisterInput): Promise<User> {
   const username = input.username.trim().toLowerCase();
-  if (!(await isUsernameAvailable(username))) throw new ApiError('username_taken', 'Username taken');
+  if (!(await isUsernameAvailable(username)))
+    throw new ApiError('username_taken', 'Username taken');
   if (input.password.length < 8) throw new ApiError('weak_password', 'Password too short');
-  if (!MCGILL_EMAIL.test(input.email.trim())) throw new ApiError('bad_email', 'Use your McGill email');
+  if (!MCGILL_EMAIL.test(input.email.trim()))
+    throw new ApiError('bad_email', 'Use your McGill email');
 
   const user = mutate((db) => {
     const zone = ZONES[Math.floor(Math.random() * ZONES.length)];
@@ -385,7 +401,10 @@ export function listUsers(): Promise<User[]> {
 
 // ─── Posts ──────────────────────────────────────────────────────────
 
-export function listPosts(filter?: { type?: Post['type']; includeEnded?: boolean }): Promise<Post[]> {
+export function listPosts(filter?: {
+  type?: Post['type'];
+  includeEnded?: boolean;
+}): Promise<Post[]> {
   const posts = snapshot().posts.filter(
     (p) =>
       (!filter?.type || p.type === filter.type) &&
@@ -478,7 +497,13 @@ export function endEvent(postId: ID, options: { archive: boolean }): Promise<End
     if (room) {
       const guests = room.members.filter((m) => m.userId !== room.ownerId);
       guests.forEach((g) => {
-        awardXpIn(db, g.userId, 'completeAsLearner', XP_REWARDS.completeAsLearner, 'Completed an event');
+        awardXpIn(
+          db,
+          g.userId,
+          'completeAsLearner',
+          XP_REWARDS.completeAsLearner,
+          'Completed an event',
+        );
         pushNotificationIn(db, g.userId, 'eventEnded', 'Event ended', post.title, '/chats');
       });
       if (guests.length > 0) {
@@ -518,12 +543,17 @@ export function expirePosts(): void {
 
 // ─── Join requests ──────────────────────────────────────────────────
 
-export async function requestToJoin(postId: ID, message?: string, asUserId?: ID): Promise<JoinRequest> {
+export async function requestToJoin(
+  postId: ID,
+  message?: string,
+  asUserId?: ID,
+): Promise<JoinRequest> {
   const req = mutate((db) => {
     const userId = asUserId ?? requireMe(db).id;
     const post = db.posts.find((p) => p.id === postId);
     if (!post) throw new ApiError('not_found', 'Post not found');
-    if (post.type === 'budmergency') throw new ApiError('no_meetup', 'Bud-mergencies have no meetup');
+    if (post.type === 'budmergency')
+      throw new ApiError('no_meetup', 'Bud-mergencies have no meetup');
     if (post.hostId === userId) throw new ApiError('own_post', 'You host this post');
     const existing = db.requests.find((r) => r.postId === postId && r.userId === userId);
     if (existing) return existing;
@@ -571,7 +601,14 @@ export function respondToRequest(requestId: ID, accept: boolean): Promise<Respon
     req.respondedAt = now;
     if (!accept) {
       req.status = 'declined';
-      pushNotificationIn(db, req.userId, 'requestDeclined', 'Request declined', post.title, `/post/${post.id}`);
+      pushNotificationIn(
+        db,
+        req.userId,
+        'requestDeclined',
+        'Request declined',
+        post.title,
+        `/post/${post.id}`,
+      );
       return { request: { ...req } };
     }
     if (post.status === 'full') throw new ApiError('full', 'This event is full');
@@ -600,7 +637,14 @@ export function respondToRequest(requestId: ID, accept: boolean): Promise<Respon
       });
     }
     refreshPostStatus(db, post);
-    pushNotificationIn(db, req.userId, 'requestAccepted', 'You’re in! 🎉', post.title, `/chats/${room.id}`);
+    pushNotificationIn(
+      db,
+      req.userId,
+      'requestAccepted',
+      'You’re in! 🎉',
+      post.title,
+      `/chats/${room.id}`,
+    );
     return { request: { ...req }, room: { ...room } };
   });
   return delay(result);
@@ -610,7 +654,10 @@ export function respondToRequest(requestId: ID, accept: boolean): Promise<Respon
 
 export function listRooms(): Promise<{ active: ChatRoom[]; archived: ChatRoom[] }> {
   const rooms = snapshot().rooms;
-  return delay({ active: rooms.filter((r) => !r.archived), archived: rooms.filter((r) => r.archived) });
+  return delay({
+    active: rooms.filter((r) => !r.archived),
+    archived: rooms.filter((r) => r.archived),
+  });
 }
 
 export function getMessages(roomId: ID): Promise<Message[]> {
@@ -645,9 +692,11 @@ export function sendMessage(roomId: ID, text: string, asUserId?: ID): Promise<Se
     const viewerId = db.account?.userId;
     if (senderId === viewerId) {
       const today = db.xpEvents.filter(
-        (e) => e.userId === senderId && e.reason === 'chatMessage' && isSameDay(e.createdAt, Date.now()),
+        (e) =>
+          e.userId === senderId && e.reason === 'chatMessage' && isSameDay(e.createdAt, Date.now()),
       ).length;
-      if (today < CHAT_XP_DAILY_CAP) xp = awardXpIn(db, senderId, 'chatMessage', XP_REWARDS.chatMessage);
+      if (today < CHAT_XP_DAILY_CAP)
+        xp = awardXpIn(db, senderId, 'chatMessage', XP_REWARDS.chatMessage);
     } else if (viewerId && room.members.some((m) => m.userId === viewerId)) {
       const post = db.posts.find((p) => p.id === room.postId);
       pushNotificationIn(
@@ -834,7 +883,8 @@ export function blockUser(userId: ID): Promise<void> {
 
 export function unblockUser(userId: ID): Promise<void> {
   mutate((db) => {
-    if (db.account) db.account.blockedUserIds = db.account.blockedUserIds.filter((id) => id !== userId);
+    if (db.account)
+      db.account.blockedUserIds = db.account.blockedUserIds.filter((id) => id !== userId);
   });
   return delay(undefined);
 }
@@ -847,12 +897,54 @@ export function awardXp(
   options: { reason?: XPReason; label?: string; userId?: ID } = {},
 ): Promise<XPResult | undefined> {
   const result = mutate((db) =>
-    awardXpIn(db, options.userId ?? requireMe(db).id, options.reason ?? 'demo', amount, options.label),
+    awardXpIn(
+      db,
+      options.userId ?? requireMe(db).id,
+      options.reason ?? 'demo',
+      amount,
+      options.label,
+    ),
   );
   return delay(result);
 }
 
 // ─── Demo ───────────────────────────────────────────────────────────
+
+/**
+ * Creates a ready-to-use, verified account in one step so the app can be
+ * explored without going through onboarding (Demo Panel / dev).
+ */
+export function quickStartDemoAccount(): Promise<User> {
+  const user = mutate((db) => {
+    const existing = me(db);
+    if (existing) return existing;
+    const u: User = {
+      id: uid('u_me'),
+      username: `demo.bud${Math.floor(Math.random() * 900 + 100)}`,
+      firstName: 'Alex',
+      lastName: 'Demo',
+      email: 'alex.demo@mail.mcgill.ca',
+      bud: { color: 'leaf', type: 'sprout', accessories: [] },
+      cuisines: [
+        { cuisine: 'Italian', level: 'Home Cook' },
+        { cuisine: 'Korean', level: 'Curious' },
+      ],
+      xp: 0,
+      createdAt: Date.now(),
+      zoneId: 'z_campus',
+    };
+    db.users.push(u);
+    db.account = {
+      userId: u.id,
+      password: 'demo-password',
+      emailVerified: true,
+      blockedUserIds: [],
+      seenSafetyTip: false,
+    };
+    return u;
+  });
+  return delay(user);
+}
 
 /** Wipes everything (including the account) and reseeds. */
 export function resetAll(): void {
@@ -909,6 +1001,7 @@ export const api = {
   // xp
   awardXp,
   // demo
+  quickStartDemoAccount,
   resetAll,
 };
 

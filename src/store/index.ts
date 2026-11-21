@@ -61,7 +61,11 @@ export function startStoreBridge() {
         if (e.result.unlocked.length) s.queueUnlocks(e.result.unlocked);
         break;
       case 'notification':
-        s.pushToast({ title: e.notification.title, body: e.notification.body, href: e.notification.href });
+        s.pushToast({
+          title: e.notification.title,
+          body: e.notification.body,
+          href: e.notification.href,
+        });
         break;
       case 'verificationCode':
         s.pushToast({

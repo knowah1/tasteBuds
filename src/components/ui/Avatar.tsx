@@ -40,7 +40,14 @@ const SW = 2.5;
 function Topper({ type, fill }: { type: BudType; fill: string }) {
   switch (type) {
     case 'naked':
-      return <path d="M50 32 C50 26 52 22 55 20" className={cn('fill-none', OUTLINE)} strokeWidth={SW} strokeLinecap="round" />;
+      return (
+        <path
+          d="M50 32 C50 26 52 22 55 20"
+          className={cn('fill-none', OUTLINE)}
+          strokeWidth={SW}
+          strokeLinecap="round"
+        />
+      );
     case 'sprout':
       return (
         <g className={OUTLINE} strokeWidth={SW} strokeLinejoin="round">
@@ -60,7 +67,10 @@ function Topper({ type, fill }: { type: BudType; fill: string }) {
     case 'tulip':
       return (
         <g className={OUTLINE} strokeWidth={SW} strokeLinejoin="round">
-          <path d="M36 34 L36 18 L43 25 L50 14 L57 25 L64 18 L64 34 Z" className="fill-eggplant-light" />
+          <path
+            d="M36 34 L36 18 L43 25 L50 14 L57 25 L64 18 L64 34 Z"
+            className="fill-eggplant-light"
+          />
           <path d="M43 25 L43 34 M57 25 L57 34" className="fill-none" />
         </g>
       );
@@ -68,7 +78,14 @@ function Topper({ type, fill }: { type: BudType; fill: string }) {
       return (
         <g className={OUTLINE} strokeWidth={SW} strokeLinecap="round" strokeLinejoin="round">
           <path d="M50 33 C50 25 44 22 46 16 C48 11 56 12 56 17" className="fill-none" />
-          <ellipse cx="57" cy="14" rx="6" ry="4.5" transform="rotate(-20 57 14)" className="fill-saffron" />
+          <ellipse
+            cx="57"
+            cy="14"
+            rx="6"
+            ry="4.5"
+            transform="rotate(-20 57 14)"
+            className="fill-saffron"
+          />
         </g>
       );
     case 'mushroom':
@@ -99,9 +116,18 @@ function Face({ panicked }: { panicked: boolean }) {
         <circle cx="60" cy="58" r="6" className="fill-white stroke-ink" strokeWidth={2} />
         <circle cx="40" cy="59" r="2.5" className="fill-ink" />
         <circle cx="60" cy="59" r="2.5" className="fill-ink" />
-        <path d="M33 49 L44 52 M67 49 L56 52" className="fill-none stroke-ink" strokeWidth={2.2} strokeLinecap="round" />
+        <path
+          d="M33 49 L44 52 M67 49 L56 52"
+          className="fill-none stroke-ink"
+          strokeWidth={2.2}
+          strokeLinecap="round"
+        />
         <ellipse cx="50" cy="72" rx="5" ry="4" className="fill-ink" />
-        <path d="M74 40 C70 46 70 50 74 50 C78 50 78 46 74 40Z" className="fill-sky stroke-ink" strokeWidth={1.5} />
+        <path
+          d="M74 40 C70 46 70 50 74 50 C78 50 78 46 74 40Z"
+          className="fill-sky stroke-ink"
+          strokeWidth={1.5}
+        />
       </g>
     );
   }
@@ -113,7 +139,12 @@ function Face({ panicked }: { panicked: boolean }) {
       <circle cx="61.2" cy="57.8" r="1.2" className="fill-white" />
       <ellipse cx="32" cy="67" rx="5" ry="3" className="fill-bud-rose opacity-60" />
       <ellipse cx="68" cy="67" rx="5" ry="3" className="fill-bud-rose opacity-60" />
-      <path d="M44 68 Q50 74 56 68" className="fill-none stroke-ink" strokeWidth={2.5} strokeLinecap="round" />
+      <path
+        d="M44 68 Q50 74 56 68"
+        className="fill-none stroke-ink"
+        strokeWidth={2.5}
+        strokeLinecap="round"
+      />
     </g>
   );
 }
@@ -131,14 +162,24 @@ function AccessoryLayer({ accessory }: { accessory: Accessory }) {
     case 'chefHat':
       return (
         <g {...o}>
-          <path d="M32 30 C24 28 24 14 34 14 C34 4 50 2 52 10 C56 2 72 6 68 16 C78 16 78 30 68 30 Z" className="fill-white" />
+          <path
+            d="M32 30 C24 28 24 14 34 14 C34 4 50 2 52 10 C56 2 72 6 68 16 C78 16 78 30 68 30 Z"
+            className="fill-white"
+          />
           <rect x="34" y="28" width="32" height="8" rx="2" className="fill-white" />
         </g>
       );
     case 'beret':
       return (
         <g {...o}>
-          <ellipse cx="46" cy="33" rx="22" ry="8" transform="rotate(-10 46 33)" className="fill-eggplant" />
+          <ellipse
+            cx="46"
+            cy="33"
+            rx="22"
+            ry="8"
+            transform="rotate(-10 46 33)"
+            className="fill-eggplant"
+          />
           <path d="M46 25 L47 20" className="fill-none" strokeLinecap="round" />
         </g>
       );
@@ -223,7 +264,13 @@ export function Avatar({ bud, size = 56, state = 'idle', ring, className, title 
       {ring && (
         <span className="absolute -inset-1 rounded-full ring-4 ring-mcgill ring-offset-2 ring-offset-cream" />
       )}
-      <svg viewBox="0 0 100 100" width={size} height={size} role="img" aria-label={title ?? 'Bud avatar'}>
+      <svg
+        viewBox="0 0 100 100"
+        width={size}
+        height={size}
+        role="img"
+        aria-label={title ?? 'Bud avatar'}
+      >
         {title && <title>{title}</title>}
         <ellipse cx="50" cy="95" rx="26" ry="4" className="fill-ink opacity-10" />
         {back.map((a) => (
@@ -236,7 +283,14 @@ export function Avatar({ bud, size = 56, state = 'idle', ring, className, title 
           className={cn(fill, OUTLINE)}
           strokeWidth={SW}
         />
-        <ellipse cx="38" cy="44" rx="9" ry="5" transform="rotate(-25 38 44)" className="fill-white opacity-40" />
+        <ellipse
+          cx="38"
+          cy="44"
+          rx="9"
+          ry="5"
+          transform="rotate(-25 38 44)"
+          className="fill-white opacity-40"
+        />
         <Face panicked={panicked} />
         {front.map((a) => (
           <AccessoryLayer key={a} accessory={a} />
