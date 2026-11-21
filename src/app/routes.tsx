@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { AppShell, BareShell } from './AppShell';
 import { OnboardingScreen } from '@/features/onboarding/OnboardingScreen';
+import { SignInScreen } from '@/features/onboarding/SignInScreen';
 import { MapScreen } from '@/features/map/MapScreen';
 import { ForumScreen } from '@/features/forum/ForumScreen';
 import { ThreadScreen } from '@/features/forum/ThreadScreen';
@@ -18,11 +19,15 @@ import { NotificationsScreen } from '@/features/notifications/NotificationsScree
  *   /chats          Chats               /user/:userId      Someone's profile
  *   /profile        My profile          /post/:postId      Event detail
  *   /notifications  Notification center /onboarding        First launch
+ *                                       /sign-in           Back into an account
  */
 export const router = createBrowserRouter([
   {
     element: <BareShell />,
-    children: [{ path: '/onboarding', element: <OnboardingScreen /> }],
+    children: [
+      { path: '/onboarding', element: <OnboardingScreen /> },
+      { path: '/sign-in', element: <SignInScreen /> },
+    ],
   },
   {
     element: <AppShell />,

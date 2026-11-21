@@ -3,6 +3,7 @@ import type {
   ChatRoom,
   ForumReply,
   ForumThread,
+  ID,
   JoinRequest,
   Message,
   Notification,
@@ -20,7 +21,10 @@ import { createSeed } from './seed';
 export interface Db {
   version: number;
   users: User[];
-  account: Account | null;
+  /** Every registered account (with its mock password). Survives sign-out. */
+  accounts: Account[];
+  /** The signed-in account's user id, or null when signed out. */
+  sessionUserId: ID | null;
   /** Pending simulated email verification code. */
   pendingCode: string | null;
   posts: Post[];
@@ -37,14 +41,16 @@ export interface Db {
 }
 
 const STORAGE_KEY = 'tastebuds:db';
-const DB_VERSION = 1;
+/** Bump when the shape changes so stale localStorage reseeds cleanly. */
+const DB_VERSION = 2;
 
 export function freshDb(now = Date.now()): Db {
   const seed = createSeed(now);
   return {
     version: DB_VERSION,
     users: seed.users,
-    account: null,
+    accounts: [],
+    sessionUserId: null,
     pendingCode: null,
     posts: seed.posts,
     requests: [],

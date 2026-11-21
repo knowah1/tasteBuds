@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Avatar, Button, useToast } from '@/components/ui';
 import { api } from '@/mock/api';
 import { useState } from 'react';
@@ -42,6 +42,15 @@ export function OnboardingScreen() {
         <Button block size="lg" variant="secondary" loading={loading} onClick={quickStart}>
           Explore with a demo account
         </Button>
+        <p className="text-center text-ink-soft">
+          Already have an account?{' '}
+          <Link
+            to="/sign-in"
+            className="inline-flex min-h-[44px] items-center font-display font-semibold text-mcgill"
+          >
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   );

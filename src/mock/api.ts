@@ -95,8 +95,13 @@ export const onDataChange = subscribeDb;
 
 // ─── Internal helpers ───────────────────────────────────────────────
 
+/** The signed-in account record (blocks, safety tip, password live here). */
+function sessionAccount(db: Db): Account | undefined {
+  return db.sessionUserId ? db.accounts.find((a) => a.userId === db.sessionUserId) : undefined;
+}
+
 function me(db: Db): User | undefined {
-  return db.account ? db.users.find((u) => u.id === db.account!.userId) : undefined;
+  return db.sessionUserId ? db.users.find((u) => u.id === db.sessionUserId) : undefined;
 }
 
 function requireMe(db: Db): User {
@@ -106,7 +111,7 @@ function requireMe(db: Db): User {
 }
 
 function blocked(db: Db): Set<ID> {
-  return new Set(db.account?.blockedUserIds ?? []);
+  return new Set(sessionAccount(db)?.blockedUserIds ?? []);
 }
 
 function displayName(db: Db, userId: ID): string {
@@ -122,7 +127,7 @@ function pushNotificationIn(
   href?: string,
 ): Notification | undefined {
   // Only the signed-in human gets notifications; bots don't need them.
-  if (!db.account || db.account.userId !== userId) return undefined;
+  if (db.sessionUserId !== userId) return undefined;
   const n: Notification = {
     id: uid('n'),
     userId,
@@ -155,7 +160,7 @@ function awardXpIn(
   const unlocked = unlocksBetween(fromLevel, toLevel);
   const result: XPResult = { event, fromLevel, toLevel, unlocked };
 
-  if (db.account?.userId === userId) {
+  if (db.sessionUserId === userId) {
     emit({ type: 'xp', result });
     if (toLevel > fromLevel) {
       pushNotificationIn(
@@ -271,7 +276,7 @@ export function snapshot(): Snapshot {
 
   return {
     me: viewer ?? null,
-    account: db.account,
+    account: sessionAccount(db) ?? null,
     users: db.users.filter((u) => !hidden.has(u.id)),
     posts: db.posts.filter((p) => !hidden.has(p.hostId)),
     requests: db.requests.filter(
@@ -295,7 +300,9 @@ export const USERNAME_RE = /^[a-z0-9._]{3,20}$/;
 
 export function isUsernameAvailable(username: string): Promise<boolean> {
   const name = username.trim().toLowerCase();
-  const taken = getDb().users.some((u) => u.username.toLowerCase() === name);
+  // `demo.bud` is reserved for the quick-start account so its credentials stay fixed.
+  const taken =
+    name === DEMO_USERNAME || getDb().users.some((u) => u.username.toLowerCase() === name);
   return delay(USERNAME_RE.test(name) && !taken);
 }
 
@@ -330,26 +337,58 @@ export async function register(input: RegisterInput): Promise<User> {
       zoneId: zone.id,
     };
     db.users.push(u);
-    db.account = {
+    db.accounts.push({
       userId: u.id,
       password: input.password,
       emailVerified: false,
       blockedUserIds: [],
       seenSafetyTip: false,
-    };
+    });
+    db.sessionUserId = u.id;
+    db.pendingCode = null;
     return u;
   });
   return delay(user);
 }
 
+export interface SignInInput {
+  /** Username or McGill email, matched case-insensitively. */
+  identifier: string;
+  password: string;
+}
+
 /**
- * Signs the viewer out. Their user record, posts and chats stay in the mock db
- * (other users still reference them); only the session is cleared, so the app
- * routes back to onboarding.
+ * Signs in to an existing account. Fails with one generic `bad_credentials`
+ * error so the UI never reveals whether the username/email or password was wrong.
+ */
+export function signIn(input: SignInInput): Promise<User> {
+  const id = input.identifier.trim().toLowerCase();
+  const db = getDb();
+  const user = id
+    ? db.users.find((u) => u.username.toLowerCase() === id || u.email.toLowerCase() === id)
+    : undefined;
+  const acc = user && db.accounts.find((a) => a.userId === user.id);
+  if (!user || !acc || acc.password !== input.password) {
+    // Same latency as a success so failures aren't distinguishable by timing either.
+    return delay(undefined).then(() => {
+      throw new ApiError('bad_credentials', 'That username/email and password don’t match.');
+    });
+  }
+  mutate((d) => {
+    d.sessionUserId = user.id;
+    d.pendingCode = null;
+  });
+  return delay({ ...user });
+}
+
+/**
+ * Signs the viewer out. Only the session is cleared: the account record
+ * (password, blocks, safety tip), user, posts and chats all stay, so the same
+ * credentials can sign back in.
  */
 export function signOut(): Promise<void> {
   mutate((db) => {
-    db.account = null;
+    db.sessionUserId = null;
     db.pendingCode = null;
   });
   return delay(undefined);
@@ -369,8 +408,9 @@ export function sendVerificationCode(): Promise<string> {
 
 export function verifyEmail(code: string): Promise<boolean> {
   const ok = mutate((db) => {
-    if (!db.account || !db.pendingCode || code.trim() !== db.pendingCode) return false;
-    db.account.emailVerified = true;
+    const acc = sessionAccount(db);
+    if (!acc || !db.pendingCode || code.trim() !== db.pendingCode) return false;
+    acc.emailVerified = true;
     db.pendingCode = null;
     return true;
   });
@@ -397,7 +437,8 @@ export function updateProfile(patch: ProfilePatch): Promise<User> {
 
 export function markSafetyTipSeen(): Promise<void> {
   mutate((db) => {
-    if (db.account) db.account.seenSafetyTip = true;
+    const acc = sessionAccount(db);
+    if (acc) acc.seenSafetyTip = true;
   });
   return delay(undefined);
 }
@@ -702,7 +743,7 @@ export function sendMessage(roomId: ID, text: string, asUserId?: ID): Promise<Se
     db.messages.push(message);
 
     let xp: XPResult | undefined;
-    const viewerId = db.account?.userId;
+    const viewerId = db.sessionUserId;
     if (senderId === viewerId) {
       const today = db.xpEvents.filter(
         (e) =>
@@ -779,7 +820,7 @@ export function createReply(
     };
     db.replies.push(reply);
     let xp: XPResult | undefined;
-    if (authorId === db.account?.userId) {
+    if (authorId === db.sessionUserId) {
       xp = awardXpIn(db, authorId, 'forumReply', XP_REWARDS.forumReply, 'Forum reply');
       checkReplyMilestones(db, authorId);
     }
@@ -845,7 +886,7 @@ export function markNotificationRead(id: ID): Promise<void> {
 
 export function markAllNotificationsRead(): Promise<void> {
   mutate((db) => {
-    const viewerId = db.account?.userId;
+    const viewerId = db.sessionUserId;
     db.notifications.forEach((n) => {
       if (n.userId === viewerId) n.read = true;
     });
@@ -856,7 +897,7 @@ export function markAllNotificationsRead(): Promise<void> {
 /** Push a notification to the signed-in user (simulators, Demo Panel). */
 export function notify(kind: NotificationKind, title: string, body?: string, href?: string): void {
   mutate((db) => {
-    if (db.account) pushNotificationIn(db, db.account.userId, kind, title, body, href);
+    if (db.sessionUserId) pushNotificationIn(db, db.sessionUserId, kind, title, body, href);
   });
 }
 
@@ -886,7 +927,7 @@ export function report(input: {
 
 export function blockUser(userId: ID): Promise<void> {
   mutate((db) => {
-    const acc = db.account;
+    const acc = sessionAccount(db);
     if (acc && userId !== acc.userId && !acc.blockedUserIds.includes(userId)) {
       acc.blockedUserIds.push(userId);
     }
@@ -896,8 +937,8 @@ export function blockUser(userId: ID): Promise<void> {
 
 export function unblockUser(userId: ID): Promise<void> {
   mutate((db) => {
-    if (db.account)
-      db.account.blockedUserIds = db.account.blockedUserIds.filter((id) => id !== userId);
+    const acc = sessionAccount(db);
+    if (acc) acc.blockedUserIds = acc.blockedUserIds.filter((id) => id !== userId);
   });
   return delay(undefined);
 }
@@ -923,17 +964,28 @@ export function awardXp(
 
 // ─── Demo ───────────────────────────────────────────────────────────
 
+/** Fixed demo credentials so the presenter can sign out and back in. */
+export const DEMO_USERNAME = 'demo.bud';
+export const DEMO_PASSWORD = 'tastebuds123';
+
 /**
- * Creates a ready-to-use, verified account in one step so the app can be
- * explored without going through onboarding (Demo Panel / dev).
+ * Signs in as the deterministic demo account (`demo.bud` / `tastebuds123`),
+ * creating it verified and with cuisines on first use, so the app can be
+ * explored without going through onboarding (Demo Panel / welcome screen).
  */
 export function quickStartDemoAccount(): Promise<User> {
   const user = mutate((db) => {
-    const existing = me(db);
-    if (existing) return existing;
+    const current = me(db);
+    if (current) return current;
+    const existing = db.users.find((u) => u.username === DEMO_USERNAME);
+    if (existing && db.accounts.some((a) => a.userId === existing.id)) {
+      db.sessionUserId = existing.id;
+      db.pendingCode = null;
+      return existing;
+    }
     const u: User = {
       id: uid('u_me'),
-      username: `demo.bud${Math.floor(Math.random() * 900 + 100)}`,
+      username: DEMO_USERNAME,
       firstName: 'Alex',
       lastName: 'Demo',
       email: 'alex.demo@mail.mcgill.ca',
@@ -947,19 +999,21 @@ export function quickStartDemoAccount(): Promise<User> {
       zoneId: 'z_campus',
     };
     db.users.push(u);
-    db.account = {
+    db.accounts.push({
       userId: u.id,
-      password: 'demo-password',
+      password: DEMO_PASSWORD,
       emailVerified: true,
       blockedUserIds: [],
       seenSafetyTip: false,
-    };
+    });
+    db.sessionUserId = u.id;
+    db.pendingCode = null;
     return u;
   });
-  return delay(user);
+  return delay({ ...user });
 }
 
-/** Wipes everything (including the account) and reseeds. */
+/** Wipes everything (including every account) and reseeds. */
 export function resetAll(): void {
   resetDb();
 }
@@ -975,6 +1029,7 @@ export const api = {
   register,
   sendVerificationCode,
   verifyEmail,
+  signIn,
   signOut,
   updateProfile,
   markSafetyTipSeen,
