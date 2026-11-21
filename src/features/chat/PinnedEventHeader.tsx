@@ -84,7 +84,9 @@ export function PinnedEventHeader({
                 {phaseLabel}
               </span>
               <span className="truncate text-[11px] text-ink-muted">
-                {guests}/{post.maxParticipants} guests
+                {room.archived
+                  ? formatDay(post.startAt, now)
+                  : `${guests}/${post.maxParticipants} guests`}
               </span>
             </span>
           </span>

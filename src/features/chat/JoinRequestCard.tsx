@@ -174,7 +174,7 @@ export function JoinRequestList({ postId, showPost }: { postId?: ID; showPost?: 
   );
   return (
     <div className="space-y-3">
-      <AnimatePresence initial={false} mode="popLayout">
+      <AnimatePresence initial={false}>
         {requests.map((r) => (
           <JoinRequestCard key={r.id} request={r} showPost={showPost ?? !postId} />
         ))}

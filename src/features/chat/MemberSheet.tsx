@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Badge, Sheet } from '@/components/ui';
-import { formatTime, timeAgo } from '@/lib/time';
+import { formatTime } from '@/lib/time';
 import { levelFromXp } from '@/lib/xp';
 import { cn } from '@/lib/cn';
 import type { ChatRoom, ID, Message, User } from '@/types';
@@ -75,12 +75,7 @@ export function MemberSheet({
                 </p>
                 <p className="truncate text-xs text-ink-muted">
                   @{u.username} · Lv {levelFromXp(u.xp)}
-                  {member && !isOwner && (
-                    <>
-                      {' '}
-                      · joined {formatTime(member.joinedAt)} ({timeAgo(member.joinedAt)})
-                    </>
-                  )}
+                  {member && !isOwner && <> · joined {formatTime(member.joinedAt)}</>}
                 </p>
                 {isHost && !isOwner && (
                   <p className="text-[11px] text-ink-soft">
