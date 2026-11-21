@@ -54,7 +54,7 @@ export const MapBud = memo(function MapBud({ info, camera, onOpen }: MapBudProps
           >
             {/* anchor the Bud's feet on its map point */}
             <motion.div
-              className="pointer-events-auto absolute -translate-x-1/2"
+              className="absolute -translate-x-1/2 [&_button]:pointer-events-auto"
               style={{ bottom: -4, scale: budScale, originY: 1 }}
             >
               <BudAvatar

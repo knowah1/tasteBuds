@@ -20,8 +20,16 @@ const HOUSE_FILLS = [
 const DOOR_FILLS = ['fill-tomato', 'fill-learn', 'fill-leaf-600', 'fill-eggplant', 'fill-saffron'];
 const AWNINGS = ['fill-tomato', 'fill-saffron', 'fill-leaf-500', 'fill-learn', 'fill-eggplant'];
 
-const LABEL_TEXT =
-  'select-none fill-ink-soft stroke-cream-50 font-display font-semibold uppercase tracking-wider';
+/** Hand-placed so signposts sit in open space rather than on top of buildings. */
+const LABEL_SPOTS: Record<string, { x: number; y: number }> = {
+  z_campus: { x: 560, y: 584 },
+  z_miltonparc: { x: 690, y: 404 },
+  z_ghetto: { x: 236, y: 318 },
+  z_plateau: { x: 700, y: 104 },
+  z_park: { x: 40, y: 168 },
+  z_downtown: { x: 214, y: 1080 },
+  z_parc: { x: 790, y: 654 },
+};
 
 function Tree({ x, y, r = 16, tone = 0 }: { x: number; y: number; r?: number; tone?: number }) {
   const crown = ['fill-leaf-400', 'fill-leaf-500', 'fill-leaf-300'][tone % 3];
@@ -172,19 +180,31 @@ function Shop({
   );
 }
 
+/** Neighbourhood signpost: a little pill so it reads over houses and trees. */
 function ZoneLabel({ x, y, text }: { x: number; y: number; text: string }) {
+  const w = text.length * 11.5 + 28;
   return (
-    <text
-      x={x}
-      y={y}
-      fontSize={20}
-      strokeWidth={6}
-      style={{ paintOrder: 'stroke' }}
-      strokeLinejoin="round"
-      className={LABEL_TEXT}
-    >
-      {text}
-    </text>
+    <g>
+      <rect x={x + 2} y={y + 4} width={w} height={30} rx={15} className="fill-ink/15" />
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={30}
+        rx={15}
+        className="fill-white stroke-road-line"
+        strokeWidth={2.5}
+      />
+      <text
+        x={x + w / 2}
+        y={y + 21}
+        textAnchor="middle"
+        fontSize={16}
+        className="select-none fill-ink-soft font-display font-semibold uppercase tracking-wider"
+      >
+        {text}
+      </text>
+    </g>
   );
 }
 
@@ -529,7 +549,11 @@ function MapArtImpl() {
 
       {/* neighbourhood labels */}
       {api.zones.map((z) => (
-        <ZoneLabel key={z.id} x={z.x + 8} y={z.y + (z.id === 'z_park' ? 190 : 22)} text={z.name} />
+        <ZoneLabel
+          key={z.id}
+          {...(LABEL_SPOTS[z.id] ?? { x: z.x + 8, y: z.y + 8 })}
+          text={z.name}
+        />
       ))}
     </svg>
   );
