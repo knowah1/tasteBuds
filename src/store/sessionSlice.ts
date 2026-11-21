@@ -7,6 +7,8 @@ export interface SessionSlice {
   account: Account | null;
   /** Pull the latest viewer-scoped snapshot from the mock API into every slice. */
   sync: () => void;
+  /** Clears the session (keeps all other data) so onboarding shows again. */
+  signOut: () => Promise<void>;
   resetAll: () => void;
 }
 
@@ -31,6 +33,10 @@ export const createSessionSlice: SliceCreator<SessionSlice> = (set) => ({
   me: null,
   account: null,
   sync: () => set(snapshotToState(api.snapshot())),
+  signOut: async () => {
+    await api.signOut();
+    set({ toasts: [], xpFloaters: [] });
+  },
   resetAll: () => {
     api.resetAll();
     set({ toasts: [], xpFloaters: [] });

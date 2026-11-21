@@ -342,6 +342,19 @@ export async function register(input: RegisterInput): Promise<User> {
   return delay(user);
 }
 
+/**
+ * Signs the viewer out. Their user record, posts and chats stay in the mock db
+ * (other users still reference them); only the session is cleared, so the app
+ * routes back to onboarding.
+ */
+export function signOut(): Promise<void> {
+  mutate((db) => {
+    db.account = null;
+    db.pendingCode = null;
+  });
+  return delay(undefined);
+}
+
 /** Generates a 6-digit code and "delivers" it via a `verificationCode` event. */
 export function sendVerificationCode(): Promise<string> {
   const code = String(Math.floor(100000 + Math.random() * 900000));
@@ -962,6 +975,7 @@ export const api = {
   register,
   sendVerificationCode,
   verifyEmail,
+  signOut,
   updateProfile,
   markSafetyTipSeen,
   // users
