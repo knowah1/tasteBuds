@@ -18,3 +18,7 @@ export {
   wearAccessory,
   type AccessorySlot,
 } from './budMeta';
+export { BudEditor, type BudEditorProps } from './BudEditor';
+export { BudEditorSheet, EditBudButton, type BudEditorSheetProps } from './BudEditorSheet';
+export { UnlockCelebration } from './UnlockCelebration';
+export { Confetti, type ConfettiProps } from './Confetti';
