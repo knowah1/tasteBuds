@@ -22,7 +22,14 @@ import { useFakeLoading } from '@/lib/useFakeLoading';
 import { XP_REWARDS } from '@/lib/xp';
 import { cn } from '@/lib/cn';
 import type { ForumReply, ID } from '@/types';
-import { URGENCY_META, buildReplyTree, timeLeftFraction, urgencyOf, useNow } from './forumMeta';
+import {
+  URGENCY_META,
+  buildReplyTree,
+  countNodes,
+  timeLeftFraction,
+  urgencyOf,
+  useNow,
+} from './forumMeta';
 import { ReplyItem, type ReplyContext } from './ReplyItem';
 import { ReplyComposer } from './ReplyComposer';
 import {
@@ -159,6 +166,8 @@ export function ThreadScreen() {
     if (blockingOp) navigate('/forum', { replace: true });
   };
 
+  const otherCount = replies.length - (tree.pinned ? countNodes(tree.pinned) : 0);
+
   const ctx: ReplyContext = {
     meId: me?.id,
     threadAuthorId: thread.authorId,
@@ -287,8 +296,8 @@ export function ThreadScreen() {
                     <p className="font-display font-semibold text-leaf-700">Resolved</p>
                     <p className="text-sm text-ink-soft">
                       This bud-mergency ended {timeAgo(thread.expiresAt, now)}. Replies are closed,
-                      but the tips stay here for anyone with the same{' '}
-                      {thread.ingredient.toLowerCase() || 'problem'}.
+                      but the tips stay here for the next bud stuck with{' '}
+                      {thread.ingredient.toLowerCase() || 'leftovers'}.
                     </p>
                   </div>
                 </motion.div>
@@ -337,16 +346,20 @@ export function ThreadScreen() {
             {/* Replies */}
             <div className="mt-5 flex items-baseline justify-between px-1">
               <h3 className="font-display text-base font-semibold">
-                {replies.length === 0
-                  ? 'Tips'
-                  : `${replies.length} ${replies.length === 1 ? 'tip' : 'tips'}`}
+                {otherCount === 0
+                  ? tree.pinned
+                    ? 'Other tips'
+                    : 'Tips'
+                  : `${otherCount} ${tree.pinned ? 'other ' : ''}${otherCount === 1 ? 'tip' : 'tips'}`}
               </h3>
               {tree.nodes.length > 1 && (
                 <span className="text-xs text-ink-muted">Most 🌱 first</span>
               )}
             </div>
 
-            {replies.length === 0 ? (
+            {otherCount === 0 && tree.pinned ? (
+              <p className="mt-2 px-1 text-sm text-ink-muted">That’s the only tip so far.</p>
+            ) : replies.length === 0 ? (
               <EmptyState
                 emoji="🍳"
                 title={resolved ? 'No tips came in' : 'No tips yet'}
