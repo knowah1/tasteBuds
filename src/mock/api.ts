@@ -272,6 +272,13 @@ export interface Snapshot {
   replies: ForumReply[];
   notifications: Notification[];
   xpEvents: XPEvent[];
+  /** Reports the viewer has filed, newest first. */
+  reports: Report[];
+  /**
+   * Users the viewer blocked. Hidden everywhere else (map, posts, chats, forum), kept here
+   * only so their profile can say "You blocked @x" and offer Unblock.
+   */
+  blockedUsers: User[];
 }
 
 /** Synchronous, viewer-scoped view of everything the signed-in user may see. */
@@ -299,6 +306,10 @@ export function snapshot(): Snapshot {
     replies: db.replies.filter((r) => !hidden.has(r.authorId)),
     notifications: db.notifications.filter((n) => n.userId === viewerId),
     xpEvents: db.xpEvents.filter((e) => e.userId === viewerId),
+    reports: db.reports
+      .filter((r) => r.reporterId === viewerId)
+      .sort((a, b) => b.createdAt - a.createdAt),
+    blockedUsers: db.users.filter((u) => hidden.has(u.id)),
   };
 }
 
@@ -917,26 +928,62 @@ export function notify(kind: NotificationKind, title: string, body?: string, hre
 
 // ─── Safety ─────────────────────────────────────────────────────────
 
-export function report(input: {
+/** Who's behind a reported thing, so a report always names a person to contact McGill about. */
+function reportedUserIdIn(db: Db, targetType: ReportTargetType, targetId: ID): ID {
+  switch (targetType) {
+    case 'user':
+      return targetId;
+    case 'post':
+      return (
+        db.posts.find((p) => p.id === targetId)?.hostId ??
+        db.threads.find((t) => t.id === targetId || t.postId === targetId)?.authorId ??
+        ''
+      );
+    case 'message':
+      return db.messages.find((m) => m.id === targetId)?.senderId ?? '';
+    case 'forumReply':
+      return db.replies.find((r) => r.id === targetId)?.authorId ?? '';
+  }
+}
+
+export interface CreateReportInput {
   targetType: ReportTargetType;
   targetId: ID;
   reason: ReportReason;
   details?: string;
-}): Promise<Report> {
+  urgent?: boolean;
+}
+
+/** Feels like a real submit, so the loading state is visible. */
+const REPORT_LATENCY_MS = 600;
+
+/**
+ * Saves a report. There is no backend or moderator behind this: nobody (including McGill)
+ * is notified. The UI hands the user McGill's contacts so they can reach out themselves.
+ */
+export function createReport(input: CreateReportInput): Promise<Report> {
   const r = mutate((db) => {
     const rep: Report = {
       id: uid('rep'),
       reporterId: requireMe(db).id,
       targetType: input.targetType,
       targetId: input.targetId,
+      targetUserId: reportedUserIdIn(db, input.targetType, input.targetId),
       reason: input.reason,
       details: input.details?.trim() || undefined,
+      urgent: !!input.urgent,
       createdAt: Date.now(),
+      status: 'submitted',
     };
     db.reports.push(rep);
     return rep;
   });
-  return delay(r);
+  return new Promise((resolve) => setTimeout(() => resolve(r), REPORT_LATENCY_MS));
+}
+
+/** Older entry point (chat and forum report sheets). Same as `createReport`. */
+export function report(input: CreateReportInput): Promise<Report> {
+  return createReport(input);
 }
 
 export function blockUser(userId: ID): Promise<void> {
@@ -1078,6 +1125,7 @@ export const api = {
   markAllNotificationsRead,
   notify,
   // safety
+  createReport,
   report,
   blockUser,
   unblockUser,
