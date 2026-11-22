@@ -45,7 +45,7 @@ interface BotSpec {
 const BOTS: BotSpec[] = [
   {
     id: 'u_maya',
-    username: 'maya.cooks',
+    username: 'maya.simmers',
     firstName: 'Maya',
     lastName: 'Haddad',
     color: 'rose',
@@ -63,7 +63,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_arjun',
-    username: 'arjun_tadka',
+    username: 'arjun.whisks',
     firstName: 'Arjun',
     lastName: 'Mehta',
     color: 'butter',
@@ -81,7 +81,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_lea',
-    username: 'lea_poutine',
+    username: 'lea.mixes',
     firstName: 'Léa',
     lastName: 'Tremblay',
     color: 'peach',
@@ -99,7 +99,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_kenji',
-    username: 'kenji.umami',
+    username: 'kenji.stirs',
     firstName: 'Kenji',
     lastName: 'Sato',
     color: 'sky',
@@ -117,7 +117,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_sofia',
-    username: 'sofia.salsa',
+    username: 'sofia.zests',
     firstName: 'Sofía',
     lastName: 'Ramírez',
     color: 'lime',
@@ -135,7 +135,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_wei',
-    username: 'wei_dumpling',
+    username: 'wei.sprinkles',
     firstName: 'Wei',
     lastName: 'Chen',
     color: 'mint',
@@ -153,7 +153,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_selam',
-    username: 'selam.injera',
+    username: 'selam.sows',
     firstName: 'Selam',
     lastName: 'Bekele',
     color: 'cocoa',
@@ -162,11 +162,11 @@ const BOTS: BotSpec[] = [
     cuisines: [['Ethiopian', 'Expert']],
     xp: 390,
     zoneId: 'z_parc',
-    bio: 'Berbere is a personality trait.',
+    bio: 'Three-day injera ferment, worth every hour.',
   },
   {
     id: 'u_jules',
-    username: 'jules.bistro',
+    username: 'jules.tastes',
     firstName: 'Jules',
     lastName: 'Moreau',
     color: 'lilac',
@@ -178,13 +178,13 @@ const BOTS: BotSpec[] = [
     ],
     xp: 830,
     zoneId: 'z_ghetto',
-    bio: 'Exchange student from Lyon. Butter is a food group.',
+    bio: 'Exchange student from Lyon. Always has a sauce on the go.',
     major: 'Finance',
     degreeLevel: 'undergrad',
   },
   {
     id: 'u_nadia',
-    username: 'nadia.griot',
+    username: 'nadia.blooms',
     firstName: 'Nadia',
     lastName: 'Joseph',
     color: 'butter',
@@ -202,7 +202,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_minh',
-    username: 'minh.pho',
+    username: 'minh.sprouts',
     firstName: 'Minh',
     lastName: 'Nguyen',
     color: 'leaf',
@@ -220,7 +220,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_eleni',
-    username: 'eleni.olive',
+    username: 'eleni.harvests',
     firstName: 'Eleni',
     lastName: 'Papadakis',
     color: 'sage',
@@ -238,7 +238,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_ploy',
-    username: 'ploy.curry',
+    username: 'ploy.plants',
     firstName: 'Ploy',
     lastName: 'Srisai',
     color: 'mint',
@@ -256,7 +256,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_gio',
-    username: 'gio.pasta',
+    username: 'gio.ladles',
     firstName: 'Giovanni',
     lastName: 'Russo',
     color: 'peach',
@@ -265,11 +265,11 @@ const BOTS: BotSpec[] = [
     cuisines: [['Italian', 'Expert']],
     xp: 760,
     zoneId: 'z_parc',
-    bio: 'Never break the spaghetti.',
+    bio: 'Fresh pasta, rolled by hand. No machine needed.',
   },
   {
     id: 'u_jiwoo',
-    username: 'jiwoo.kimchi',
+    username: 'jiwoo.grows',
     firstName: 'Ji-woo',
     lastName: 'Park',
     color: 'rose',
@@ -287,7 +287,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_omar',
-    username: 'omar.falafel',
+    username: 'omar.chops',
     firstName: 'Omar',
     lastName: 'Saleh',
     color: 'butter',
@@ -304,7 +304,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_chloe',
-    username: 'chloe.bakes',
+    username: 'chloe.kneads',
     firstName: 'Chloé',
     lastName: 'Gagnon',
     color: 'lilac',
@@ -320,7 +320,7 @@ const BOTS: BotSpec[] = [
   },
   {
     id: 'u_marcus',
-    username: 'marcus.jerk',
+    username: 'marcus.plates',
     firstName: 'Marcus',
     lastName: 'Campbell',
     color: 'leaf',
@@ -332,13 +332,13 @@ const BOTS: BotSpec[] = [
     ],
     xp: 480,
     zoneId: 'z_downtown',
-    bio: 'Scotch bonnets are not a threat, they are a promise.',
+    bio: 'Plans cities by day, slow-cooks stews by night.',
     major: 'Urban Planning',
     degreeLevel: 'masters',
   },
   {
     id: 'u_priya',
-    username: 'priya.chai',
+    username: 'priya.waters',
     firstName: 'Priya',
     lastName: 'Iyer',
     color: 'sky',
@@ -350,7 +350,7 @@ const BOTS: BotSpec[] = [
     ],
     xp: 60,
     zoneId: 'z_park',
-    bio: 'Masala chai at all hours.',
+    bio: 'Always has the kettle on. Learning pasta next.',
     major: 'Electrical Engineering',
   },
 ];
@@ -458,7 +458,8 @@ const POSTS: PostSpec[] = [
     type: 'potluck',
     hostId: 'u_marcus',
     cuisines: ['Caribbean', 'Haitian', 'Mexican'],
-    description: 'spicy food potluck 🌶️ heat tolerance optional, milk will be on standby',
+    description:
+      'big-flavour potluck 🍲 bring your favourite dish, mild or fiery. plates and a playlist on me',
     startIn: 8 * HOUR,
     duration: 3 * HOUR,
     max: 8,
@@ -729,7 +730,7 @@ function buildRooms(posts: Post[], now: number): { rooms: ChatRoom[]; messages: 
       roomId: room.id,
       senderId: 'u_sofia',
       kind: 'text',
-      text: 'elote and a salsa macha that WILL hurt',
+      text: 'elote and a salsa macha, with a mild one on the side',
       createdAt: now - 2 * HOUR + 5 * MINUTE,
     },
     {
