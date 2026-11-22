@@ -8,7 +8,7 @@ import { OVERLAY_ROOT_ID } from '@/components/ui';
 export function PhoneFrame({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-full w-full items-center justify-center sm:p-6">
-      <div className="relative h-full w-full overflow-hidden bg-cream sm:h-phone sm:max-h-full sm:w-phone sm:rounded-[3rem] sm:shadow-phone sm:ring-[10px] sm:ring-ink">
+      <div className="relative h-full w-full overflow-hidden bg-cream sm:h-phone sm:max-h-full sm:w-phone sm:rounded-[3rem] sm:ring-[10px] sm:ring-ink">
         {/* Notch (desktop only) */}
         <div className="pointer-events-none absolute left-1/2 top-2 z-[70] hidden h-7 w-32 -translate-x-1/2 rounded-full bg-ink sm:block" />
         <div className="relative flex h-full flex-col">{children}</div>

@@ -1,44 +1,58 @@
 import type { Config } from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 /**
  * tasteBuds design tokens. Components must use these names — never raw hex values.
+ *
+ * Palette sampled from the hand-drawn sketches: flat colour blocks plus solid outlines,
+ * no shadows, no gradients. Irregular `sketch-*` radii carry the hand-made feel.
  */
+const palette = {
+  /** App background, inactive pills, neutral avatar tiles. */
+  cream: '#FFF4E1',
+  /** Cards, bottom nav bar. */
+  paper: '#FFFFFF',
+  /** Primary actions, "+", active nav icon, urgent countdown pill, warning icon. */
+  tomato: '#CF3737',
+  /** Banners, active-tab background, urgent card outline, urgent avatar tile. */
+  blush: '#FFCBCB',
+  /** Inactive icons, nav labels, outlines, inactive chips, divider lines. */
+  kraft: '#C9B084',
+  /** Light kraft tint: Potluck tiles. */
+  'kraft-light': '#F1E6CF',
+  /** Active filter chip, mint card outline. */
+  leaf: '#379043',
+  /** Hero/feature card fill. */
+  mint: '#E8FFE2',
+  /** Button inside mint cards (kraft outline). */
+  sage: '#ABD49C',
+};
+
+/** Asymmetric radii so neighbouring shapes never share the exact same corners. */
+const SKETCH_RADII = {
+  '.sketch': { borderRadius: '26px 22px 28px 24px / 24px 28px 22px 26px' },
+  '.sketch-2': { borderRadius: '22px 28px 24px 26px / 28px 22px 26px 24px' },
+  '.sketch-3': { borderRadius: '28px 24px 22px 27px / 22px 26px 28px 23px' },
+  '.sketch-4': { borderRadius: '24px 26px 27px 21px / 26px 23px 24px 28px' },
+  /** Small tiles (avatars, stat tiles, nav squares). */
+  '.sketch-sm': { borderRadius: '16px 13px 17px 14px / 14px 17px 13px 16px' },
+  '.sketch-sm-2': { borderRadius: '13px 17px 14px 16px / 17px 13px 16px 14px' },
+  /** Pills and chips: em-based so they scale with the text inside. */
+  '.sketch-pill': { borderRadius: '1.3em 1.05em 1.25em 1.1em / 1.1em 1.3em 1.05em 1.25em' },
+  '.sketch-pill-2': { borderRadius: '1.05em 1.3em 1.1em 1.25em / 1.25em 1.05em 1.3em 1.1em' },
+  /** Hand-drawn circle (the "+" button, round avatars). */
+  '.sketch-round': { borderRadius: '52% 48% 50% 47% / 48% 52% 47% 51%' },
+};
+
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        cream: {
-          DEFAULT: '#FFF8EE',
-          50: '#FFFCF7',
-          100: '#FFF8EE',
-          200: '#FBEBD3',
-          300: '#F3DAB5',
-        },
+        ...palette,
+        // Text colours (unchanged): headings, body, secondary and muted copy.
         ink: { DEFAULT: '#3B2A20', soft: '#6B5545', muted: '#A08C7C' },
-        mcgill: { DEFAULT: '#ED1B2F', dark: '#C41425', light: '#FDE3E5' },
-        leaf: {
-          50: '#F1F9EC',
-          100: '#DFF1D3',
-          200: '#BFE3A8',
-          300: '#9AD27A',
-          400: '#78BF55',
-          500: '#5AA63C',
-          600: '#46862E',
-          700: '#356625',
-        },
-        tomato: { DEFAULT: '#E5533D', light: '#FCE3DE' },
-        saffron: { DEFAULT: '#F4A523', light: '#FDF0D5' },
-        eggplant: { DEFAULT: '#6B3E75', light: '#EDE1F0' },
-        sky: { DEFAULT: '#7CC4E8', light: '#E2F3FB' },
-        park: { DEFAULT: '#B9DE9A', dark: '#8FC46B' },
-        road: { DEFAULT: '#F6E7CF', line: '#E8D2AE' },
-        // Post-type accents
-        learn: { DEFAULT: '#3E8ED0', light: '#E0EEFA' },
-        teach: { DEFAULT: '#5AA63C', light: '#E3F3DA' },
-        potluck: { DEFAULT: '#F4A523', light: '#FDF0D5' },
-        emergency: { DEFAULT: '#ED1B2F', light: '#FDE3E5' },
-        // Bud swatches
+        // Bud illustration swatches. Only the Bud artwork uses these, never UI chrome.
         bud: {
           leaf: '#78BF55',
           mint: '#7ED6B2',
@@ -50,6 +64,11 @@ export default {
           sky: '#8EC9F0',
           butter: '#F6D96B',
           cocoa: '#B08467',
+          // Accessory and topper paints.
+          saffron: '#F4A523',
+          plum: '#6B3E75',
+          'plum-light': '#EDE1F0',
+          'leaf-dark': '#5AA63C',
         },
       },
       fontFamily: {
@@ -60,13 +79,6 @@ export default {
       borderRadius: {
         chunky: '1.5rem',
         blob: '2rem',
-      },
-      boxShadow: {
-        soft: '0 4px 14px -4px rgba(59, 42, 32, 0.18)',
-        lift: '0 10px 28px -8px rgba(59, 42, 32, 0.28)',
-        chunky: '0 4px 0 0 rgba(59, 42, 32, 0.15)',
-        press: '0 1px 0 0 rgba(59, 42, 32, 0.15)',
-        phone: '0 30px 80px -20px rgba(59, 42, 32, 0.45)',
       },
       width: { phone: '390px' },
       height: { phone: '844px' },
@@ -80,17 +92,22 @@ export default {
           '25%': { transform: 'translateX(-2px)' },
           '75%': { transform: 'translateX(2px)' },
         },
-        shimmer: {
-          '0%': { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
+        breathe: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.55' },
         },
       },
       animation: {
         wiggle: 'wiggle 1.2s ease-in-out infinite',
         shake: 'shake 0.3s ease-in-out infinite',
-        shimmer: 'shimmer 1.6s linear infinite',
+        breathe: 'breathe 1.6s ease-in-out infinite',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addUtilities }) => {
+      // Outlines are plain solid borders (border-2 / border-[3px] + a palette colour).
+      addUtilities(SKETCH_RADII);
+    }),
+  ],
 } satisfies Config;

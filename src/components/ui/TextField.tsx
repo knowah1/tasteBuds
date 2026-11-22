@@ -16,24 +16,24 @@ interface FieldChrome {
 }
 
 const inputBase =
-  'w-full rounded-2xl bg-white px-4 text-base text-ink placeholder:text-ink-muted ring-2 transition-shadow focus:outline-none';
+  'sketch-sm w-full border-2 bg-paper px-4 text-base text-ink placeholder:text-ink-muted transition-colors focus:outline-none';
 
 function ring(error?: string | null, success?: string | null) {
-  if (error) return 'ring-mcgill focus:ring-mcgill';
-  if (success) return 'ring-leaf-400 focus:ring-leaf-500';
-  return 'ring-cream-300 focus:ring-leaf-400';
+  if (error) return 'border-tomato focus:border-tomato';
+  if (success) return 'border-leaf focus:border-leaf';
+  return 'border-kraft/60 focus:border-leaf';
 }
 
 function Messages({ id, error, success, hint }: { id: string } & FieldChrome) {
   if (error)
     return (
-      <p id={id} className="mt-1.5 pl-1 text-sm text-mcgill">
+      <p id={id} className="mt-1.5 pl-1 text-sm text-tomato">
         {error}
       </p>
     );
   if (success)
     return (
-      <p id={id} className="mt-1.5 pl-1 text-sm text-leaf-600">
+      <p id={id} className="mt-1.5 pl-1 text-sm text-leaf">
         {success}
       </p>
     );
@@ -109,7 +109,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
           <span
             className={cn(
               'pointer-events-none absolute bottom-2 right-3 text-sm',
-              near ? 'text-mcgill' : 'text-ink-muted',
+              near ? 'text-tomato' : 'text-ink-muted',
             )}
           >
             {len}/{maxLength}

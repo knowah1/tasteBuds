@@ -18,10 +18,10 @@ export function ProgressBar({ value, className, barClassName, label }: ProgressB
       aria-valuenow={Math.round(pct)}
       aria-valuemin={0}
       aria-valuemax={100}
-      className={cn('h-3 w-full overflow-hidden rounded-full bg-cream-200', className)}
+      className={cn('sketch-pill h-3 w-full overflow-hidden bg-cream', className)}
     >
       <motion.div
-        className={cn('h-full rounded-full bg-leaf-500', barClassName)}
+        className={cn('sketch-pill-2 h-full bg-leaf', barClassName)}
         initial={false}
         animate={{ width: `${pct}%` }}
         transition={{ type: 'spring', stiffness: 120, damping: 20 }}
