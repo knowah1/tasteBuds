@@ -11,6 +11,7 @@ import { DAY } from '@/lib/time';
 import { levelProgress } from '@/lib/xp';
 import { cn } from '@/lib/cn';
 import { SKILL_LEVELS, type Post, type SkillLevel, type User } from '@/types';
+import { StudiesLine } from './components/StudiesLine';
 
 function useMinuteNow() {
   const [now, setNow] = useState(() => Date.now());
@@ -97,6 +98,7 @@ export function ProfileView({
               {user.firstName} {user.lastName}
             </h2>
             <p className="truncate text-ink-muted">@{user.username}</p>
+            <StudiesLine user={user} isMe={isMe} />
           </div>
         </div>
         {user.bio && <p className="mt-3 text-sm text-ink-soft">{user.bio}</p>}
