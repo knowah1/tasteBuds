@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useStore, type MapFilter } from '@/store';
+import { selectActivePostsByType } from '@/store/postSlice';
 import { api } from '@/mock/api';
 import type { Post, User, Zone } from '@/types';
 
@@ -27,20 +28,26 @@ function useNow(ms: number) {
 
 const PRIORITY: Record<Post['type'], number> = { budmergency: 3, potluck: 1, learn: 1, teach: 1 };
 
-export function isLivePost(p: Post, now: number) {
-  return (p.status === 'open' || p.status === 'full') && p.endAt > now;
+export interface MapBuds {
+  buds: MapBudInfo[];
+  /**
+   * Active posts matching the filter chip, from the same selector and the same clock as the
+   * Buds' bubbles, so the count pill and empty state can't disagree with the globe.
+   * Includes the signed-in user's own posts.
+   */
+  matchingPosts: Post[];
 }
 
-export function useMapBuds(filter: MapFilter): MapBudInfo[] {
-  const { users, posts, me } = useStore(
-    useShallow((s) => ({ users: s.users, posts: s.posts, me: s.me })),
-  );
+export function useMapBuds(filter: MapFilter): MapBuds {
+  const { users, me } = useStore(useShallow((s) => ({ users: s.users, me: s.me })));
   const now = useNow(15_000);
+  const type = filter === 'all' ? undefined : filter;
+  const active = useStore(useShallow(selectActivePostsByType(undefined, now)));
+  const matchingPosts = useStore(useShallow(selectActivePostsByType(type, now)));
 
-  return useMemo(() => {
-    const live = posts.filter((p) => isLivePost(p, now));
+  const buds = useMemo(() => {
     const byHost = new Map<string, Post[]>();
-    live.forEach((p) => byHost.set(p.hostId, [...(byHost.get(p.hostId) ?? []), p]));
+    active.forEach((p) => byHost.set(p.hostId, [...(byHost.get(p.hostId) ?? []), p]));
 
     // `users` already holds the signed-in user's record (see snapshotToState).
     return users.map((user) => {
@@ -51,15 +58,17 @@ export function useMapBuds(filter: MapFilter): MapBudInfo[] {
           (a, b) => PRIORITY[b.type] - PRIORITY[a.type] || b.createdAt - a.createdAt,
         )[0];
       const isMe = user.id === me?.id;
-      const matching = filter === 'all' ? hosted : hosted.filter((p) => p.type === filter);
+      const matching = type ? hosted.filter((p) => p.type === type) : hosted;
       const post = pick(matching.length ? matching : hosted);
       return {
         user,
         zone,
         post,
         isMe,
-        visible: isMe || filter === 'all' || matching.length > 0,
+        visible: isMe || !type || matching.length > 0,
       };
     });
-  }, [users, posts, me, filter, now]);
+  }, [users, active, me, type]);
+
+  return { buds, matchingPosts };
 }
