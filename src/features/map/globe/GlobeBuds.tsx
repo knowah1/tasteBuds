@@ -16,6 +16,7 @@ import { LEAVE_FACTOR, updateClusters, type Clusterable } from './clusters';
 import { easeInOut, GLOBE_RADIUS } from './sphere';
 import { getWalker, holdWalker, stepWalker, type Walker } from './walkers';
 import './globe.css';
+import { Icon } from '@/components/ui';
 
 /** Bud size in px at default zoom. Small enough that bubbles use the compact style. */
 const BUD_SIZE = 46;
@@ -23,7 +24,7 @@ const BUD_SIZE = 46;
 const BUBBLE_LIFT = BUD_SIZE * 0.97;
 /** Keep bubbles this far from the canvas edges. */
 const EDGE = 8;
-/** The "💬" pip a Bud shows when its bubble has no room (px at scale 1). */
+/** The chat-bubble pip a Bud shows when its bubble has no room (px at scale 1). */
 const PIP = 18;
 /** A blocked bubble may slide sideways up to this share of its width. */
 const MAX_SLIDE = 0.4;
@@ -171,7 +172,7 @@ const isPanicked = (s: Slot) => s.info.post?.type === 'budmergency';
 /** Stable clustering rank: Bud-mergencies seed first, then Buds with posts. */
 const rankOf = (info: GlobeBudInfo) => (info.post?.type === 'budmergency' ? 2 : info.post ? 1 : 0);
 
-/** Body box around the feet (px): the 🚨 banner makes panicked Buds wide and tall. */
+/** Body box around the feet (px): the bud-mergency banner makes panicked Buds wide and tall. */
 function bodyBox(s: Slot) {
   const k = s.scale;
   return isPanicked(s)
@@ -184,7 +185,7 @@ const overlaps = (a: Box, b: Box) => a.l < b.r && a.r > b.l && a.t < b.b && a.b 
 
 const TYPE_ORDER: PostType[] = ['learn', 'teach', 'potluck'];
 
-/** Snapshot a cluster for its marker (faces, count, 🚨 dot, post-type dots). */
+/** Snapshot a cluster for its marker (faces, count, bud-mergency dot, post-type dots). */
 function viewOf(id: string, members: Slot[]): ClusterView {
   const sorted = [...members].sort(
     (a, b) => b.rank - a.rank || (a.key < b.key ? -1 : a.key > b.key ? 1 : 0),
@@ -477,7 +478,7 @@ export function GlobeBuds({ buds, rig, hiddenId, onOpen, reducedMotion }: GlobeB
     });
 
     // 4) Declutter bodies: push overlapping Buds apart along the axis of least overlap
-    //    (wide 🚨 banners stack instead of piling up). Smoothed and capped. Clustered Buds sit
+    //    (wide bud-mergency banners stack instead of piling up). Smoothed and capped. Clustered Buds sit
     //    this out; everyone else also steps out from under the user's own bubble.
     const live = slots.filter((s) => s.vis * s.fv > 0.15 && !s.inCluster && s.merge < 0.5);
     const k = 0.5 * Math.min(1, dt * 8);
@@ -615,7 +616,7 @@ export function GlobeBuds({ buds, rig, hiddenId, onOpen, reducedMotion }: GlobeB
 
     // 6) Bubbles: most important first (me > Bud-mergency > already shown > centrality). A
     //    bubble may not cover any visible Bud, cluster marker or bubble already placed: it
-    //    slides sideways (tail stays over its Bud), and if that fails it becomes a 💬 pip.
+    //    slides sideways (tail stays over its Bud), and if that fails it becomes a chat pip.
     const obstacles: { box: Box; owner?: Slot }[] = markerBoxes.map((box) => ({ box }));
     live.forEach((s) => obstacles.push({ box: bodyRect(s), owner: s }));
     const placed = new Map<Slot, number>();
@@ -728,7 +729,7 @@ export function GlobeBuds({ buds, rig, hiddenId, onOpen, reducedMotion }: GlobeB
       s.bubbleShown = show;
       if (!show) s.slide = 0;
 
-      // No room for the bubble: a small 💬 pip still says "this Bud has a post".
+      // No room for the bubble: a small chat pip still says "this Bud has a post".
       const pip = !!s.info.post && !show && s.merge < 0.05 && s.vis * s.fv > 0.3;
       if (s.pip && pip !== s.pipShown) s.pip.dataset.shown = pip ? '1' : '0';
       s.pipShown = pip;
@@ -768,7 +769,7 @@ function bodyRect(s: Slot): Box {
   const bb = bodyBox(s);
   const x = s.sx + s.ox;
   const y = s.sy + s.oy;
-  // Buds with a post keep room above the head for their 💬 pip.
+  // Buds with a post keep room above the head for their chat pip.
   const pip = s.info.post ? PIP * s.scale : 0;
   return { l: x - bb.hw * 0.8, r: x + bb.hw * 0.8, t: y - bb.top - pip, b: y - bb.top * 0.2 };
 }
@@ -897,7 +898,9 @@ const GlobeBud = memo(function GlobeBud({
               style={{ bottom: BUBBLE_LIFT }}
             >
               <AnimatePresence>
-                {post && <BudBubble key={post.id} text={post.title} type={post.type} compact />}
+                {post && (
+                  <BudBubble key={post.id} text={post.title} type={post.type} mine={isMe} compact />
+                )}
               </AnimatePresence>
             </div>
             <div
@@ -912,12 +915,12 @@ const GlobeBud = memo(function GlobeBud({
               {post && (
                 <span
                   className={cn(
-                    'flex items-center justify-center rounded-full text-[9px] leading-none shadow-chunky ring-2 ring-white',
+                    'sketch-round flex items-center justify-center text-white ring-2 ring-paper',
                     POST_TYPE_META[post.type].solid,
                   )}
                   style={{ width: PIP, height: PIP }}
                 >
-                  💬
+                  <Icon name="chat" size={PIP - 4} strokeWidth={2.6} />
                 </span>
               )}
             </div>
@@ -945,7 +948,7 @@ const GlobeBud = memo(function GlobeBud({
                 />
               </div>
               {isMe && !panicked && (
-                <span className="pointer-events-none absolute left-1/2 top-full -mt-1 -translate-x-1/2 rounded-full bg-mcgill px-2 py-px font-display text-xs uppercase tracking-wide text-white shadow-chunky ring-2 ring-white">
+                <span className="pointer-events-none absolute left-1/2 top-full -mt-1 -translate-x-1/2 sketch-pill bg-tomato px-2 py-px font-display text-xs uppercase tracking-wide text-white ring-2 ring-paper">
                   You
                 </span>
               )}

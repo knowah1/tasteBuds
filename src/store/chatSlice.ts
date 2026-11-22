@@ -91,7 +91,7 @@ function checkEndedEvents(get: () => AppState, set: (p: Partial<AppState>) => vo
       endPromptSeen: [...get().endPromptSeen, room.id],
       endPromptRoomId: get().endPromptRoomId ?? room.id,
     });
-    api.notify('eventEnded', 'Time’s up in the kitchen! ⏰', post.title, `/chats/${room.id}`);
+    api.notify('eventEnded', 'Time’s up in the kitchen!', post.title, `/chats/${room.id}`);
   }
 }
 

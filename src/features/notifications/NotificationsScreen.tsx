@@ -27,7 +27,8 @@ export function NotificationsScreen() {
       <div className="space-y-2 px-4 pb-6">
         {notifications.length === 0 ? (
           <EmptyState
-            emoji="🔔"
+            icon="bell"
+            tone="cream"
             title="All quiet"
             body="Join requests, replies and level-ups show up here."
           />
@@ -36,7 +37,7 @@ export function NotificationsScreen() {
             <Card
               key={n.id}
               interactive
-              className={cn(!n.read && 'ring-2 ring-mcgill-light')}
+              className={cn(!n.read && 'ring-2 ring-blush')}
               onClick={() => {
                 markRead(n.id);
                 if (n.href) navigate(n.href);

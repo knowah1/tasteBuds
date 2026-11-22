@@ -4,7 +4,6 @@ import type { Bud, CuisineSkill } from '@/types';
 import { Badge, Button } from '@/components/ui';
 import { BudAvatar, Confetti } from '@/features/bud';
 import { useStore } from '@/store';
-import { CUISINE_META, TONE_CLASSES } from '@/lib/cuisine';
 
 export interface CelebrationStepProps {
   bud: Bud;
@@ -28,7 +27,7 @@ export function CelebrationStep({ bud, cuisines, onFinish }: CelebrationStepProp
   };
 
   return (
-    <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-gradient-to-b from-leaf-100 via-cream to-cream">
+    <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-mint">
       <Confetti pieces={70} />
       <div className="no-scrollbar relative flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-6 text-center">
         <motion.div
@@ -37,8 +36,8 @@ export function CelebrationStep({ bud, cuisines, onFinish }: CelebrationStepProp
           transition={{ type: 'spring', stiffness: 220, damping: 13, delay: 0.15 }}
           className="relative mt-16"
         >
-          <div className="absolute inset-x-2 bottom-1 h-8 rounded-[50%] bg-leaf-200" />
-          <BudAvatar bud={bud} size={180} state="hasBubble" bubble="Hi! I'm new here 👋" ring />
+          <div className="absolute inset-x-2 bottom-1 h-8 bg-sage [border-radius:52%_48%_50%_46%/60%_55%_45%_50%]" />
+          <BudAvatar bud={bud} size={180} state="hasBubble" bubble="Hi! I'm new here" ring />
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
@@ -67,8 +66,8 @@ export function CelebrationStep({ bud, cuisines, onFinish }: CelebrationStepProp
               key={c.cuisine}
               variants={{ hidden: { opacity: 0, scale: 0.5 }, show: { opacity: 1, scale: 1 } }}
             >
-              <Badge className={TONE_CLASSES[CUISINE_META[c.cuisine].tone]}>
-                {CUISINE_META[c.cuisine].emoji} {c.cuisine} · {c.level}
+              <Badge className="bg-blush text-tomato">
+                {c.cuisine} · {c.level}
               </Badge>
             </motion.span>
           ))}
@@ -81,7 +80,7 @@ export function CelebrationStep({ bud, cuisines, onFinish }: CelebrationStepProp
         className="pb-safe relative px-6 pt-3 sm:pb-6"
       >
         <Button block size="lg" loading={saving} onClick={finish}>
-          Take me to the map 🗺️
+          Take me to the map
         </Button>
       </motion.div>
     </div>

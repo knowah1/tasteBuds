@@ -6,7 +6,7 @@ export function GlobeSkeleton() {
   return (
     <div className="absolute inset-0 flex items-center justify-center" aria-label="Loading map">
       <motion.div
-        className="aspect-square w-[85%] rounded-full"
+        className="aspect-square w-[85%] sketch-round"
         style={{
           backgroundColor: GLOBE_COLORS.ocean,
           boxShadow: `0 0 0 6px ${GLOBE_COLORS.glow}`,

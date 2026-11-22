@@ -33,9 +33,9 @@ export type BudAvatarProps = BudSource & {
   state?: BudState;
   /** Speech-bubble text (the post title). Shown whenever set. */
   bubble?: string;
-  /** Colours the bubble ring and adds the post-type emoji. */
+  /** Bud-mergency bubbles get the tomato outline. */
   bubbleType?: PostType;
-  /** Red "🚨 bud-mergency" banner. Defaults to on for panicked Buds with a Bud-mergency bubble. */
+  /** Blush "bud-mergency" pill. Defaults to on for panicked Buds with a Bud-mergency bubble. */
   banner?: boolean;
   /** Highlight ring at the Bud's feet (the signed-in user's own Bud). */
   ring?: boolean;
@@ -84,7 +84,7 @@ export const BudAvatar = memo(function BudAvatar({
 
   const geo = GEOMETRY[bud.type];
   const fill = BUD_FILL[bud.color];
-  const bodyFill = geo.neutralBody ? 'fill-cream-50' : fill;
+  const bodyFill = geo.neutralBody ? 'fill-cream' : fill;
   const accessories = sortAccessories(bud.accessories);
   const hatted = accessories.some((a) => HATS.includes(a));
   const showBanner = banner ?? (state === 'panicked' && bubbleType === 'budmergency');
@@ -111,7 +111,7 @@ export const BudAvatar = memo(function BudAvatar({
             className="absolute left-1/2 z-10 -translate-x-1/2"
             style={{ bottom: size * 0.97 }}
           >
-            <BudBubble text={bubble} type={bubbleType} compact={size < 56} />
+            <BudBubble text={bubble} type={bubbleType} mine={ring} compact={size < 56} />
           </div>
         )}
       </AnimatePresence>
@@ -124,9 +124,9 @@ export const BudAvatar = memo(function BudAvatar({
         whileHover={interactive ? { scale: 1.06 } : undefined}
         style={{ originY: 0.9 }}
         className={cn(
-          'block h-full w-full rounded-full',
+          'block h-full w-full sketch-round',
           interactive &&
-            'cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-leaf-200',
+            'cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sage',
         )}
       >
         <svg
@@ -148,7 +148,7 @@ export const BudAvatar = memo(function BudAvatar({
                 cy="93"
                 rx="33"
                 ry="8"
-                className="tb-ring fill-mcgill/15 stroke-mcgill"
+                className="tb-ring fill-blush stroke-tomato"
                 strokeWidth={3}
               />
             )}

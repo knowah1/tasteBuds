@@ -49,12 +49,12 @@ export function WelcomeStep({ onStart }: { onStart: () => void }) {
     pushToast({
       kind: 'success',
       title: 'Welcome to tasteBuds!',
-      body: 'Signed in with a demo account 🌱',
+      body: 'Signed in with a demo account',
     });
   };
 
   return (
-    <div className="pt-safe flex flex-1 flex-col items-center justify-between bg-gradient-to-b from-leaf-100 to-cream px-6 pb-8 sm:pt-16">
+    <div className="pt-safe flex flex-1 flex-col items-center justify-between bg-mint px-6 pb-8 sm:pt-16">
       <div />
       <div className="flex flex-col items-center text-center">
         <div className="relative flex h-56 w-full items-center justify-center">
@@ -87,7 +87,7 @@ export function WelcomeStep({ onStart }: { onStart: () => void }) {
           </motion.div>
         </div>
         <h1 className="mt-6 font-display text-5xl">
-          taste<span className="text-mcgill">Buds</span>
+          taste<span className="text-tomato">Buds</span>
         </h1>
         <p className="mt-3 max-w-xs text-lg text-ink-soft">
           Learn, teach and cook together with McGill students, one bud at a time.
@@ -104,7 +104,7 @@ export function WelcomeStep({ onStart }: { onStart: () => void }) {
           Already have an account?{' '}
           <Link
             to="/sign-in"
-            className="inline-flex min-h-[44px] items-center font-display text-mcgill"
+            className="inline-flex min-h-[44px] items-center font-display text-tomato"
           >
             Sign in
           </Link>

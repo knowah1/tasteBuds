@@ -28,12 +28,12 @@ export function SignInScreen() {
     try {
       const user = await signIn(identifier, password);
       if (selectIsOnboarded(useStore.getState())) {
-        toast.success(`Welcome back, ${user.firstName}! 🌱`);
+        toast.success(`Welcome back, ${user.firstName}!`);
         navigate('/', { replace: true });
       } else {
         // Unverified email or no cuisines yet: OnboardingScreen derives the right step
         // (verify → cuisines → Bud) from `me` / `account`.
-        toast.success(`Welcome back, ${user.firstName}! 🌱`, 'Let’s finish setting up your Bud.');
+        toast.success(`Welcome back, ${user.firstName}!`, 'Let’s finish setting up your Bud.');
         navigate('/onboarding', { replace: true });
       }
     } catch (err) {
@@ -43,7 +43,7 @@ export function SignInScreen() {
   };
 
   return (
-    <div className="pt-safe flex flex-1 flex-col overflow-y-auto bg-gradient-to-b from-leaf-100 to-cream px-6 pb-10 sm:pt-16">
+    <div className="pt-safe flex flex-1 flex-col overflow-y-auto bg-cream px-6 pb-10 sm:pt-16">
       <div className="flex flex-col items-center pt-6 text-center">
         <motion.div
           initial={{ scale: 0, rotate: -20 }}
@@ -94,7 +94,7 @@ export function SignInScreen() {
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               aria-pressed={showPassword}
-              className="-mr-1 min-h-[44px] rounded-xl px-2 text-sm text-leaf-600"
+              className="-mr-1 min-h-[44px] sketch-sm-2 px-2 text-sm text-leaf"
             >
               {showPassword ? 'Hide' : 'Show'}
             </button>
@@ -110,7 +110,7 @@ export function SignInScreen() {
         New here?{' '}
         <Link
           to="/onboarding?start=account"
-          className="inline-flex min-h-[44px] items-center font-display text-mcgill"
+          className="inline-flex min-h-[44px] items-center font-display text-tomato"
         >
           Create an account
         </Link>

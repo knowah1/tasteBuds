@@ -20,7 +20,7 @@ export function DemoPanel() {
   }, [setOpen]);
 
   return (
-    <Sheet open={open} onClose={() => setOpen(false)} title="🎬 Demo panel">
+    <Sheet open={open} onClose={() => setOpen(false)} title="Demo panel">
       <div className="space-y-3 pt-1">
         <Button
           block
@@ -43,7 +43,7 @@ export function DemoPanel() {
               setSwitching(null);
               setOpen(false);
               navigate('/onboarding', { replace: true });
-              toast.success('Signed out', 'See you soon 🌱');
+              toast.success('Signed out', 'See you soon');
             }}
           >
             Sign out
@@ -59,10 +59,7 @@ export function DemoPanel() {
               setSwitching(null);
               setOpen(false);
               navigate('/', { replace: true });
-              toast.success(
-                `Welcome back, ${user.firstName}! 🌱`,
-                `Signed in as @${DEMO_USERNAME}`,
-              );
+              toast.success(`Welcome back, ${user.firstName}!`, `Signed in as @${DEMO_USERNAME}`);
             }}
           >
             Sign in as {DEMO_USERNAME}
@@ -75,7 +72,7 @@ export function DemoPanel() {
             resetAll();
             setOpen(false);
             navigate('/onboarding', { replace: true });
-            toast.success('All data reset', 'Fresh seed loaded 🌱');
+            toast.success('All data reset', 'Fresh seed loaded');
           }}
         >
           Reset all data

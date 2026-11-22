@@ -45,8 +45,13 @@ const STORAGE_KEY = 'tastebuds:db';
  * Bump when the shape changes. Versions listed in `migrate` are upgraded in place;
  * anything older reseeds cleanly.
  * v3: a Bud lives only on its user record. Drop any Bud copied onto other records.
+ * v4: app-written copy (system chat lines, notifications) no longer carries emojis.
  */
-const DB_VERSION = 3;
+const DB_VERSION = 4;
+
+/** Emojis (plus their joiners/variation selectors) and the space before them. */
+const EMOJI = /\s?(?:\p{Extended_Pictographic}[\u{FE0F}\u{200D}]*)+/gu;
+const stripEmoji = (text: string) => text.replace(EMOJI, '').trim();
 
 /** Keys that used to (or might) hold a copy of a user's Bud on non-user records. */
 const COPIED_BUD_KEYS = ['bud', 'hostBud', 'authorBud', 'senderBud', 'userBud'];
@@ -63,11 +68,27 @@ function stripCopiedBuds<T>(records: T[] | undefined): T[] {
 /** Upgrades a stored db to the current version, or returns null to reseed. */
 function migrate(parsed: Db): Db | null {
   if (parsed.version === DB_VERSION) return parsed;
-  if (parsed.version === 2) {
-    const messages = parsed.messages ?? [];
+  if (parsed.version === 3) {
+    // Only app-written text: system lines and notifications. Never what a user typed.
     return {
       ...parsed,
       version: DB_VERSION,
+      messages: (parsed.messages ?? []).map((m) =>
+        m.kind === 'system' ? { ...m, text: stripEmoji(m.text) } : m,
+      ),
+      notifications: (parsed.notifications ?? []).map((n) => ({
+        ...n,
+        title: stripEmoji(n.title),
+        body: n.body && stripEmoji(n.body),
+      })),
+    };
+  }
+  if (parsed.version === 2) {
+    const messages = parsed.messages ?? [];
+    // v2 → v3, then on to v4.
+    return migrate({
+      ...parsed,
+      version: 3,
       posts: stripCopiedBuds(parsed.posts),
       requests: stripCopiedBuds(parsed.requests),
       rooms: stripCopiedBuds(parsed.rooms).map((r) => ({
@@ -78,7 +99,7 @@ function migrate(parsed: Db): Db | null {
       threads: stripCopiedBuds(parsed.threads),
       replies: stripCopiedBuds(parsed.replies),
       notifications: stripCopiedBuds(parsed.notifications),
-    };
+    });
   }
   return null;
 }

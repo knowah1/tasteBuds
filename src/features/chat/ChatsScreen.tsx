@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import { TopBar } from '@/app/TopBar';
 import { Screen } from '@/app/Screen';
-import { Badge, Button, EmptyState, SkeletonList } from '@/components/ui';
+import { Button, EmptyState, SkeletonList, Icon, Pill } from '@/components/ui';
 import { UserAvatar } from '@/features/bud';
 import { useStore, type ChatsSegment } from '@/store';
 import { hasEventEnded, selectIncomingRequests } from '@/store/chatSlice';
@@ -34,7 +34,7 @@ export function ChatsScreen() {
   return (
     <Screen>
       <TopBar title="Chats" />
-      <div className="mx-4 mb-3 flex rounded-full bg-cream-200 p-1" role="tablist">
+      <div className="mx-4 mb-3 flex sketch-pill bg-paper p-1" role="tablist">
         {SEGMENTS.map((s) => {
           const count = s.id === 'active' ? active.length + incoming : archived.length;
           return (
@@ -45,14 +45,14 @@ export function ChatsScreen() {
               aria-selected={segment === s.id}
               onClick={() => setSegment(s.id)}
               className={cn(
-                'relative flex-1 rounded-full py-2 font-display text-sm transition-colors',
-                segment === s.id ? 'text-ink' : 'text-ink-muted',
+                'relative flex-1 sketch-pill py-2 font-display text-sm transition-colors',
+                segment === s.id ? 'text-tomato' : 'text-kraft',
               )}
             >
               {segment === s.id && (
                 <motion.span
                   layoutId="chat-seg"
-                  className="absolute inset-0 rounded-full bg-white shadow-soft"
+                  className="absolute inset-0 sketch-pill-2 bg-blush"
                   transition={{ type: 'spring', stiffness: 500, damping: 36 }}
                 />
               )}
@@ -61,10 +61,10 @@ export function ChatsScreen() {
                 {count > 0 && (
                   <span
                     className={cn(
-                      'ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 font-display text-xs leading-none',
+                      'ml-1.5 inline-flex h-5 min-w-5 items-center justify-center sketch-pill px-1 font-display text-xs leading-none',
                       s.id === 'active' && incoming > 0
-                        ? 'bg-mcgill text-white'
-                        : 'bg-cream-300 text-ink-soft',
+                        ? 'bg-tomato text-white'
+                        : 'bg-cream text-kraft',
                     )}
                   >
                     {count}
@@ -104,7 +104,7 @@ export function ChatsScreen() {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-2 mt-1 px-1 font-display text-base uppercase tracking-wide text-ink-muted">
+    <h2 className="mb-2 mt-1 flex items-center gap-1 px-1 font-display text-base uppercase tracking-wide text-ink-muted">
       {children}
     </h2>
   );
@@ -136,14 +136,16 @@ function ActiveList({ rooms, incoming }: { rooms: ChatRoom[]; incoming: number }
   if (incoming === 0 && sorted.length === 0 && waiting.length === 0) {
     return (
       <EmptyState
-        emoji="🍳"
+        icon="chat"
         title="No kitchens yet"
         body="Post an event or ask to join one. Chats open as soon as someone’s in."
         action={
           <div className="flex flex-col gap-2">
-            <Button onClick={() => setComposerOpen(true)}>+ Post an event</Button>
+            <Button onClick={() => setComposerOpen(true)} leftIcon={<Icon name="plus" size={18} />}>
+              Post an event
+            </Button>
             <Button variant="ghost" size="sm" onClick={() => navigate('/')}>
-              Find Buds on the map 🗺️
+              Find Buds on the map
             </Button>
           </div>
         }
@@ -156,7 +158,8 @@ function ActiveList({ rooms, incoming }: { rooms: ChatRoom[]; incoming: number }
       {incoming > 0 && (
         <section>
           <SectionTitle>
-            🙋 Asking to join <span className="text-mcgill">· {incoming}</span>
+            <Icon name="hand" size={20} className="text-kraft" /> Asking to join{' '}
+            <span className="text-tomato">· {incoming}</span>
           </SectionTitle>
           <JoinRequestList showPost />
         </section>
@@ -215,23 +218,20 @@ function RoomRow({ room, index }: { room: ChatRoom; index: number }) {
       whileTap={{ scale: 0.98 }}
       onClick={() => navigate(`/chats/${room.id}`)}
       className={cn(
-        'flex w-full items-center gap-3 rounded-chunky bg-white p-3 text-left shadow-soft ring-1 ring-cream-200',
+        'flex w-full items-center gap-3 sketch bg-paper p-3 text-left',
         room.archived && 'opacity-90',
       )}
     >
       <div className="relative shrink-0">
         <span
-          className={cn(
-            'flex h-14 w-14 items-center justify-center rounded-2xl text-2xl',
-            meta.classes,
-          )}
+          className={cn('flex h-14 w-14 items-center justify-center sketch-sm', meta.classes)}
           aria-hidden
         >
-          {meta.emoji}
+          <Icon name={meta.icon} size={30} />
         </span>
         {phase === 'live' && (
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white">
-            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-mcgill" />
+          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center sketch-round bg-paper">
+            <span className="h-2.5 w-2.5 animate-breathe sketch-round bg-tomato" />
           </span>
         )}
       </div>
@@ -251,15 +251,21 @@ function RoomRow({ room, index }: { room: ChatRoom; index: number }) {
           {lastMessagePreview(messages, users, meId)}
         </p>
         <div className="mt-1 flex items-center gap-1.5">
-          {isHost && <Badge className="bg-saffron-light text-ink">👑 Hosting</Badge>}
-          {phase === 'over' && !room.archived && (
-            <Badge className="bg-mcgill-light text-mcgill">⏰ Time’s up</Badge>
+          {isHost && (
+            <Pill icon="crown" tone="mint">
+              Hosting
+            </Pill>
           )}
-          {room.archived && <Badge>🗄️ Read-only</Badge>}
+          {phase === 'over' && !room.archived && (
+            <Pill icon="timer" tone="urgent">
+              Time’s up
+            </Pill>
+          )}
+          {room.archived && <Pill icon="archive">Read-only</Pill>}
           {!room.archived && (
             <span className="ml-auto flex -space-x-1.5">
               {members.slice(0, 4).map((u) => (
-                <span key={u.id} className="rounded-full bg-white ring-2 ring-white">
+                <span key={u.id} className="sketch-round bg-paper ring-2 ring-paper">
                   <UserAvatar userId={u.id} size={20} />
                 </span>
               ))}
@@ -279,18 +285,18 @@ function WaitingRow({ post }: { post: Post }) {
       type="button"
       whileTap={{ scale: 0.98 }}
       onClick={() => navigate(`/post/${post.id}`)}
-      className="flex w-full items-center gap-3 rounded-chunky border-2 border-dashed border-cream-300 p-3 text-left"
+      className="flex w-full items-center gap-3 sketch border-2 border-dashed border-kraft p-3 text-left"
     >
       <motion.span
         animate={{ rotate: [0, -8, 8, 0] }}
         transition={{ duration: 2.4, repeat: Infinity }}
         className={cn(
-          'flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-xl',
+          'flex h-11 w-11 shrink-0 items-center justify-center sketch-sm',
           meta.classes,
         )}
         aria-hidden
       >
-        ⏳
+        <Icon name="hourglass" size={24} />
       </motion.span>
       <span className="min-w-0 flex-1">
         <span className="block truncate font-display text-base">{post.title}</span>
@@ -309,7 +315,8 @@ function ArchivedList({ rooms }: { rooms: ChatRoom[] }) {
   if (sorted.length === 0) {
     return (
       <EmptyState
-        emoji="🗄️"
+        icon="archive"
+        tone="cream"
         title="Nothing archived"
         body="When you end an event and choose Archive, a read-only copy of the chat lands here."
       />

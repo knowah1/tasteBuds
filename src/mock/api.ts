@@ -178,7 +178,7 @@ function awardXpIn(
         db,
         userId,
         'levelUp',
-        `Level ${toLevel}! 🎉`,
+        `Level ${toLevel}!`,
         'Your Bud is growing.',
         '/profile',
       );
@@ -700,7 +700,7 @@ export function respondToRequest(requestId: ID, accept: boolean): Promise<Respon
         id: uid('m'),
         roomId: room.id,
         kind: 'system',
-        text: `${displayName(db, req.userId)} joined the kitchen 🍳`,
+        text: `${displayName(db, req.userId)} joined the kitchen`,
         createdAt: now,
       });
     }
@@ -709,7 +709,7 @@ export function respondToRequest(requestId: ID, accept: boolean): Promise<Respon
       db,
       req.userId,
       'requestAccepted',
-      'You’re in! 🎉',
+      'You’re in!',
       post.title,
       `/chats/${room.id}`,
     );
@@ -843,7 +843,7 @@ export function createReply(
         db,
         thread.authorId,
         'forumReply',
-        `${displayName(db, authorId)} has an idea 💡`,
+        `${displayName(db, authorId)} has an idea`,
         reply.text.slice(0, 80),
         `/forum/${thread.id}`,
       );

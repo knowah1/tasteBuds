@@ -63,7 +63,6 @@ export function OnboardingScreen() {
     clear();
     pushToast({
       kind: 'success',
-      emoji: '🎉',
       title: 'Your Bud just sprouted on the map!',
       body: 'Tap other Buds to say hi, or hit + to post.',
       duration: 5000,
@@ -83,7 +82,9 @@ export function OnboardingScreen() {
                 <Icon name="chevronLeft" size={22} />
               </IconButton>
             ) : (
-              <span className="flex h-11 w-11 items-center justify-center text-2xl">🌱</span>
+              <span className="flex h-11 w-11 items-center justify-center text-leaf">
+                <Icon name="sprout" size={30} strokeWidth={2.2} />
+              </span>
             )}
             <div className="flex-1">
               <div className="mb-1.5 flex justify-between text-sm text-ink-muted">

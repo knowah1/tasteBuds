@@ -80,7 +80,6 @@ export function startStoreBridge() {
       case 'verificationCode':
         s.pushToast({
           kind: 'inbox',
-          emoji: '📬',
           title: 'New email · tasteBuds',
           body: `Your verification code is ${e.code}`,
           duration: 0,

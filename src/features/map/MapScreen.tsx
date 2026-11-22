@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
-import { Button, Chip } from '@/components/ui';
+import { Button, Chip, Icon, type IconName } from '@/components/ui';
 import { TopBar } from '@/app/TopBar';
 import { Screen } from '@/app/Screen';
 import { useStore, type MapFilter } from '@/store';
@@ -14,20 +14,21 @@ import { GlobeSkeleton } from './globe/GlobeSkeleton';
 /** three.js is big: load the globe in its own chunk behind the skeleton. */
 const GlobeMap = lazy(() => import('./globe/GlobeMap'));
 
-const FILTERS: { id: MapFilter; label: string }[] = [
-  { id: 'all', label: '🌍 All' },
-  { id: 'learn', label: '📚 Learn' },
-  { id: 'teach', label: '👩‍🍳 Teach' },
-  { id: 'potluck', label: '🥘 Potluck' },
-  { id: 'budmergency', label: '🚨 Bud-mergency' },
+const FILTERS: { id: MapFilter; label: string; icon: IconName }[] = [
+  { id: 'all', label: 'All', icon: 'globe' },
+  { id: 'learn', label: 'Learn', icon: POST_TYPE_META.learn.icon },
+  { id: 'teach', label: 'Teach', icon: POST_TYPE_META.teach.icon },
+  { id: 'potluck', label: 'Potluck', icon: POST_TYPE_META.potluck.icon },
+  { id: 'budmergency', label: 'Bud-mergency', icon: POST_TYPE_META.budmergency.icon },
 ];
 
+/** Active chips are leaf; the bud-mergency filter keeps its tomato alarm colour. */
 const CHIP_SELECTED: Record<MapFilter, string> = {
-  all: 'bg-ink text-white ring-ink',
-  learn: 'bg-learn text-white ring-learn',
-  teach: 'bg-teach text-white ring-teach',
-  potluck: 'bg-potluck text-ink ring-potluck',
-  budmergency: 'bg-emergency text-white ring-emergency',
+  all: 'bg-leaf text-white',
+  learn: 'bg-leaf text-white',
+  teach: 'bg-leaf text-white',
+  potluck: 'bg-leaf text-white',
+  budmergency: 'bg-tomato text-white',
 };
 
 export function MapScreen() {
@@ -55,13 +56,14 @@ export function MapScreen() {
             selected={mapFilter === f.id}
             onClick={() => setMapFilter(f.id)}
             selectedClassName={CHIP_SELECTED[f.id]}
+            leading={<Icon name={f.icon} size={18} />}
           >
             {f.label}
           </Chip>
         ))}
       </div>
 
-      <div className="relative flex-1 overflow-hidden bg-gradient-to-b from-cream to-sky-light">
+      <div className="relative flex-1 overflow-hidden bg-cream">
         {loading ? (
           <GlobeSkeleton />
         ) : (
@@ -83,7 +85,7 @@ export function MapScreen() {
                 initial={{ y: -12, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -12, opacity: 0 }}
-                className="rounded-full bg-white/90 px-3 py-1 text-sm text-ink-soft shadow-soft backdrop-blur"
+                className="sketch-pill border-2 border-kraft bg-paper px-3 py-1 text-sm text-ink-soft"
               >
                 {mapFilter === 'all'
                   ? `${others.length} Buds around the world · ${withPosts} cooking`
@@ -100,9 +102,11 @@ export function MapScreen() {
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 30, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 380, damping: 26 }}
-              className="absolute inset-x-4 bottom-4 z-[3000] rounded-chunky bg-white p-4 text-center shadow-lift ring-2 ring-cream-300"
+              className="sketch border-2 border-kraft absolute inset-x-4 bottom-4 z-[3000] bg-paper p-4 text-center"
             >
-              <div className="text-3xl">{POST_TYPE_META[mapFilter].emoji}</div>
+              <div className="sketch-sm mx-auto flex h-12 w-12 items-center justify-center bg-cream text-kraft">
+                <Icon name={POST_TYPE_META[mapFilter].icon} size={28} />
+              </div>
               <p className="mt-1 font-display text-lg text-ink">
                 No {POST_TYPE_META[mapFilter].label} posts right now
               </p>

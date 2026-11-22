@@ -8,7 +8,6 @@ export interface Toast {
   kind: ToastKind;
   title: string;
   body?: string;
-  emoji?: string;
   /** ms; 0 = sticky until dismissed. */
   duration: number;
   href?: string;

@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { useShallow } from 'zustand/react/shallow';
-import { Badge, Button, Card, EmptyState, ProgressBar } from '@/components/ui';
+import { AvatarTile, Badge, Button, Card, EmptyState, Icon, ProgressBar } from '@/components/ui';
 import { BudAvatar, EditBudButton } from '@/features/bud';
 import { PostCard } from '@/features/posts/PostCard';
 import { eventPhase } from '@/features/posts/postMeta';
 import { useStore } from '@/store';
 import { selectHostedPosts, selectJoinedPosts } from '@/store/postSlice';
-import { CUISINE_META, TONE_CLASSES } from '@/lib/cuisine';
 import { DAY } from '@/lib/time';
 import { levelProgress } from '@/lib/xp';
 import { cn } from '@/lib/cn';
@@ -64,66 +63,63 @@ export function ProfileView({
 
   return (
     <div className="space-y-4 px-4 pb-28">
-      {/* Header */}
+      {/* Hero (sketch 2): the Bud on a mint card with a leaf outline */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className={cn(
-          'flex flex-col items-center rounded-blob bg-gradient-to-b from-leaf-100 to-cream px-4 pb-5 text-center',
-          live ? 'pt-24' : 'pt-6',
+          'sketch-3 border-2 border-leaf flex flex-col items-center bg-mint px-4 pb-5 text-center',
+          live ? 'pt-24' : 'pt-8',
         )}
       >
         <BudAvatar
           userId={user.id}
-          size={128}
+          size={150}
           ring={isMe}
           state={live?.type === 'budmergency' ? 'panicked' : live ? 'hasBubble' : 'idle'}
           bubble={live?.title}
           bubbleType={live?.type}
           label={isMe ? 'Your Bud' : `${user.firstName}'s Bud`}
         />
-        <h2 className={cn('font-display text-2xl', live?.type === 'budmergency' ? 'mt-8' : 'mt-3')}>
-          {user.firstName} {user.lastName}
-        </h2>
-        <p className="text-ink-muted">@{user.username}</p>
-        {user.bio && <p className="mt-2 max-w-xs text-sm text-ink-soft">{user.bio}</p>}
-        {isMe && <EditBudButton className="mt-3" />}
+        {isMe ? (
+          <EditBudButton className={cn('px-8', live?.type === 'budmergency' ? 'mt-9' : 'mt-4')} />
+        ) : (
+          <div className={live?.type === 'budmergency' ? 'h-6' : 'h-1'} />
+        )}
       </motion.div>
 
-      {/* Level */}
-      <Card>
-        <div className="flex items-center gap-3">
-          <motion.div
-            initial={{ scale: 0.6, rotate: -10 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 14 }}
-            className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-leaf-500 text-white shadow-chunky"
-          >
-            <span className="font-display text-xs uppercase leading-none">Lv</span>
-            <span className="font-display text-2xl leading-none">{lv.level}</span>
-          </motion.div>
+      {/* Who + stats */}
+      <Card shape={2}>
+        <div className="flex items-center gap-4">
+          <AvatarTile userId={user.id} tone="mint" size={72} />
           <div className="min-w-0 flex-1">
-            <div className="mb-1.5 flex items-baseline justify-between">
-              <span className="font-display text-lg">Level {lv.level}</span>
-              <span className="text-sm tabular-nums text-ink-muted">
-                {lv.current} / {lv.needed} XP
-              </span>
-            </div>
-            <ProgressBar value={lv.progress} label="Level progress" />
-            <p className="mt-1.5 text-sm text-ink-muted">
-              {lv.needed - lv.current} XP to Level {lv.level + 1} · {user.xp} XP total
-            </p>
+            <h2 className="truncate font-display text-2xl leading-snug">
+              {user.firstName} {user.lastName}
+            </h2>
+            <p className="truncate text-ink-muted">@{user.username}</p>
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-          <Stat value={hosted.length} label="Hosted" />
-          <Stat value={isMe ? joined.length : '—'} label="Joined" />
-          <Stat value={days} label={days === 1 ? 'Day a Bud' : 'Days a Bud'} />
+        {user.bio && <p className="mt-3 text-sm text-ink-soft">{user.bio}</p>}
+        <div className="mt-4 grid grid-cols-3 gap-3 text-center">
+          <Stat value={lv.level} label="Level" shape="sketch-sm" />
+          <Stat value={user.xp} label="XP" shape="sketch-sm-2" />
+          <Stat
+            value={hosted.length}
+            label={hosted.length === 1 ? 'Post' : 'Posts'}
+            shape="sketch-sm"
+          />
+        </div>
+        <div className="mt-4">
+          <ProgressBar value={lv.progress} label="Level progress" />
+          <p className="mt-1.5 text-sm text-ink-muted">
+            {lv.needed - lv.current} XP to Level {lv.level + 1} · a Bud for {days}{' '}
+            {days === 1 ? 'day' : 'days'}
+          </p>
         </div>
       </Card>
 
-      {/* Cuisines */}
-      <Card>
+      {/* Cuisines as blush pills */}
+      <Card shape={4}>
         <h3 className="mb-3 font-display text-lg">Cuisines</h3>
         {user.cuisines.length === 0 ? (
           <p className="text-sm text-ink-muted">No cuisines yet.</p>
@@ -137,11 +133,10 @@ export function ProfileView({
               >
                 <Badge
                   className={cn(
-                    'gap-1.5 py-1 pl-2 pr-2.5 text-sm',
-                    TONE_CLASSES[CUISINE_META[c.cuisine].tone],
+                    'gap-1.5 bg-blush py-1 pl-3 pr-3 text-sm text-tomato',
+                    i % 2 ? 'sketch-pill-2' : 'sketch-pill',
                   )}
                 >
-                  <span aria-hidden>{CUISINE_META[c.cuisine].emoji}</span>
                   {c.cuisine}
                   <SkillPips level={c.level} />
                 </Badge>
@@ -158,18 +153,23 @@ export function ProfileView({
         empty={
           isMe ? (
             <EmptyState
-              emoji="🍳"
+              icon="pan"
               title="Nothing cooking yet"
               body="Post a Learn, Teach or Potluck and your Bud will wear the bubble."
               action={
-                <Button size="sm" onClick={() => openComposer(true)}>
-                  + New post
+                <Button
+                  size="sm"
+                  onClick={() => openComposer(true)}
+                  leftIcon={<Icon name="plus" size={16} />}
+                >
+                  New post
                 </Button>
               }
             />
           ) : (
             <EmptyState
-              emoji="😴"
+              icon="clock"
+              tone="cream"
               title="No open events"
               body={`${user.firstName} is taking a break.`}
             />
@@ -191,7 +191,7 @@ export function ProfileView({
         title="Past"
         count={past.length}
         empty={
-          <p className="rounded-chunky bg-white/60 px-4 py-5 text-center text-sm text-ink-muted ring-1 ring-cream-200">
+          <p className="sketch-2 bg-paper/60 px-4 py-5 text-center text-sm text-ink-muted">
             Finished events and resolved Bud-mergencies show up here.
           </p>
         }
@@ -211,9 +211,17 @@ export function ProfileView({
   );
 }
 
-function Stat({ value, label }: { value: ReactNode; label: string }) {
+function Stat({
+  value,
+  label,
+  shape,
+}: {
+  value: ReactNode;
+  label: string;
+  shape: 'sketch-sm' | 'sketch-sm-2';
+}) {
   return (
-    <div className="rounded-2xl bg-cream-100 py-2">
+    <div className={cn(shape, 'bg-cream py-3')}>
       <p className="font-display text-xl tabular-nums">{value}</p>
       <p className="text-sm text-ink-muted">{label}</p>
     </div>
@@ -229,7 +237,7 @@ function SkillPips({ level }: { level: SkillLevel }) {
         {SKILL_LEVELS.map((l, i) => (
           <span
             key={l}
-            className={cn('h-1.5 w-1.5 rounded-full bg-current', i > rank && 'opacity-25')}
+            className={cn('h-1.5 w-1.5 sketch-round bg-current', i > rank && 'opacity-25')}
           />
         ))}
       </span>
