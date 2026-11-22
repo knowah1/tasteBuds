@@ -20,7 +20,7 @@ export function TopBar({ title }: { title?: string }) {
         className="flex select-none items-center gap-1.5 font-display text-2xl text-ink"
         aria-label="tasteBuds (long-press for demo panel)"
       >
-        <Icon name="sprout" size={28} strokeWidth={2.2} className="text-leaf" />
+        {!title && <Icon name="sprout" size={28} strokeWidth={2.2} className="text-leaf" />}
         {title ?? (
           <span>
             taste<span className="text-tomato">Buds</span>

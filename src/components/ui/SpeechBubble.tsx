@@ -33,7 +33,7 @@ export function SpeechBubble({ children, tone = 'kraft', compact, className }: S
       <svg
         aria-hidden
         viewBox="0 0 14 10"
-        className="absolute left-1/2 h-2.5 w-3.5 -translate-x-[45%] overflow-visible"
+        className="absolute left-1/2 h-2.5 w-3.5 -translate-x-1/2 overflow-visible"
         style={{ top: 'calc(100% - 2.5px)' }}
       >
         <path

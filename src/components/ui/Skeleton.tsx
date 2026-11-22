@@ -1,8 +1,14 @@
 import { cn } from '@/lib/cn';
 
-/** Flat cream block that gently breathes. No shimmer gradient. */
+/** Flat cream block (or any `bg-*` you pass) that gently breathes. No shimmer gradient. */
 export function Skeleton({ className }: { className?: string }) {
-  return <div aria-hidden className={cn('sketch-sm animate-breathe bg-cream', className)} />;
+  const tinted = /(^|\s)bg-/.test(className ?? '');
+  return (
+    <div
+      aria-hidden
+      className={cn('sketch-sm animate-breathe', !tinted && 'bg-cream', className)}
+    />
+  );
 }
 
 /** Generic list-of-cards skeleton: white cards with cream tiles and lines. */
