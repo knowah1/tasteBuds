@@ -68,7 +68,7 @@ export function ProfileView({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className={cn(
-          'sketch-3 edge-leaf flex flex-col items-center bg-mint px-4 pb-5 text-center',
+          'sketch-3 border-2 border-leaf flex flex-col items-center bg-mint px-4 pb-5 text-center',
           live ? 'pt-24' : 'pt-8',
         )}
       >

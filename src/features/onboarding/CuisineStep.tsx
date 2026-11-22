@@ -80,7 +80,7 @@ export function CuisineStep({ value, onChange, onNext }: CuisineStepProps) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, x: -40, transition: { duration: 0.15 } }}
               transition={{ type: 'spring', stiffness: 420, damping: 30 }}
-              className="sketch edge-kraft edge-2 bg-paper p-3"
+              className="sketch border-2 border-kraft bg-paper p-3"
             >
               <div className="mb-2 flex items-center justify-between px-1">
                 <span className="font-display text-lg">{cuisine}</span>

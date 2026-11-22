@@ -19,7 +19,7 @@ export function GlobeFallback({
 
   return (
     <div className="no-scrollbar absolute inset-0 overflow-y-auto bg-cream px-4 pb-24 pt-12">
-      <div className="sketch edge-kraft mb-3 bg-paper p-3 text-center">
+      <div className="sketch border-2 border-kraft mb-3 bg-paper p-3 text-center">
         <p className="font-display text-base text-ink">The globe needs WebGL</p>
         <p className="text-sm text-ink-soft">Here are the Buds around the world instead.</p>
       </div>
@@ -34,7 +34,7 @@ export function GlobeFallback({
             <button
               type="button"
               onClick={() => onOpen(b.user.id)}
-              className="flex w-full items-center gap-3 sketch-2 edge-kraft edge-2 bg-paper p-3 text-left transition active:scale-[0.98]"
+              className="flex w-full items-center gap-3 sketch-2 border-2 border-kraft bg-paper p-3 text-left transition active:scale-[0.98]"
             >
               <BudAvatar
                 userId={b.user.id}

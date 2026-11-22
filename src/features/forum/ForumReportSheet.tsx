@@ -80,7 +80,7 @@ export function ForumReportSheet({
             className="space-y-4"
           >
             {target && (
-              <div className="sketch-sm edge-kraft edge-2 bg-paper px-3 py-2 text-sm">
+              <div className="sketch-sm border-2 border-kraft bg-paper px-3 py-2 text-sm">
                 <p className="text-sm text-ink-muted">{target.authorName}</p>
                 <p className="line-clamp-3 break-words leading-relaxed text-ink-soft">
                   {target.preview}
@@ -164,7 +164,7 @@ export function ForumActionSheet({
           <button
             type="button"
             onClick={() => onReport(target.report)}
-            className="flex w-full items-center gap-3 sketch-sm edge-kraft edge-2 bg-paper px-4 py-3.5 text-left font-display text-ink active:scale-[0.98]"
+            className="flex w-full items-center gap-3 sketch-sm border-2 border-kraft bg-paper px-4 py-3.5 text-left font-display text-ink active:scale-[0.98]"
           >
             <Icon name="flag" size={22} className="text-kraft" />
             Report {target.report.type === 'post' ? 'this bud-mergency' : 'this reply'}
@@ -172,7 +172,7 @@ export function ForumActionSheet({
           <button
             type="button"
             onClick={() => onBlock(target.userId, target.report.authorName)}
-            className="flex w-full items-center gap-3 sketch-sm-2 edge-blush edge-2 bg-paper px-4 py-3.5 text-left font-display text-tomato active:scale-[0.98]"
+            className="flex w-full items-center gap-3 sketch-sm-2 border-2 border-blush bg-paper px-4 py-3.5 text-left font-display text-tomato active:scale-[0.98]"
           >
             <Icon name="block" size={22} />
             Block {target.report.authorName}

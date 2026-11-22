@@ -79,7 +79,7 @@ export function ReplyItem({
           <div
             className={cn(
               'relative bg-paper px-3 py-2 [border-radius:6px_18px_20px_16px/8px_16px_19px_17px]',
-              pinned ? 'edge-sage edge-2' : 'edge-kraft edge-2',
+              pinned ? 'border-2 border-sage' : 'border-2 border-kraft',
             )}
           >
             {flashing && (

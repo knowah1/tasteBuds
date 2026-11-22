@@ -85,7 +85,7 @@ export function JoinRequestCard({
         transition: { duration: 0.22 },
       }}
       transition={{ type: 'spring', stiffness: 420, damping: 30 }}
-      className="sketch edge-kraft edge-2 bg-paper p-4"
+      className="sketch border-2 border-kraft bg-paper p-4"
     >
       {showPost && (
         <button

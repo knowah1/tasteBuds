@@ -28,10 +28,10 @@ import {
 } from './postMeta';
 
 const HERO_BG: Record<Post['type'], string> = {
-  learn: 'bg-mint edge-leaf',
-  teach: 'bg-mint edge-leaf',
-  potluck: 'bg-paper edge-kraft',
-  budmergency: 'bg-blush edge-tomato',
+  learn: 'bg-mint border-2 border-leaf',
+  teach: 'bg-mint border-2 border-leaf',
+  potluck: 'bg-paper border-2 border-kraft',
+  budmergency: 'bg-blush border-2 border-tomato',
 };
 
 const PHASE_BADGE: Record<EventPhase, { label: string; className: string }> = {
@@ -361,7 +361,7 @@ function JoinActions({
           )}
           {state === 'host' && (
             <div className="flex items-center gap-2">
-              <div className="sketch-sm edge-kraft edge-2 flex-1 bg-paper px-4 py-2">
+              <div className="sketch-sm border-2 border-kraft flex-1 bg-paper px-4 py-2">
                 <p className="flex items-center gap-1 font-display text-base">
                   <Icon name="chefHat" size={18} className="text-leaf" /> You’re the host
                 </p>

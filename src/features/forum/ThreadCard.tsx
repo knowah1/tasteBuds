@@ -44,7 +44,7 @@ export const ThreadCard = memo(function ThreadCard({
       aria-label={`${thread.title}, posted by ${who}${resolved ? ', resolved' : ''}`}
       onClick={onOpen}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpen()}
-      className={cn(urgent && 'edge-3')}
+      outlineWidth={urgent ? 3 : 2}
     >
       <div className="flex items-center gap-4">
         <AvatarTile

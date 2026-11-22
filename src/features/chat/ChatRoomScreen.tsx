@@ -245,7 +245,7 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
 }
 
 const BANNER_TONES = {
-  cream: 'bg-paper text-ink-soft edge-kraft edge-2',
+  cream: 'bg-paper text-ink-soft border-2 border-kraft',
   blush: 'bg-blush text-tomato',
   leaf: 'bg-mint text-leaf',
 } as const;

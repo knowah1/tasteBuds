@@ -167,7 +167,7 @@ export function VerifyStep() {
             exit={{ opacity: 0, scale: 0.9 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onChange(inboxCode)}
-            className="sketch-sm edge-kraft mt-5 flex w-full items-center gap-3 bg-paper px-4 py-3 text-left"
+            className="sketch-sm border-2 border-kraft mt-5 flex w-full items-center gap-3 bg-paper px-4 py-3 text-left"
           >
             <span className="sketch-sm-2 flex h-10 w-10 shrink-0 items-center justify-center bg-blush text-tomato">
               <Icon name="mail" size={22} />

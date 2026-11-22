@@ -293,36 +293,63 @@ export function ComposerSheet() {
   );
 }
 
+/**
+ * One look for all four tiles: tinted fill, 2px outline + title in the type's colour,
+ * ink description and a white icon tile. Static strings so Tailwind can see them.
+ */
+const TYPE_TILE: Record<PostType, { tile: string; accent: string }> = {
+  learn: {
+    tile: 'bg-mint border-leaf focus-visible:ring-leaf/40',
+    accent: 'text-leaf',
+  },
+  teach: {
+    // Sage lightened so its weight matches the other three fills.
+    tile: 'bg-sage/50 border-leaf focus-visible:ring-leaf/40',
+    accent: 'text-leaf',
+  },
+  potluck: {
+    tile: 'bg-kraft-light border-kraft focus-visible:ring-kraft/50',
+    accent: 'text-kraft',
+  },
+  budmergency: {
+    tile: 'bg-blush border-tomato focus-visible:ring-tomato/40',
+    accent: 'text-tomato',
+  },
+};
+
 function TypePicker({ selected, onPick }: { selected?: PostType; onPick: (t: PostType) => void }) {
   return (
     <div className="grid grid-cols-2 gap-3 pb-2 pt-1">
       {TYPES.map((type, i) => {
         const meta = POST_TYPE_META[type];
+        const look = TYPE_TILE[type];
         return (
           <motion.button
             key={type}
             type="button"
             onClick={() => onPick(type)}
+            aria-pressed={selected === type}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0, transition: { delay: i * 0.05 } }}
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
             className={cn(
-              'flex min-h-[132px] flex-col items-start gap-1 p-4 text-left',
+              'flex min-h-[132px] flex-col items-start gap-1 border-2 p-4 text-left transition-[filter]',
+              'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
+              'active:brightness-[0.93]',
               ['sketch', 'sketch-2', 'sketch-3', 'sketch-4'][i],
-              meta.classes,
-              selected === type && 'edge-kraft',
+              look.tile,
             )}
           >
-            <motion.span
-              className="sketch-sm flex h-12 w-12 items-center justify-center bg-paper"
-              whileHover={{ rotate: [0, -12, 12, 0] }}
-              transition={{ duration: 0.4 }}
+            <span
+              className={cn(
+                'sketch-sm mb-1 flex h-12 w-12 items-center justify-center bg-paper',
+                look.accent,
+              )}
             >
               <Icon name={meta.icon} size={28} />
-            </motion.span>
-            <span className="font-display text-xl">{meta.label}</span>
-            <span className="text-sm text-ink-soft">{POST_TYPE_BLURB[type]}</span>
+            </span>
+            <span className={cn('font-display text-xl', look.accent)}>{meta.label}</span>
+            <span className="text-sm text-ink">{POST_TYPE_BLURB[type]}</span>
           </motion.button>
         );
       })}

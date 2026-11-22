@@ -66,7 +66,7 @@ export function BudEditor({
           type="button"
           whileTap={{ scale: 0.9, rotate: -20 }}
           onClick={() => onChange(randomBud(level))}
-          className="sketch-pill edge-kraft edge-2 absolute right-0 top-2 flex h-11 items-center gap-1 bg-paper px-3 text-sm text-ink-soft"
+          className="sketch-pill border-2 border-kraft absolute right-0 top-2 flex h-11 items-center gap-1 bg-paper px-3 text-sm text-ink-soft"
           aria-label="Surprise me: random look"
         >
           <Icon name="dice" size={18} /> <span>Surprise me</span>
@@ -178,7 +178,7 @@ function TypePicker({ value, onChange }: { value: Bud; onChange: (b: Bud) => voi
             onClick={() => onChange({ ...value, type: t })}
             className={cn(
               'flex flex-col items-center sketch-sm pb-2 pt-1 transition-colors',
-              selected ? 'edge-leaf bg-mint' : 'edge-kraft edge-2 bg-paper',
+              selected ? 'border-2 border-leaf bg-mint' : 'border-2 border-kraft bg-paper',
             )}
           >
             <BudAvatar
@@ -286,7 +286,7 @@ function AccessoryCard({
       aria-label={unlocked ? meta.label : `${meta.label}, locked until level ${unlockLv}`}
       className={cn(
         'relative flex flex-col items-center sketch-sm pb-1.5 pt-1 transition-colors',
-        worn ? 'edge-leaf bg-mint' : 'edge-kraft edge-2 bg-paper',
+        worn ? 'border-2 border-leaf bg-mint' : 'border-2 border-kraft bg-paper',
         !unlocked && 'bg-cream',
       )}
     >

@@ -207,7 +207,7 @@ export function ThreadScreen() {
               animate={{ opacity: 1, y: 0 }}
               className={cn(
                 'sketch relative overflow-hidden bg-paper p-4',
-                urgency === 'critical' ? 'edge-blush edge-3' : 'edge-kraft edge-2',
+                urgency === 'critical' ? 'border-[3px] border-blush' : 'border-2 border-kraft',
               )}
             >
               <div className="flex items-start gap-3">
@@ -248,11 +248,6 @@ export function ThreadScreen() {
                 {!resolved && (
                   <Pill icon="timer" tone={meta.pill} className="tabular-nums">
                     {countdown(thread.expiresAt, now)}
-                  </Pill>
-                )}
-                {!resolved && urgency === 'critical' && (
-                  <Pill icon="warning" tone="blush" outlined>
-                    {meta.label}
                   </Pill>
                 )}
               </div>
@@ -318,7 +313,7 @@ export function ThreadScreen() {
                   initial={{ opacity: 0, y: -10, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ type: 'spring', stiffness: 380, damping: 24 }}
-                  className="sketch-3 edge-leaf relative mt-4 bg-mint p-3"
+                  className="sketch-3 border-2 border-leaf relative mt-4 bg-mint p-3"
                 >
                   {celebrate > 0 && <Confetti key={celebrate} pieces={36} burst />}
                   <div className="mb-2 flex items-center gap-1.5 px-1">

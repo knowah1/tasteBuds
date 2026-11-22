@@ -85,7 +85,7 @@ export function MapScreen() {
                 initial={{ y: -12, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -12, opacity: 0 }}
-                className="sketch-pill edge-kraft edge-2 bg-paper px-3 py-1 text-sm text-ink-soft"
+                className="sketch-pill border-2 border-kraft bg-paper px-3 py-1 text-sm text-ink-soft"
               >
                 {mapFilter === 'all'
                   ? `${others.length} Buds around the world · ${withPosts} cooking`
@@ -102,7 +102,7 @@ export function MapScreen() {
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 30, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 380, damping: 26 }}
-              className="sketch edge-kraft absolute inset-x-4 bottom-4 z-[3000] bg-paper p-4 text-center"
+              className="sketch border-2 border-kraft absolute inset-x-4 bottom-4 z-[3000] bg-paper p-4 text-center"
             >
               <div className="sketch-sm mx-auto flex h-12 w-12 items-center justify-center bg-cream text-kraft">
                 <Icon name={POST_TYPE_META[mapFilter].icon} size={28} />

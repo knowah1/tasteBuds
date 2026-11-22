@@ -182,7 +182,7 @@ export default function GlobeMap({ buds, meId, filter, onOpen }: GlobeMapProps) 
           transition={{ type: 'spring', stiffness: 420, damping: 22, delay: 0.25 }}
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.05 }}
-          className="absolute bottom-4 right-4 z-10 flex h-12 items-center gap-1.5 sketch-pill edge-kraft bg-paper pl-3 pr-4 font-display text-sm text-ink"
+          className="absolute bottom-4 right-4 z-10 flex h-12 items-center gap-1.5 sketch-pill border-2 border-kraft bg-paper pl-3 pr-4 font-display text-sm text-ink"
         >
           <Icon name="pin" size={20} className="text-tomato" />
           Find me

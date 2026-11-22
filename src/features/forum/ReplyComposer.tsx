@@ -100,7 +100,7 @@ export function ReplyComposer({
                     setText(q);
                     inputRef.current?.focus();
                   }}
-                  className="sketch-pill edge-kraft edge-2 shrink-0 bg-paper px-3 py-1.5 text-sm text-ink-soft"
+                  className="sketch-pill border-2 border-kraft shrink-0 bg-paper px-3 py-1.5 text-sm text-ink-soft"
                 >
                   {q.trim()}
                 </motion.button>

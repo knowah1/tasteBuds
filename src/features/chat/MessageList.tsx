@@ -94,7 +94,7 @@ export function MessageList({
                 }}
                 className={cn(
                   'break-words px-3.5 py-2 text-left text-[15px] leading-snug',
-                  mine ? 'bg-tomato text-white' : 'edge-kraft edge-2 bg-paper text-ink',
+                  mine ? 'bg-tomato text-white' : 'border-2 border-kraft bg-paper text-ink',
                   // The last bubble in a run gets a tucked corner on its speaker's side.
                   !item.last
                     ? 'sketch-sm'

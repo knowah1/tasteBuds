@@ -87,7 +87,7 @@ export function EventEndPrompt() {
               initial={{ scale: 0, rotate: -15 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: 'spring', stiffness: 380, damping: 14, delay: 0.1 }}
-              className="sketch-round edge-leaf mx-auto mb-2 flex h-16 w-16 items-center justify-center bg-paper text-leaf"
+              className="sketch-round border-2 border-leaf mx-auto mb-2 flex h-16 w-16 items-center justify-center bg-paper text-leaf"
             >
               <Icon name={timeUp ? 'timer' : 'pan'} size={34} />
             </motion.div>
@@ -182,7 +182,11 @@ function ChoiceCard({
       whileTap={{ scale: 0.97 }}
       className={cn(
         'sketch-2 flex w-full items-center gap-3 bg-paper p-3 text-left transition-colors',
-        selected ? (danger ? 'edge-tomato' : 'edge-leaf') : 'edge-kraft edge-2',
+        selected
+          ? danger
+            ? 'border-2 border-tomato'
+            : 'border-2 border-leaf'
+          : 'border-2 border-kraft',
       )}
     >
       <span

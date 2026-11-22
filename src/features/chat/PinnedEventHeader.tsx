@@ -54,7 +54,7 @@ export function PinnedEventHeader({
 
   return (
     <div className="sticky top-0 z-10 px-3 pb-2">
-      <motion.div layout className="sketch edge-kraft edge-2 overflow-hidden bg-paper">
+      <motion.div layout className="sketch border-2 border-kraft overflow-hidden bg-paper">
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
