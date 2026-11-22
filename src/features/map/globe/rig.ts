@@ -3,6 +3,11 @@ import type { Vector3 } from 'three';
 export interface FlyToOptions {
   /** ms. Default 700. */
   duration?: number;
+  /**
+   * Camera distance from the globe's centre to end at (zooms along with the spin).
+   * Clamped to the controls' zoom range. Default: keep the current distance.
+   */
+  distance?: number;
   onDone?: () => void;
 }
 

@@ -43,6 +43,11 @@ export function fitDistance(width: number, height: number) {
   return GLOBE_RADIUS / Math.sin(angular);
 }
 
+/** Farthest zoom: the whole globe with a comfortable margin. */
+export function maxDistanceFor(width: number, height: number) {
+  return Math.max(fitDistance(width, height) / 0.8, MIN_DISTANCE + 0.5);
+}
+
 /** Where the camera looked last time (so coming back to the Map keeps your view). */
 let lastView: { dir: Vector3; distance: number } | undefined;
 
@@ -125,7 +130,9 @@ export function CameraRig({
   const introState = useRef<Intro | null>(null);
   const resumeTimer = useRef<number>();
   const fit = fitDistance(size.width, size.height);
-  const maxDistance = Math.max(fit / 0.8, MIN_DISTANCE + 0.5);
+  const maxDistance = maxDistanceFor(size.width, size.height);
+  const maxDistanceRef = useRef(maxDistance);
+  maxDistanceRef.current = maxDistance;
 
   const stopAutoRotate = () => {
     window.clearTimeout(resumeTimer.current);
@@ -179,12 +186,16 @@ export function CameraRig({
       const from = camera.position.clone().normalize();
       const to = clampPolar(dir.clone().normalize());
       const dist = camera.position.length();
+      const toDist =
+        opts.distance === undefined
+          ? dist
+          : MathUtils.clamp(opts.distance, MIN_DISTANCE, maxDistanceRef.current);
       const duration = reducedMotion ? 0 : (opts.duration ?? 700);
       tween.current = {
         from,
         to,
         fromDist: dist,
-        toDist: dist,
+        toDist,
         start: performance.now(),
         duration,
         onDone: opts.onDone,
