@@ -1,5 +1,5 @@
 import type { ID, User } from '@/types';
-import { api, type ProfilePatch } from '@/mock/api';
+import { api, ApiError, type ProfilePatch, type StudiesPatch } from '@/mock/api';
 import type { SliceCreator } from './types';
 
 export interface UserSlice {
@@ -10,10 +10,22 @@ export interface UserSlice {
    */
   usersById: Record<ID, User>;
   updateProfile: (patch: ProfilePatch) => Promise<User>;
+  /**
+   * Sets or clears the signed-in user's major and degree level. Omit a field to keep it,
+   * pass `null` to clear it. The mock API persists it; the store resyncs from there.
+   */
+  updateStudies: (patch: StudiesPatch) => Promise<User>;
 }
 
-export const createUserSlice: SliceCreator<UserSlice> = () => ({
+export const createUserSlice: SliceCreator<UserSlice> = (_set, get) => ({
   users: [],
   usersById: {},
   updateProfile: (patch) => api.updateProfile(patch),
+  updateStudies: async (patch) => {
+    const userId = get().currentUserId;
+    if (!userId) throw new ApiError('unauthenticated', 'No signed-in user');
+    const user = await api.updateStudies(userId, patch);
+    get().sync();
+    return user;
+  },
 });

@@ -47,8 +47,9 @@ const STORAGE_KEY = 'tastebuds:db';
  * v3: a Bud lives only on its user record. Drop any Bud copied onto other records.
  * v4: app-written copy (system chat lines, notifications) no longer carries emojis.
  * v5: reports carry `targetUserId`, `urgent` and `status`.
+ * v6: users may carry `major` and `degreeLevel`. Seeded bots get theirs from the seed.
  */
-const DB_VERSION = 5;
+const DB_VERSION = 6;
 
 /** Emojis (plus their joiners/variation selectors) and the space before them. */
 const EMOJI = /\s?(?:\p{Extended_Pictographic}[\u{FE0F}\u{200D}]*)+/gu;
@@ -69,22 +70,41 @@ function stripCopiedBuds<T>(records: T[] | undefined): T[] {
 /** Upgrades a stored db to the current version, or returns null to reseed. */
 function migrate(parsed: Db): Db | null {
   if (parsed.version === DB_VERSION) return parsed;
-  if (parsed.version === 4) {
-    type OldReport = Omit<Report, 'targetUserId' | 'urgent' | 'status'> & Partial<Report>;
+  if (parsed.version === 5) {
+    // Both fields are optional, so real users load as they are. Only seeded bots that have
+    // no studies yet pick up the seed's, so their profiles match a fresh install.
+    const seeded = new Map(createSeed().users.map((u) => [u.id, u]));
     return {
       ...parsed,
       version: DB_VERSION,
+      users: (parsed.users ?? []).map((u) => {
+        const s = u.isBot ? seeded.get(u.id) : undefined;
+        if (!s || u.major !== undefined || u.degreeLevel !== undefined) return u;
+        return {
+          ...u,
+          ...(s.major && { major: s.major }),
+          ...(s.degreeLevel && { degreeLevel: s.degreeLevel }),
+        };
+      }),
+    };
+  }
+  if (parsed.version === 4) {
+    type OldReport = Omit<Report, 'targetUserId' | 'urgent' | 'status'> & Partial<Report>;
+    // v4 → v5, then on to v6.
+    return migrate({
+      ...parsed,
+      version: 5,
       reports: ((parsed.reports ?? []) as OldReport[]).map((r) => ({
         ...r,
         targetUserId: r.targetUserId ?? (r.targetType === 'user' ? r.targetId : ''),
         urgent: r.urgent ?? false,
         status: r.status ?? 'submitted',
       })),
-    };
+    });
   }
   if (parsed.version === 3) {
     // Only app-written text: system lines and notifications. Never what a user typed.
-    // v3 → v4, then on to v5.
+    // v3 → v4, then on through v5 and v6.
     return migrate({
       ...parsed,
       version: 4,
@@ -100,7 +120,7 @@ function migrate(parsed: Db): Db | null {
   }
   if (parsed.version === 2) {
     const messages = parsed.messages ?? [];
-    // v2 → v3, then on through v4 and v5.
+    // v2 → v3, then on through v4, v5 and v6.
     return migrate({
       ...parsed,
       version: 3,

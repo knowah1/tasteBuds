@@ -11,6 +11,7 @@ import type {
   Bud,
   ChatRoom,
   CuisineSkill,
+  DegreeLevel,
   ForumReply,
   ForumThread,
   ID,
@@ -30,6 +31,7 @@ import type {
 import { DESCRIPTION_MAX, MAX_PARTICIPANTS_LIMIT } from '@/types';
 import { uid } from '@/lib/id';
 import { generateTitle } from '@/lib/titles';
+import { DEGREE_LEVELS } from '@/lib/majors';
 import { DAY, isSameDay } from '@/lib/time';
 import {
   CHAT_XP_DAILY_CAP,
@@ -458,6 +460,49 @@ export function updateProfile(patch: ProfilePatch): Promise<User> {
     return { ...requireMe(db) };
   });
   return delay(user);
+}
+
+/**
+ * Studies fields to change. Omit a field to leave it as is; pass `null` to clear it.
+ * An empty or whitespace-only major also clears it.
+ */
+export interface StudiesPatch {
+  major?: string | null;
+  degreeLevel?: DegreeLevel | null;
+}
+
+export const MAJOR_MAX = 60;
+
+/** Sets or clears the signed-in user's major and degree level. */
+export function updateStudies(userId: ID, patch: StudiesPatch): Promise<User> {
+  try {
+    const user = mutate((db) => {
+      const { id } = requireMe(db);
+      if (id !== userId) throw new ApiError('forbidden', 'You can only edit your own studies');
+      if (patch.degreeLevel != null && !DEGREE_LEVELS.includes(patch.degreeLevel))
+        throw new ApiError('bad_degree_level', 'Unknown degree level');
+      const i = db.users.findIndex((u) => u.id === id);
+      const next: User = { ...db.users[i] };
+      if (patch.major !== undefined) {
+        const major = patch.major?.trim().replace(/\s+/g, ' ').slice(0, MAJOR_MAX);
+        if (major) next.major = major;
+        else delete next.major;
+      }
+      if (patch.degreeLevel !== undefined) {
+        if (patch.degreeLevel) next.degreeLevel = patch.degreeLevel;
+        else delete next.degreeLevel;
+      }
+      // A new record (not a mutation) so selectors holding the old one re-render.
+      db.users = db.users.map((u, j) => (j === i ? next : u));
+      return next;
+    });
+    return delay({ ...user });
+  } catch (e) {
+    // Fail after the same latency as a success, like the other calls.
+    return delay(undefined).then(() => {
+      throw e;
+    });
+  }
 }
 
 export function markSafetyTipSeen(): Promise<void> {
@@ -1093,6 +1138,7 @@ export const api = {
   signIn,
   signOut,
   updateProfile,
+  updateStudies,
   markSafetyTipSeen,
   // users
   getUser,

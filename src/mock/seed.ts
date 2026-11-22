@@ -2,6 +2,7 @@ import type {
   ChatRoom,
   Cuisine,
   CuisineSkill,
+  DegreeLevel,
   ForumReply,
   ForumThread,
   Message,
@@ -37,6 +38,8 @@ interface BotSpec {
   xp: number;
   zoneId: string;
   bio: string;
+  major?: string;
+  degreeLevel?: DegreeLevel;
 }
 
 const BOTS: BotSpec[] = [
@@ -55,6 +58,8 @@ const BOTS: BotSpec[] = [
     xp: 420,
     zoneId: 'z_miltonparc',
     bio: 'Teta’s recipes, U2 Nutrition. Will trade fattoush for gossip.',
+    major: 'Nutrition',
+    degreeLevel: 'undergrad',
   },
   {
     id: 'u_arjun',
@@ -71,6 +76,8 @@ const BOTS: BotSpec[] = [
     xp: 610,
     zoneId: 'z_ghetto',
     bio: 'Comp Sci by day, dal by night.',
+    major: 'Computer Science',
+    degreeLevel: 'undergrad',
   },
   {
     id: 'u_lea',
@@ -87,6 +94,8 @@ const BOTS: BotSpec[] = [
     xp: 350,
     zoneId: 'z_plateau',
     bio: 'Tourtière evangelist. Sugar shack every spring.',
+    major: 'Civil Engineering',
+    degreeLevel: 'undergrad',
   },
   {
     id: 'u_kenji',
@@ -103,6 +112,8 @@ const BOTS: BotSpec[] = [
     xp: 280,
     zoneId: 'z_campus',
     bio: 'Ramen broth takes 12 hours and so does my thesis.',
+    major: 'Chemical Engineering',
+    degreeLevel: 'phd',
   },
   {
     id: 'u_sofia',
@@ -119,6 +130,8 @@ const BOTS: BotSpec[] = [
     xp: 515,
     zoneId: 'z_downtown',
     bio: 'tortillas from scratch or bust. masa harina lives in my bag',
+    major: 'Anthropology',
+    degreeLevel: 'masters',
   },
   {
     id: 'u_wei',
@@ -135,6 +148,8 @@ const BOTS: BotSpec[] = [
     xp: 700,
     zoneId: 'z_miltonparc',
     bio: 'Dumpling-folding speedrunner. 40/min PB.',
+    major: 'Mathematics',
+    degreeLevel: 'undergrad',
   },
   {
     id: 'u_selam',
@@ -164,6 +179,8 @@ const BOTS: BotSpec[] = [
     xp: 830,
     zoneId: 'z_ghetto',
     bio: 'Exchange student from Lyon. Butter is a food group.',
+    major: 'Finance',
+    degreeLevel: 'undergrad',
   },
   {
     id: 'u_nadia',
@@ -180,6 +197,8 @@ const BOTS: BotSpec[] = [
     xp: 160,
     zoneId: 'z_downtown',
     bio: 'Griot and pikliz, every Sunday.',
+    major: 'Nursing',
+    degreeLevel: 'undergrad',
   },
   {
     id: 'u_minh',
@@ -196,6 +215,8 @@ const BOTS: BotSpec[] = [
     xp: 240,
     zoneId: 'z_campus',
     bio: 'Pho on a hot plate in residence. Ask me how.',
+    major: 'Software Engineering',
+    degreeLevel: 'undergrad',
   },
   {
     id: 'u_eleni',
@@ -212,6 +233,8 @@ const BOTS: BotSpec[] = [
     xp: 300,
     zoneId: 'z_park',
     bio: 'Yiayia-approved spanakopita.',
+    major: 'Psychology',
+    degreeLevel: 'masters',
   },
   {
     id: 'u_ploy',
@@ -228,6 +251,8 @@ const BOTS: BotSpec[] = [
     xp: 455,
     zoneId: 'z_miltonparc',
     bio: 'Green curry paste, pounded by hand.',
+    major: 'Biochemistry',
+    degreeLevel: 'phd',
   },
   {
     id: 'u_gio',
@@ -257,6 +282,8 @@ const BOTS: BotSpec[] = [
     xp: 330,
     zoneId: 'z_ghetto',
     bio: 'Kimchi jjigae fixes everything.',
+    major: 'Music Performance',
+    degreeLevel: 'masters',
   },
   {
     id: 'u_omar',
@@ -273,6 +300,7 @@ const BOTS: BotSpec[] = [
     xp: 90,
     zoneId: 'z_campus',
     bio: 'First year, first apartment, first everything.',
+    degreeLevel: 'undergrad',
   },
   {
     id: 'u_chloe',
@@ -305,6 +333,8 @@ const BOTS: BotSpec[] = [
     xp: 480,
     zoneId: 'z_downtown',
     bio: 'Scotch bonnets are not a threat, they are a promise.',
+    major: 'Urban Planning',
+    degreeLevel: 'masters',
   },
   {
     id: 'u_priya',
@@ -321,6 +351,7 @@ const BOTS: BotSpec[] = [
     xp: 60,
     zoneId: 'z_park',
     bio: 'Masala chai at all hours.',
+    major: 'Electrical Engineering',
   },
 ];
 
@@ -337,6 +368,8 @@ function buildUsers(now: number): User[] {
     createdAt: now - (20 + i * 7) * DAY,
     isBot: true,
     bio: b.bio,
+    ...(b.major && { major: b.major }),
+    ...(b.degreeLevel && { degreeLevel: b.degreeLevel }),
     zoneId: b.zoneId,
   }));
 }
