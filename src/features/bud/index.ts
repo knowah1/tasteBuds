@@ -1,9 +1,11 @@
 /**
  * Bud system (Track A). Other tracks import from here:
  *   import { BudAvatar } from '@/features/bud';
- *   <BudAvatar bud={user.bud} state="walking" bubble={post.title} bubbleType={post.type} onTap={…} />
+ *   <BudAvatar userId={user.id} state="walking" bubble={post.title} bubbleType={post.type} onTap={…} />
+ * Real users' Buds are always resolved by `userId` (never copy `user.bud` around).
  */
 export { BudAvatar, type BudAvatarProps } from './BudAvatar';
+export { UserAvatar, type UserAvatarProps } from './UserAvatar';
 export { BudBubble, EmergencyBanner, type BudBubbleProps } from './BudBubble';
 export {
   ACCESSORIES_BY_LEVEL,

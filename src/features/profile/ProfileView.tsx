@@ -74,7 +74,7 @@ export function ProfileView({
         )}
       >
         <BudAvatar
-          bud={user.bud}
+          userId={user.id}
           size={128}
           ring={isMe}
           state={live?.type === 'budmergency' ? 'panicked' : live ? 'hasBubble' : 'idle'}

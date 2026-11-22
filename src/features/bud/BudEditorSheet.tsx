@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Bud } from '@/types';
 import { Button, Sheet } from '@/components/ui';
-import { selectMyLevel, useStore } from '@/store';
+import { selectMyLevel, useStore, useUserBud } from '@/store';
 import { BudEditor } from './BudEditor';
 import { DEFAULT_BUD, budsEqual, sanitizeBud } from './budMeta';
 
@@ -12,11 +12,11 @@ export interface BudEditorSheetProps {
 
 /** Re-openable Bud editor for the signed-in user (Profile → "Edit my Bud"). */
 export function BudEditorSheet({ open, onClose }: BudEditorSheetProps) {
-  const me = useStore((s) => s.me);
+  const meId = useStore((s) => s.currentUserId);
   const { level } = useStore(selectMyLevel);
   const updateProfile = useStore((s) => s.updateProfile);
   const pushToast = useStore((s) => s.pushToast);
-  const current = me?.bud ?? DEFAULT_BUD;
+  const current = useUserBud(meId) ?? DEFAULT_BUD;
   const [draft, setDraft] = useState<Bud>(current);
   const [saving, setSaving] = useState(false);
 

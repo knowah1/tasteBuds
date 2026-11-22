@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Badge } from '@/components/ui';
+import { Badge } from '@/components/ui';
+import { UserAvatar } from '@/features/bud';
 import { CUISINE_META, POST_TYPE_META, TONE_CLASSES, ingredientEmoji } from '@/lib/cuisine';
 import { countdown, formatDay, formatRange, formatTime } from '@/lib/time';
 import { cn } from '@/lib/cn';
@@ -149,7 +150,7 @@ export function PinnedEventHeader({
           <span className="flex -space-x-2">
             {members.slice(0, 6).map((u) => (
               <span key={u.id} className="rounded-full bg-white ring-2 ring-cream-50">
-                <Avatar bud={u.bud} size={26} ring={false} />
+                <UserAvatar userId={u.id} size={26} ring={false} />
               </span>
             ))}
           </span>

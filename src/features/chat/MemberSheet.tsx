@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Badge, Sheet } from '@/components/ui';
+import { Badge, Sheet } from '@/components/ui';
+import { UserAvatar } from '@/features/bud';
 import { formatTime } from '@/lib/time';
 import { levelFromXp } from '@/lib/xp';
 import { cn } from '@/lib/cn';
@@ -66,7 +67,7 @@ export function MemberSheet({
                   navigate(u.id === meId ? '/profile' : `/user/${u.id}`);
                 }}
               >
-                <Avatar bud={u.bud} size={44} ring={u.id === meId} />
+                <UserAvatar userId={u.id} size={44} ring={u.id === meId} />
               </button>
               <div className="min-w-0 flex-1">
                 <p className="flex items-center gap-1.5 truncate font-display font-semibold">

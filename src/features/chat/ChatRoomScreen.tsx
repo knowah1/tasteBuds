@@ -4,7 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import { BackBar } from '@/app/TopBar';
 import { Screen } from '@/app/Screen';
-import { Avatar, Button, EmptyState, Sheet, Skeleton } from '@/components/ui';
+import { Button, EmptyState, Sheet, Skeleton } from '@/components/ui';
+import { UserAvatar } from '@/features/bud';
 import { useStore } from '@/store';
 import {
   hasEventEnded,
@@ -160,7 +161,7 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
           )}
           {peekUser && (
             <Banner key="peek" tone="leaf" onClick={() => setPeekId(null)}>
-              <Avatar bud={peekUser.bud} size={26} />
+              <UserAvatar userId={peekUser.id} size={26} />
               <span className="flex-1">
                 Seeing what <b>{peekUser.firstName}</b> sees · {shown.length} of {messages.length}{' '}
                 messages

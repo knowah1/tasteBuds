@@ -1,7 +1,8 @@
 import { memo, useMemo, type CSSProperties } from 'react';
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 'framer-motion';
-import type { Bud, BudState, PostType } from '@/types';
+import type { Bud, BudState, ID, PostType } from '@/types';
 import { BUD_FILL } from '@/components/ui';
+import { useUserBud } from '@/store';
 import { cn } from '@/lib/cn';
 import { BudBubble, EmergencyBanner } from './BudBubble';
 import {
@@ -16,11 +17,17 @@ import {
   TopperFront,
   sortAccessories,
 } from './BudParts';
-import { BUD_TYPE_META } from './budMeta';
+import { BUD_TYPE_META, DEFAULT_BUD } from './budMeta';
 import './bud.css';
 
-export interface BudAvatarProps {
-  bud: Bud;
+/**
+ * Pass `userId` for a real user's Bud: it's looked up from their user record on every render,
+ * so an edit shows up everywhere at once. `bud` is only for Buds that aren't saved on a user
+ * yet (editor previews, onboarding drafts, decorative cast).
+ */
+type BudSource = { userId: ID | null | undefined; bud?: never } | { bud: Bud; userId?: never };
+
+export type BudAvatarProps = BudSource & {
   /** Rendered width/height in px. */
   size?: number;
   state?: BudState;
@@ -41,7 +48,7 @@ export interface BudAvatarProps {
   /** Accessible name. */
   label?: string;
   className?: string;
-}
+};
 
 const TAP_BOUNCE = {
   scale: [1, 1.18, 0.88, 1.06, 1],
@@ -55,7 +62,8 @@ const TAP_BOUNCE = {
  * panicked (worried face, sweat drops, shake).
  */
 export const BudAvatar = memo(function BudAvatar({
-  bud,
+  userId,
+  bud: budProp,
   size = 64,
   state = 'idle',
   bubble,
@@ -68,6 +76,8 @@ export const BudAvatar = memo(function BudAvatar({
   label,
   className,
 }: BudAvatarProps) {
+  const storedBud = useUserBud(userId);
+  const bud = budProp ?? storedBud ?? DEFAULT_BUD;
   const controls = useAnimationControls();
   const reduceMotion = useReducedMotion();
   const delay = useMemo(() => `${(-Math.random() * 3).toFixed(2)}s`, []);
@@ -126,6 +136,7 @@ export const BudAvatar = memo(function BudAvatar({
           overflow="visible"
           role="img"
           aria-label={name}
+          data-bud={`${bud.color}/${bud.type}/${bud.accessories.join('+')}`}
           className={cn('tb-bud block', `tb-${state}`, animated && 'tb-anim')}
           style={{ '--tb-delay': delay } as CSSProperties}
         >

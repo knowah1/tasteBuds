@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import { TopBar } from '@/app/TopBar';
 import { Screen } from '@/app/Screen';
-import { Avatar, Badge, Button, EmptyState, SkeletonList } from '@/components/ui';
+import { Badge, Button, EmptyState, SkeletonList } from '@/components/ui';
+import { UserAvatar } from '@/features/bud';
 import { useStore, type ChatsSegment } from '@/store';
 import { hasEventEnded, selectIncomingRequests } from '@/store/chatSlice';
 import { POST_TYPE_META } from '@/lib/cuisine';
@@ -259,7 +260,7 @@ function RoomRow({ room, index }: { room: ChatRoom; index: number }) {
             <span className="ml-auto flex -space-x-1.5">
               {members.slice(0, 4).map((u) => (
                 <span key={u.id} className="rounded-full bg-white ring-2 ring-white">
-                  <Avatar bud={u.bud} size={20} />
+                  <UserAvatar userId={u.id} size={20} />
                 </span>
               ))}
             </span>

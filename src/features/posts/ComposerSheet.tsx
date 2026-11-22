@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button, Icon, Sheet } from '@/components/ui';
-import { BudAvatar, Confetti, DEFAULT_BUD } from '@/features/bud';
+import { BudAvatar, Confetti } from '@/features/bud';
 import { useStore } from '@/store';
 import { POST_TYPE_META } from '@/lib/cuisine';
 import { generateTitle, isTitleComplete } from '@/lib/titles';
 import { cn } from '@/lib/cn';
-import type { Bud, Post, PostType } from '@/types';
+import type { ID, Post, PostType } from '@/types';
 import { BubblePreview } from './BubblePreview';
 import {
   CuisinePicker,
@@ -212,7 +212,7 @@ export function ComposerSheet() {
             className="space-y-5 pb-2"
           >
             <BubblePreview
-              bud={me?.bud}
+              userId={me?.id}
               type={draft.type}
               title={title}
               complete={complete}
@@ -273,7 +273,7 @@ export function ComposerSheet() {
           <motion.div key="done" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <Published
               post={step.post}
-              bud={me?.bud}
+              userId={me?.id}
               onMap={() => goTo('/')}
               onView={() =>
                 goTo(
@@ -328,12 +328,12 @@ function TypePicker({ selected, onPick }: { selected?: PostType; onPick: (t: Pos
 
 function Published({
   post,
-  bud,
+  userId,
   onMap,
   onView,
 }: {
   post: Post;
-  bud?: Bud;
+  userId: ID | undefined;
   onMap: () => void;
   onView: () => void;
 }) {
@@ -347,7 +347,7 @@ function Published({
         transition={{ type: 'spring', stiffness: 300, damping: 14 }}
       >
         <BudAvatar
-          bud={bud ?? DEFAULT_BUD}
+          userId={userId}
           size={120}
           state={emergency ? 'panicked' : 'hasBubble'}
           bubble={post.title}

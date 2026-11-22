@@ -270,6 +270,7 @@ export function Avatar({ bud, size = 56, state = 'idle', ring, className, title 
         height={size}
         role="img"
         aria-label={title ?? 'Bud avatar'}
+        data-bud={`${bud.color}/${bud.type}/${bud.accessories.join('+')}`}
       >
         {title && <title>{title}</title>}
         <ellipse cx="50" cy="95" rx="26" ry="4" className="fill-ink opacity-10" />

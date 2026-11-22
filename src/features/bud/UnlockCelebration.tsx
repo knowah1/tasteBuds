@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button, Modal } from '@/components/ui';
-import { useStore } from '@/store';
+import { useStore, useUserBud } from '@/store';
 import { ACCESSORY_UNLOCK_LEVEL } from '@/lib/xp';
 import { BudAvatar } from './BudAvatar';
 import { Confetti } from './Confetti';
@@ -14,13 +14,13 @@ import { ACCESSORY_META, DEFAULT_BUD, wearAccessory } from './budMeta';
  */
 export function UnlockCelebration() {
   const accessory = useStore((s) => s.pendingUnlocks[0]);
-  const me = useStore((s) => s.me);
+  const meId = useStore((s) => s.currentUserId);
   const shiftUnlock = useStore((s) => s.shiftUnlock);
   const updateProfile = useStore((s) => s.updateProfile);
   const pushToast = useStore((s) => s.pushToast);
   const [saving, setSaving] = useState(false);
 
-  const bud = me?.bud ?? DEFAULT_BUD;
+  const bud = useUserBud(meId) ?? DEFAULT_BUD;
   const meta = accessory ? ACCESSORY_META[accessory] : undefined;
 
   const wearNow = async () => {
@@ -41,7 +41,11 @@ export function UnlockCelebration() {
   };
 
   return (
-    <Modal open={!!accessory && !!me} onClose={shiftUnlock} className="overflow-hidden text-center">
+    <Modal
+      open={!!accessory && !!meId}
+      onClose={shiftUnlock}
+      className="overflow-hidden text-center"
+    >
       {accessory && meta && (
         <>
           <Confetti key={accessory} burst pieces={56} />
