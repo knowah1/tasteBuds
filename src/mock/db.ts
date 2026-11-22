@@ -108,8 +108,13 @@ function load(): Db {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      const migrated = migrate(JSON.parse(raw) as Db);
-      if (migrated) return migrated;
+      const parsed = JSON.parse(raw) as Db;
+      const migrated = migrate(parsed);
+      if (migrated) {
+        // Write the upgrade back now so stale copies don't linger in storage.
+        if (migrated !== parsed) localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+        return migrated;
+      }
     }
   } catch {
     // Corrupt or unavailable storage — fall through to a fresh seed.
