@@ -7,10 +7,10 @@ import { Icon, type IconName } from './icons';
 
 /** Each kind gets a hand-drawn icon on a flat tile and a matching outline. */
 const KIND_STYLES: Record<Toast['kind'], { icon: IconName; tile: string; edge: string }> = {
-  success: { icon: 'check', tile: 'bg-mint text-leaf', edge: 'edge-leaf' },
-  info: { icon: 'bell', tile: 'bg-cream text-kraft', edge: 'edge-kraft' },
-  error: { icon: 'warning', tile: 'bg-blush text-tomato', edge: 'edge-tomato' },
-  inbox: { icon: 'mail', tile: 'bg-blush text-tomato', edge: 'edge-tomato' },
+  success: { icon: 'check', tile: 'bg-mint text-leaf', edge: 'border-2 border-leaf' },
+  info: { icon: 'bell', tile: 'bg-cream text-kraft', edge: 'border-2 border-kraft' },
+  error: { icon: 'warning', tile: 'bg-blush text-tomato', edge: 'border-2 border-tomato' },
+  inbox: { icon: 'mail', tile: 'bg-blush text-tomato', edge: 'border-2 border-tomato' },
 };
 
 function ToastItem({ toast }: { toast: Toast }) {

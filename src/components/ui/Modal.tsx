@@ -36,7 +36,7 @@ export function Modal({ open, onClose, children, className, dismissable = true }
             <motion.div
               role="dialog"
               aria-modal
-              className={cn('sketch edge-kraft relative w-full bg-cream p-6', className)}
+              className={cn('sketch border-2 border-kraft relative w-full bg-cream p-6', className)}
               initial={{ scale: 0.8, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 10 }}

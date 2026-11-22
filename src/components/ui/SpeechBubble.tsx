@@ -16,7 +16,6 @@ export interface SpeechBubbleProps {
 
 /**
  * Sketch-kit speech bubble: white fill, hand-drawn outline and a little V tail.
- * Uses a plain border (no wobble filter) because map bubbles move every frame.
  */
 export function SpeechBubble({ children, tone = 'kraft', compact, className }: SpeechBubbleProps) {
   return (

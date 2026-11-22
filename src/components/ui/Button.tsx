@@ -8,12 +8,12 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 /** Flat fills plus hand-drawn outlines. No shadows, no gradients. */
 const VARIANTS: Record<ButtonVariant, string> = {
   primary: 'bg-tomato text-white hover:brightness-95',
-  secondary: 'bg-paper text-ink edge-kraft edge-2 hover:bg-cream',
+  secondary: 'bg-paper text-ink border-2 border-kraft hover:bg-cream',
   ghost: 'bg-transparent text-ink-soft hover:bg-cream',
   leaf: 'bg-leaf text-white hover:brightness-95',
   /** The button inside mint hero cards (sketch 2). */
-  sage: 'bg-sage text-ink edge-kraft hover:brightness-95',
-  danger: 'bg-paper text-tomato edge-blush hover:bg-blush/40',
+  sage: 'bg-sage text-ink border-2 border-kraft hover:brightness-95',
+  danger: 'bg-paper text-tomato border-2 border-blush hover:bg-blush/40',
 };
 
 const SIZES: Record<ButtonSize, string> = {
@@ -94,7 +94,7 @@ export function IconButton({ label, children, badge, className, ...rest }: IconB
       aria-label={label}
       whileTap={{ scale: 0.88 }}
       className={cn(
-        'sketch-round edge-kraft edge-2 inline-flex h-11 w-11 items-center justify-center bg-paper text-ink',
+        'sketch-round border-2 border-kraft inline-flex h-11 w-11 items-center justify-center bg-paper text-ink',
         'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sage',
         className,
       )}

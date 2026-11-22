@@ -4,8 +4,8 @@ import plugin from 'tailwindcss/plugin';
 /**
  * tasteBuds design tokens. Components must use these names — never raw hex values.
  *
- * Palette sampled from the hand-drawn sketches: flat colour blocks plus outlines,
- * no shadows, no gradients.
+ * Palette sampled from the hand-drawn sketches: flat colour blocks plus solid outlines,
+ * no shadows, no gradients. Irregular `sketch-*` radii carry the hand-made feel.
  */
 const palette = {
   /** App background, inactive pills, neutral avatar tiles. */
@@ -18,6 +18,8 @@ const palette = {
   blush: '#FFCBCB',
   /** Inactive icons, nav labels, outlines, inactive chips, divider lines. */
   kraft: '#C9B084',
+  /** Light kraft tint: Potluck tiles. */
+  'kraft-light': '#F1E6CF',
   /** Active filter chip, mint card outline. */
   leaf: '#379043',
   /** Hero/feature card fill. */
@@ -103,40 +105,9 @@ export default {
     },
   },
   plugins: [
-    plugin(({ addUtilities, addBase, matchUtilities }) => {
+    plugin(({ addUtilities }) => {
+      // Outlines are plain solid borders (border-2 / border-[3px] + a palette colour).
       addUtilities(SKETCH_RADII);
-
-      /*
-       * Hand-drawn outlines: `edge-kraft`, `edge-blush`, `edge-tomato`, `edge-leaf`…
-       * The stroke lives on ::before and runs through a gentle SVG displacement filter
-       * (#tb-wobble, defined once in PhoneFrame), so the line wobbles but text never does.
-       * Width: `edge-2` (2px) / default 2.5px / `edge-3` (3px). `edge-still` drops the wobble.
-       */
-      matchUtilities(
-        {
-          edge: (value: string) => ({
-            '--edge-c': value,
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              inset: '0',
-              borderRadius: 'inherit',
-              border: 'var(--edge-w, 2.5px) solid var(--edge-c)',
-              filter: 'var(--edge-filter, url(#tb-wobble))',
-              pointerEvents: 'none',
-            },
-          }),
-        },
-        { values: palette, type: 'color' },
-      );
-      addUtilities({
-        '.edge-2': { '--edge-w': '2px' },
-        '.edge-3': { '--edge-w': '3px' },
-        '.edge-still': { '--edge-filter': 'none' },
-      });
-      // An outlined element must be the containing block for its ::before stroke.
-      // :where() keeps this at zero specificity so `absolute`/`fixed` still win.
-      addBase({ ':where([class*="edge-"])': { position: 'relative' } });
     }),
   ],
 } satisfies Config;
