@@ -275,14 +275,27 @@ export type ReportReason = (typeof REPORT_REASONS)[number];
 
 export type ReportTargetType = 'user' | 'post' | 'message' | 'forumReply';
 
+export const REPORT_DETAILS_MAX = 500;
+
+/**
+ * Only 'submitted' for now: there's no backend or moderator, so a report is saved locally
+ * and the user contacts McGill themselves.
+ */
+export type ReportStatus = 'submitted';
+
 export interface Report {
   id: ID;
   reporterId: ID;
   targetType: ReportTargetType;
   targetId: ID;
+  /** The person behind the reported thing (the user, post host, sender or reply author). */
+  targetUserId: ID;
   reason: ReportReason;
   details?: string;
+  /** The reporter said they or someone else is in danger right now. */
+  urgent: boolean;
   createdAt: Timestamp;
+  status: ReportStatus;
 }
 
 // ─── XP ─────────────────────────────────────────────────────────────
