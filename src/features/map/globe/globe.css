@@ -11,6 +11,26 @@
   opacity: 1;
   transform: translateX(calc(-50% + var(--tb-bx, 0px))) scale(1);
 }
+/* When a bubble slides sideways to make room, its tail stays over its own Bud. */
+.tb-globe-bubble > div > span[aria-hidden] {
+  --tw-translate-x: calc(-50% + var(--tb-tx, 0px));
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* No room for the bubble: a small 💬 pip above the head instead. */
+.tb-globe-pip {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.3);
+  transform-origin: 50% 100%;
+  transition:
+    opacity 0.18s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tb-globe-pip[data-shown='1'] {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
 /* Cluster markers are moved every frame from JS; only the press feedback is CSS. */
 .tb-globe-cluster {
   transform-origin: 0 0;
@@ -39,7 +59,9 @@
     animation: none;
     opacity: 0.6;
   }
-  .tb-globe-bubble {
+  .tb-globe-bubble,
+  .tb-globe-bubble > div > span[aria-hidden],
+  .tb-globe-pip {
     transition: opacity 0.18s ease;
   }
 }

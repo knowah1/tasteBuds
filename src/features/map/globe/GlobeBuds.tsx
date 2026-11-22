@@ -4,6 +4,8 @@ import { Html } from '@react-three/drei';
 import { AnimatePresence } from 'framer-motion';
 import { MathUtils, Vector3, type Group } from 'three';
 import { BudAvatar, BudBubble } from '@/features/bud';
+import { POST_TYPE_META } from '@/lib/cuisine';
+import { cn } from '@/lib/cn';
 import type { BudState, PostType } from '@/types';
 import type { MapBudInfo } from '../useMapBuds';
 import type { Region } from './regions';
@@ -21,6 +23,16 @@ const BUD_SIZE = 46;
 const BUBBLE_LIFT = BUD_SIZE * 0.97;
 /** Keep bubbles this far from the canvas edges. */
 const EDGE = 8;
+/** The "💬" pip a Bud shows when its bubble has no room (px at scale 1). */
+const PIP = 18;
+/** A blocked bubble may slide sideways up to this share of its width. */
+const MAX_SLIDE = 0.4;
+/** Keep the bubble's tail this far (px at scale 1) inside its rounded ends. */
+const TAIL_INSET = 14;
+/** A shown bubble must be blocked this long (ms) before it turns into a pip… */
+const BUBBLE_HIDE_MS = 350;
+/** …and a pip must have room this long before its bubble comes back. */
+const BUBBLE_SHOW_MS = 250;
 /** Pre-created cluster markers (one React render per membership change, never per frame). */
 const POOL = 8;
 /** Cluster markers are drawn this much bigger than the Buds around them. */
@@ -44,6 +56,7 @@ interface Slot extends Clusterable {
   /** Leans the Bud (not its bubble) outward near the limb. */
   lean: HTMLDivElement | null;
   bubble: HTMLDivElement | null;
+  pip: HTMLDivElement | null;
   /** Measured bubble size (px, at scale 1); 0 = measure next frame. */
   bubbleW: number;
   bubbleH: number;
@@ -62,6 +75,12 @@ interface Slot extends Clusterable {
   /** World position this frame (for flying to a cluster). */
   world: Vector3;
   bubbleShown: boolean;
+  /** Whether the bubble had room, and since when (ms): show/hide only once that holds. */
+  bubbleFits: boolean;
+  bubbleFitsSince: number;
+  /** Last sideways slide picked for the bubble (px on screen, beyond the edge clamp). */
+  slide: number;
+  pipShown: boolean;
   /** In a live cluster this frame (committed, with at least one other member). */
   inCluster: boolean;
   /** 0 = standing alone, 1 = fully merged into its cluster marker. Eased every frame. */
@@ -232,6 +251,8 @@ export function GlobeBuds({ buds, rig, hiddenId, onOpen, reducedMotion }: GlobeB
       }),
     [],
   );
+  /** The user's own bubble last frame: other Buds step out from under it. */
+  const meBubble = useRef<Box | null>(null);
   /** Cluster markers last frame: Buds standing alone (you included) step out from under them. */
   const markerBoxesRef = useRef<Box[]>([]);
 
@@ -501,6 +522,17 @@ export function GlobeBuds({ buds, rig, hiddenId, onOpen, reducedMotion }: GlobeB
         else s.oy += (y - B.top / 2 === my ? 1 : Math.sign(y - B.top / 2 - my)) * py * k;
       });
     });
+    const mine = meBubble.current;
+    if (mine) {
+      live.forEach((s) => {
+        if (s.info.isMe) return;
+        const body = bodyRect(s);
+        if (!overlaps(body, mine)) return;
+        const toLeft = body.r - mine.l;
+        const toRight = mine.r - body.l;
+        s.ox += (toLeft < toRight ? -toLeft : toRight) * k;
+      });
+    }
     const maxOff = BUD_SIZE * 1.1;
     slots.forEach((s) => {
       s.ox *= 1 - Math.min(1, dt * 1.2);
@@ -583,12 +615,13 @@ export function GlobeBuds({ buds, rig, hiddenId, onOpen, reducedMotion }: GlobeB
 
     markerBoxesRef.current = markerBoxes;
 
-    // 6) Bubbles: greedily keep the most important ones that don't overlap each other, the
-    //    user's own Bud, the faces of Buds whose bubbles are already showing, or a cluster.
-    const accepted: Box[] = [...markerBoxes];
-    const me = live.find((s) => s.info.isMe);
-    if (me && !me.info.post) accepted.push(bodyRect(me));
+    // 6) Bubbles: most important first (me > Bud-mergency > already shown > centrality). A
+    //    bubble may not cover any visible Bud, cluster marker or bubble already placed: it
+    //    slides sideways (tail stays over its Bud), and if that fails it becomes a 💬 pip.
+    const obstacles: { box: Box; owner?: Slot }[] = markerBoxes.map((box) => ({ box }));
+    live.forEach((s) => obstacles.push({ box: bodyRect(s), owner: s }));
     const placed = new Map<Slot, number>();
+    meBubble.current = null;
     live
       .filter((s) => s.info.post && s.bubbleW > 0 && s.vis > 0.7 && s.fv > 0.5 && s.merge < 0.05)
       .map((s) => {
@@ -611,18 +644,47 @@ export function GlobeBuds({ buds, rig, hiddenId, onOpen, reducedMotion }: GlobeB
         const mid0 = s.sx + s.ox;
         const dx =
           Math.min(0, size.width - EDGE - (mid0 + w / 2)) + Math.max(0, EDGE - (mid0 - w / 2));
-        const mid = mid0 + dx;
-        const box = {
-          l: mid - (w * shrink) / 2,
-          r: mid + (w * shrink) / 2,
-          t: bottom - h * shrink,
-          b: bottom,
+        const boxAt = (slide: number): Box => {
+          const mid = mid0 + dx + slide;
+          return {
+            l: mid - (w * shrink) / 2,
+            r: mid + (w * shrink) / 2,
+            t: bottom - h * shrink,
+            b: bottom,
+          };
         };
-        const hits = accepted.some((a) => overlaps(a, box));
-        if (s.info.isMe || !hits) {
-          accepted.push(box, bodyRect(s));
-          placed.set(s, dx / Math.max(0.01, s.scale));
+        const free = (box: Box) => obstacles.every((o) => o.owner === s || !overlaps(o.box, box));
+        // Home first, then the last slide (so it doesn't hop sides), then out in steps.
+        const tries = [0];
+        if (s.slide) tries.push(s.slide);
+        const side = s.slide < 0 ? -1 : 1;
+        for (const f of [0.1, 0.2, 0.3, MAX_SLIDE]) tries.push(side * f * w, -side * f * w);
+        let slide: number | undefined;
+        for (const t of tries) {
+          const mid = mid0 + dx + t;
+          if (t !== 0 && (mid - w / 2 < EDGE || mid + w / 2 > size.width - EDGE)) continue;
+          if (free(boxAt(t))) {
+            slide = t;
+            break;
+          }
         }
+        // Time hysteresis on top of the overlap one: a shown bubble gives way only after being
+        // blocked for BUBBLE_HIDE_MS, a hidden one comes back after BUBBLE_SHOW_MS of room.
+        const fits = slide !== undefined;
+        if (fits !== s.bubbleFits) {
+          s.bubbleFits = fits;
+          s.bubbleFitsSince = now;
+        }
+        const held = now - s.bubbleFitsSince;
+        const show = s.bubbleShown ? fits || held < BUBBLE_HIDE_MS : fits && held >= BUBBLE_SHOW_MS;
+        // Your own post always shows (others step out from under it, see step 4).
+        if (!show && !s.info.isMe) return;
+        slide = slide ?? s.slide;
+        s.slide = slide;
+        const box = boxAt(slide);
+        obstacles.push({ box, owner: s });
+        placed.set(s, (dx + slide) / Math.max(0.01, s.scale));
+        if (s.info.isMe) meBubble.current = box;
       });
 
     // 7) Write styles.
@@ -654,10 +716,24 @@ export function GlobeBuds({ buds, rig, hiddenId, onOpen, reducedMotion }: GlobeB
 
       const show = placed.has(s);
       if (s.bubble) {
-        if (show) s.bubble.style.setProperty('--tb-bx', `${(placed.get(s) ?? 0).toFixed(1)}px`);
+        if (show) {
+          const bx = placed.get(s) ?? 0;
+          const tailMax = Math.max(0, s.bubbleW / 2 - TAIL_INSET);
+          s.bubble.style.setProperty('--tb-bx', `${bx.toFixed(1)}px`);
+          s.bubble.style.setProperty(
+            '--tb-tx',
+            `${MathUtils.clamp(-bx, -tailMax, tailMax).toFixed(1)}px`,
+          );
+        }
         if (show !== s.bubbleShown) s.bubble.dataset.shown = show ? '1' : '0';
       }
       s.bubbleShown = show;
+      if (!show) s.slide = 0;
+
+      // No room for the bubble: a small 💬 pip still says "this Bud has a post".
+      const pip = !!s.info.post && !show && s.merge < 0.05 && s.vis * s.fv > 0.3;
+      if (s.pip && pip !== s.pipShown) s.pip.dataset.shown = pip ? '1' : '0';
+      s.pipShown = pip;
     });
   });
 
@@ -689,12 +765,14 @@ export function GlobeBuds({ buds, rig, hiddenId, onOpen, reducedMotion }: GlobeB
   );
 }
 
-/** Body box (px) on screen, the face and head mostly. */
+/** Body box (px) on screen, the face and head mostly: what a bubble must never cover. */
 function bodyRect(s: Slot): Box {
   const bb = bodyBox(s);
   const x = s.sx + s.ox;
   const y = s.sy + s.oy;
-  return { l: x - bb.hw * 0.8, r: x + bb.hw * 0.8, t: y - bb.top, b: y - bb.top * 0.2 };
+  // Buds with a post keep room above the head for their 💬 pip.
+  const pip = s.info.post ? PIP * s.scale : 0;
+  return { l: x - bb.hw * 0.8, r: x + bb.hw * 0.8, t: y - bb.top - pip, b: y - bb.top * 0.2 };
 }
 
 interface GlobeBudProps {
@@ -733,6 +811,7 @@ const GlobeBud = memo(function GlobeBud({
       bounce: prev?.bounce ?? null,
       lean: prev?.lean ?? null,
       bubble: prev?.bubble ?? null,
+      pip: prev?.pip ?? null,
       bubbleW: 0,
       bubbleH: 0,
       setWalking,
@@ -748,6 +827,10 @@ const GlobeBud = memo(function GlobeBud({
       scale: 1,
       world: new Vector3(),
       bubbleShown: false,
+      slide: 0,
+      bubbleFits: false,
+      bubbleFitsSince: 0,
+      pipShown: false,
       clusterable: false,
       wasClusterable: false,
       rank: rankOf(info),
@@ -818,6 +901,27 @@ const GlobeBud = memo(function GlobeBud({
               <AnimatePresence>
                 {post && <BudBubble key={post.id} text={post.title} type={post.type} compact />}
               </AnimatePresence>
+            </div>
+            <div
+              ref={(el) => {
+                slot.pip = el;
+              }}
+              data-shown={slot.pipShown ? '1' : '0'}
+              aria-hidden
+              className="tb-globe-pip pointer-events-none absolute left-1/2"
+              style={{ bottom: BUD_SIZE * 0.9 }}
+            >
+              {post && (
+                <span
+                  className={cn(
+                    'flex items-center justify-center rounded-full text-[9px] leading-none shadow-chunky ring-2 ring-white',
+                    POST_TYPE_META[post.type].solid,
+                  )}
+                  style={{ width: PIP, height: PIP }}
+                >
+                  💬
+                </span>
+              )}
             </div>
             <div
               ref={(el) => {
