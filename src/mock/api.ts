@@ -43,6 +43,7 @@ import {
 } from '@/lib/xp';
 import { getDb, mutate, resetDb, subscribeDb, type Db } from './db';
 import { ZONES } from './seed';
+import { DEMO_USERNAME } from './demoAccount';
 
 // ─── Latency & events ───────────────────────────────────────────────
 
@@ -1071,7 +1072,7 @@ export function awardXp(
 // ─── Demo ───────────────────────────────────────────────────────────
 
 /** Fixed demo credentials so the presenter can sign out and back in. */
-export const DEMO_USERNAME = 'demo.bud';
+export { DEMO_USERNAME };
 export const DEMO_PASSWORD = 'tastebuds123';
 
 /**
