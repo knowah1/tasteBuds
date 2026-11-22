@@ -11,6 +11,14 @@
   opacity: 1;
   transform: translateX(calc(-50% + var(--tb-bx, 0px))) scale(1);
 }
+/* Cluster markers are moved every frame from JS; only the press feedback is CSS. */
+.tb-globe-cluster {
+  transform-origin: 0 0;
+  will-change: transform, opacity;
+}
+.tb-globe-cluster:active > span:first-child {
+  transform: scale(0.94);
+}
 
 @keyframes tb-twinkle {
   0%,
@@ -32,6 +40,6 @@
     opacity: 0.6;
   }
   .tb-globe-bubble {
-    transition: none;
+    transition: opacity 0.18s ease;
   }
 }

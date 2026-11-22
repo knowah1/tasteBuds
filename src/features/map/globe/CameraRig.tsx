@@ -131,6 +131,8 @@ export function CameraRig({
   const resumeTimer = useRef<number>();
   const fit = fitDistance(size.width, size.height);
   const maxDistance = maxDistanceFor(size.width, size.height);
+  const maxDistanceRef = useRef(maxDistance);
+  maxDistanceRef.current = maxDistance;
 
   const stopAutoRotate = () => {
     window.clearTimeout(resumeTimer.current);
@@ -184,12 +186,16 @@ export function CameraRig({
       const from = camera.position.clone().normalize();
       const to = clampPolar(dir.clone().normalize());
       const dist = camera.position.length();
+      const toDist =
+        opts.distance === undefined
+          ? dist
+          : MathUtils.clamp(opts.distance, MIN_DISTANCE, maxDistanceRef.current);
       const duration = reducedMotion ? 0 : (opts.duration ?? 700);
       tween.current = {
         from,
         to,
         fromDist: dist,
-        toDist: dist,
+        toDist,
         start: performance.now(),
         duration,
         onDone: opts.onDone,
