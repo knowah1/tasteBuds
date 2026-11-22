@@ -138,7 +138,7 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
               {emergency && phase === 'ended' ? 'Resolved' : PHASE_BADGE[phase].label}
             </Badge>
           </div>
-          <h2 className="mt-2 font-display text-2xl font-bold leading-tight">{post.title}</h2>
+          <h2 className="mt-2 font-display text-2xl leading-snug">{post.title}</h2>
           {post.description ? (
             <p className="mt-2 break-words text-ink-soft">{post.description}</p>
           ) : (
@@ -189,7 +189,7 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
           {zone && (
             <Fact icon="map" label="Around">
               {zone.name}
-              <span className="ml-1 text-xs text-ink-muted">(exact address shared in chat)</span>
+              <span className="ml-1 text-sm text-ink-muted">(exact address shared in chat)</span>
             </Fact>
           )}
         </Card>
@@ -202,13 +202,13 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
         >
           <UserAvatar userId={host.id} size={52} />
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
+            <p className="text-sm uppercase tracking-wide text-ink-muted">
               {isHost ? 'You’re hosting' : 'Hosted by'}
             </p>
-            <p className="truncate font-display font-semibold">
+            <p className="truncate font-display text-lg">
               {host.firstName} {host.lastName}
             </p>
-            <p className="truncate text-xs text-ink-muted">
+            <p className="truncate text-sm text-ink-muted">
               @{host.username} · Lv {levelFromXp(host.xp)}
               {hostSkill && ` · ${hostSkill.cuisine} ${hostSkill.level}`}
             </p>
@@ -219,14 +219,14 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
         {/* Members (only visible to people in the room) */}
         {members.length > 0 && (
           <Card>
-            <h3 className="mb-2 font-display text-sm font-semibold text-ink-soft">
+            <h3 className="mb-2 font-display text-base text-ink-soft">
               In the kitchen · {members.length}
             </h3>
             <div className="flex flex-wrap gap-3">
               {members.map((u) => (
                 <div key={u.id} className="flex w-14 flex-col items-center">
                   <UserAvatar userId={u.id} size={44} ring={u.id === me?.id} />
-                  <span className="mt-1 w-full truncate text-center text-[11px] text-ink-soft">
+                  <span className="mt-1 w-full truncate text-center text-sm text-ink-soft">
                     {u.id === me?.id ? 'You' : u.firstName}
                   </span>
                 </div>
@@ -318,7 +318,7 @@ function JoinActions({
                 </motion.span>
                 Requested
               </Button>
-              <p className="text-center text-xs text-ink-muted">
+              <p className="text-center text-sm text-ink-muted">
                 {request ? `“${request}” · ` : ''}Waiting for the host to reply
               </p>
             </>
@@ -339,7 +339,7 @@ function JoinActions({
               <Button block size="lg" variant="secondary" onClick={onMap}>
                 Find another kitchen 🗺️
               </Button>
-              <p className="text-center text-xs text-ink-muted">
+              <p className="text-center text-sm text-ink-muted">
                 The host couldn’t fit you in this time. No worries!
               </p>
             </>
@@ -362,8 +362,8 @@ function JoinActions({
           {state === 'host' && (
             <div className="flex items-center gap-2">
               <div className="flex-1 rounded-2xl bg-white px-4 py-2 shadow-soft ring-1 ring-cream-200">
-                <p className="font-display text-sm font-semibold">You’re the host 👩‍🍳</p>
-                <p className="text-xs text-ink-muted">
+                <p className="font-display text-base">You’re the host 👩‍🍳</p>
+                <p className="text-sm text-ink-muted">
                   {pending === 0
                     ? 'No pending requests'
                     : `${pending} request${pending === 1 ? '' : 's'} waiting`}
@@ -397,8 +397,8 @@ function Fact({
         <Icon name={icon} size={18} />
       </span>
       <div className="min-w-0">
-        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{label}</p>
-        <div className="flex flex-wrap items-center text-sm font-medium text-ink">{children}</div>
+        <p className="text-sm uppercase tracking-wide text-ink-muted">{label}</p>
+        <div className="flex flex-wrap items-center text-base text-ink">{children}</div>
       </div>
     </div>
   );

@@ -27,13 +27,13 @@ function ring(error?: string | null, success?: string | null) {
 function Messages({ id, error, success, hint }: { id: string } & FieldChrome) {
   if (error)
     return (
-      <p id={id} className="mt-1.5 pl-1 text-sm font-semibold text-mcgill">
+      <p id={id} className="mt-1.5 pl-1 text-sm text-mcgill">
         {error}
       </p>
     );
   if (success)
     return (
-      <p id={id} className="mt-1.5 pl-1 text-sm font-semibold text-leaf-600">
+      <p id={id} className="mt-1.5 pl-1 text-sm text-leaf-600">
         {success}
       </p>
     );
@@ -58,10 +58,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   return (
     <div className={className}>
       {label && (
-        <label
-          htmlFor={inputId}
-          className="mb-1.5 block pl-1 font-display text-sm font-medium text-ink-soft"
-        >
+        <label htmlFor={inputId} className="mb-1.5 block pl-1 text-sm text-ink-soft">
           {label}
         </label>
       )}
@@ -95,10 +92,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
   return (
     <div className={className}>
       {label && (
-        <label
-          htmlFor={inputId}
-          className="mb-1.5 block pl-1 font-display text-sm font-medium text-ink-soft"
-        >
+        <label htmlFor={inputId} className="mb-1.5 block pl-1 text-sm text-ink-soft">
           {label}
         </label>
       )}
@@ -114,7 +108,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
         {maxLength && showCount && (
           <span
             className={cn(
-              'pointer-events-none absolute bottom-2 right-3 font-display text-xs font-semibold',
+              'pointer-events-none absolute bottom-2 right-3 text-sm',
               near ? 'text-mcgill' : 'text-ink-muted',
             )}
           >

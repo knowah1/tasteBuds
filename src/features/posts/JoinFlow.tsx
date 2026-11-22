@@ -32,7 +32,7 @@ export function JoinTracker({ state }: { state: JoinState }) {
             <motion.span
               animate={{ scale: done ? 1 : 0.9 }}
               className={cn(
-                'flex h-6 shrink-0 items-center gap-1 rounded-full px-2 font-display text-[11px] font-semibold',
+                'flex h-7 shrink-0 items-center gap-1 rounded-full px-2 text-sm',
                 done ? tone : 'bg-cream-200 text-ink-muted',
               )}
             >
@@ -75,7 +75,7 @@ export function SafetyTipModal({
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-leaf-100 text-4xl">
           🛡️
         </div>
-        <h2 className="mt-3 font-display text-xl font-bold">Before you head over</h2>
+        <h2 className="mt-3 font-display text-2xl">Before you head over</h2>
         <p className="mt-1 text-sm text-ink-soft">tasteBuds meetups happen in real kitchens.</p>
       </div>
       <ul className="mt-4 space-y-3">
@@ -85,8 +85,8 @@ export function SafetyTipModal({
               {emoji}
             </span>
             <div>
-              <p className="font-display text-sm font-semibold">{title}</p>
-              <p className="text-xs text-ink-soft">{body}</p>
+              <p className="font-display text-base">{title}</p>
+              <p className="text-sm text-ink-soft">{body}</p>
             </div>
           </li>
         ))}
@@ -148,14 +148,13 @@ export function AskToJoinSheet({
       }
     >
       <p className="text-sm text-ink-soft">
-        Say hi to <span className="font-semibold text-ink">{hostName}</span>! A short note helps
-        hosts say yes.
+        Say hi to <span className="text-ink">{hostName}</span>! A short note helps hosts say yes.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {QUICK_LINES.map((line) => (
           <Chip
             key={line}
-            className="h-9 px-3 text-xs"
+            className="h-9 px-3 text-sm"
             onClick={() =>
               setMessage((m) => (m ? `${m} ${line}` : line).slice(0, JOIN_MESSAGE_MAX))
             }

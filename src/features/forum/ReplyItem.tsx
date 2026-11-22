@@ -92,16 +92,16 @@ export function ReplyItem({
               />
             )}
             <div className="relative">
-              <div className="flex items-center gap-1.5 text-xs">
+              <div className="flex items-center gap-1.5 text-sm">
                 <button
                   type="button"
                   onClick={openProfile}
-                  className="truncate font-display font-semibold text-ink"
+                  className="truncate font-display text-ink"
                 >
                   {name}
                 </button>
                 {isOp && (
-                  <span className="rounded-full bg-emergency-light px-1.5 py-px font-display text-[10px] font-bold uppercase tracking-wide text-emergency">
+                  <span className="rounded-full bg-emergency-light px-1.5 py-px font-display text-xs uppercase tracking-wide text-emergency">
                     OP
                   </span>
                 )}
@@ -175,10 +175,7 @@ function ActionButton({
       type="button"
       whileTap={{ scale: 0.9 }}
       onClick={onClick}
-      className={cn(
-        'h-8 rounded-full px-2.5 font-display text-xs font-semibold text-ink-soft hover:bg-cream-200',
-        className,
-      )}
+      className={cn('h-8 rounded-full px-2.5 text-sm text-ink-soft hover:bg-cream-200', className)}
     >
       {children}
     </motion.button>
@@ -206,7 +203,7 @@ function UpvoteButton({
       aria-label={`${active ? 'Remove upvote' : 'Upvote'} (${count})`}
       whileTap={disabled ? undefined : { scale: 0.85 }}
       className={cn(
-        'flex h-8 items-center gap-1 rounded-full px-2.5 font-display text-xs font-bold ring-1 transition-colors',
+        'flex h-8 items-center gap-1 rounded-full px-2.5 text-sm ring-1 transition-colors',
         active
           ? 'bg-leaf-100 text-leaf-700 ring-leaf-300'
           : 'bg-white text-ink-soft ring-cream-300',
@@ -223,7 +220,7 @@ function UpvoteButton({
       >
         🌱
       </motion.span>
-      <span className="relative inline-flex h-4 min-w-[1ch] overflow-hidden tabular-nums">
+      <span className="relative inline-flex h-5 min-w-[1ch] overflow-hidden tabular-nums">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
             key={count}

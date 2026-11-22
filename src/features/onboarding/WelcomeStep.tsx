@@ -86,7 +86,7 @@ export function WelcomeStep({ onStart }: { onStart: () => void }) {
             />
           </motion.div>
         </div>
-        <h1 className="mt-6 font-display text-5xl font-bold">
+        <h1 className="mt-6 font-display text-5xl">
           taste<span className="text-mcgill">Buds</span>
         </h1>
         <p className="mt-3 max-w-xs text-lg text-ink-soft">
@@ -104,7 +104,7 @@ export function WelcomeStep({ onStart }: { onStart: () => void }) {
           Already have an account?{' '}
           <Link
             to="/sign-in"
-            className="inline-flex min-h-[44px] items-center font-display font-semibold text-mcgill"
+            className="inline-flex min-h-[44px] items-center font-display text-mcgill"
           >
             Sign in
           </Link>

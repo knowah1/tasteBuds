@@ -21,8 +21,8 @@ export function GlobeFallback({
   return (
     <div className="no-scrollbar absolute inset-0 overflow-y-auto bg-gradient-to-b from-cream to-sky-light px-4 pb-24 pt-12">
       <div className="mb-3 rounded-chunky bg-white/80 p-3 text-center shadow-soft ring-2 ring-cream-300">
-        <p className="font-display text-sm font-semibold text-ink">🌍 The globe needs WebGL</p>
-        <p className="text-xs text-ink-soft">Here are the Buds around the world instead.</p>
+        <p className="font-display text-base text-ink">🌍 The globe needs WebGL</p>
+        <p className="text-sm text-ink-soft">Here are the Buds around the world instead.</p>
       </div>
       <ul className="flex flex-col gap-2">
         {shown.map((b, i) => (
@@ -45,13 +45,11 @@ export function GlobeFallback({
                 state={b.post?.type === 'budmergency' ? 'panicked' : b.post ? 'hasBubble' : 'idle'}
               />
               <span className="min-w-0 flex-1">
-                <span className="block font-display text-sm font-semibold text-ink">
+                <span className="block font-display text-base text-ink">
                   {b.isMe ? 'You' : b.user.firstName}
-                  <span className="ml-1 font-sans text-xs font-normal text-ink-muted">
-                    · {b.region.label}
-                  </span>
+                  <span className="ml-1 font-body text-sm text-ink-muted">· {b.region.label}</span>
                 </span>
-                <span className="block truncate text-xs text-ink-soft">
+                <span className="block truncate text-sm text-ink-soft">
                   {b.post
                     ? `${POST_TYPE_META[b.post.type].emoji} ${b.post.title}`
                     : b.user.cuisines

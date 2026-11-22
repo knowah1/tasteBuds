@@ -166,10 +166,7 @@ export function ComposerSheet() {
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className={cn(
-                'text-center text-sm font-semibold',
-                error ? 'text-mcgill' : 'text-ink-muted',
-              )}
+              className={cn('text-center text-sm', error ? 'text-mcgill' : 'text-ink-muted')}
               role={error ? 'alert' : undefined}
             >
               {error ?? problem}
@@ -218,7 +215,7 @@ export function ComposerSheet() {
               complete={complete}
               popKey={popKey}
             />
-            <p className="-mt-2 text-center text-xs text-ink-muted">
+            <p className="-mt-2 text-center text-sm text-ink-muted">
               Titles are written for you from what you pick ✨
             </p>
 
@@ -317,8 +314,8 @@ function TypePicker({ selected, onPick }: { selected?: PostType; onPick: (t: Pos
             >
               {meta.emoji}
             </motion.span>
-            <span className="font-display text-lg font-semibold">{meta.label}</span>
-            <span className="text-xs text-ink-soft">{POST_TYPE_BLURB[type]}</span>
+            <span className="font-display text-xl">{meta.label}</span>
+            <span className="text-sm text-ink-soft">{POST_TYPE_BLURB[type]}</span>
           </motion.button>
         );
       })}
@@ -356,7 +353,7 @@ function Published({
           label="Your Bud"
         />
       </motion.div>
-      <h3 className="mt-10 font-display text-xl font-bold">
+      <h3 className="mt-10 font-display text-2xl">
         {emergency ? 'Help is on the way!' : 'Your bubble is up!'}
       </h3>
       <p className="mt-1 max-w-xs text-sm text-ink-soft">

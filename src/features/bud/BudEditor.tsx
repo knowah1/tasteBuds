@@ -66,7 +66,7 @@ export function BudEditor({
           type="button"
           whileTap={{ scale: 0.9, rotate: -20 }}
           onClick={() => onChange(randomBud(level))}
-          className="absolute right-0 top-2 flex h-11 items-center gap-1 rounded-full bg-white px-3 font-display text-sm font-semibold text-ink-soft shadow-soft"
+          className="absolute right-0 top-2 flex h-11 items-center gap-1 rounded-full bg-white px-3 text-sm text-ink-soft shadow-soft"
           aria-label="Surprise me: random look"
         >
           🎲 <span>Surprise me</span>
@@ -94,14 +94,14 @@ export function BudEditor({
             aria-selected={tab === t.id}
             onClick={() => setTab(t.id)}
             className={cn(
-              'relative flex h-11 flex-1 items-center justify-center gap-1 rounded-full font-display text-sm font-semibold transition-colors',
+              'relative flex h-11 flex-1 items-center justify-center gap-1 rounded-full font-display text-sm transition-colors',
               tab === t.id ? 'text-ink' : 'text-ink-muted',
             )}
           >
             <span className="relative">{t.emoji}</span>
             <span className="relative">{t.label}</span>
             {t.id === 'accessories' && (
-              <span className="relative rounded-full bg-cream-200 px-1.5 text-[11px] text-ink-soft">
+              <span className="relative rounded-full bg-cream-200 px-1.5 font-body text-sm text-ink-soft">
                 {unlockedCount}/{ACCESSORIES_BY_LEVEL.length}
               </span>
             )}
@@ -159,9 +159,7 @@ function ColorPicker({ value, onChange }: { value: Bud; onChange: (b: Bud) => vo
           );
         })}
       </div>
-      <p className="mt-4 text-center font-display text-sm font-semibold text-ink-soft">
-        {BUD_COLOR_META[value.color].label}
-      </p>
+      <p className="mt-4 text-center text-sm text-ink-soft">{BUD_COLOR_META[value.color].label}</p>
     </div>
   );
 }
@@ -188,7 +186,7 @@ function TypePicker({ value, onChange }: { value: Bud; onChange: (b: Bud) => voi
               size={56}
               animated={false}
             />
-            <span className="mt-0.5 font-display text-[11px] font-semibold leading-tight text-ink-soft">
+            <span className="mt-0.5 text-center text-sm leading-snug text-ink-soft">
               {BUD_TYPE_META[t].label}
             </span>
           </motion.button>
@@ -300,8 +298,8 @@ function AccessoryCard({
       </div>
       <span
         className={cn(
-          'whitespace-nowrap font-display font-semibold leading-tight',
-          unlocked ? 'text-[11px] text-ink-soft' : 'text-[10px] text-ink-muted',
+          'px-1 text-center text-sm leading-snug',
+          unlocked ? 'text-ink-soft' : 'text-ink-muted',
         )}
       >
         {unlocked ? meta.label : `Unlocks at Lv ${unlockLv}`}

@@ -36,8 +36,8 @@ export function Field({
   return (
     <section className="space-y-2">
       <div className="flex items-baseline justify-between pl-1">
-        <h3 className="font-display text-sm font-semibold text-ink-soft">{label}</h3>
-        {hint && <span className="text-xs text-ink-muted">{hint}</span>}
+        <h3 className="font-display text-base text-ink-soft">{label}</h3>
+        {hint && <span className="text-sm text-ink-muted">{hint}</span>}
       </div>
       {children}
     </section>
@@ -89,7 +89,7 @@ export function CuisinePicker({
               {level && (
                 <span
                   className={cn(
-                    'ml-0.5 rounded-full px-1.5 text-[10px] font-semibold',
+                    'ml-0.5 rounded-full px-1.5 text-sm',
                     value.includes(c) ? 'bg-white/25' : 'bg-leaf-100 text-leaf-700',
                   )}
                 >
@@ -298,7 +298,7 @@ export function EmergencyDurationPicker({
             selected={value === min}
             onClick={() => onChange(min)}
             selectedClassName="bg-emergency text-white ring-emergency"
-            className="justify-center px-0 text-xs"
+            className="justify-center px-0 text-sm"
           >
             {label}
           </Chip>
@@ -331,7 +331,7 @@ export function ParticipantStepper({
               initial={{ y: -12, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 12, opacity: 0 }}
-              className="font-display text-2xl font-bold tabular-nums"
+              className="font-display text-2xl tabular-nums"
               aria-live="polite"
             >
               {value}
@@ -381,7 +381,7 @@ function StepButton({
       onClick={onClick}
       whileTap={disabled ? undefined : { scale: 0.85 }}
       className={cn(
-        'flex h-12 w-12 items-center justify-center rounded-2xl bg-cream-200 font-display text-2xl font-bold text-ink',
+        'flex h-12 w-12 items-center justify-center rounded-2xl bg-cream-200 font-display text-2xl text-ink',
         disabled && 'opacity-40',
       )}
     >

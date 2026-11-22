@@ -80,7 +80,7 @@ export function CuisineStep({ value, onChange, onNext }: CuisineStepProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="pl-1 font-display text-lg font-semibold"
+              className="pl-1 font-display text-lg"
             >
               How comfy are you?
             </motion.h2>
@@ -96,20 +96,20 @@ export function CuisineStep({ value, onChange, onNext }: CuisineStepProps) {
               className="rounded-chunky bg-white p-3 shadow-soft ring-1 ring-cream-200"
             >
               <div className="mb-2 flex items-center justify-between px-1">
-                <span className="font-display font-semibold">
+                <span className="font-display text-lg">
                   {CUISINE_META[cuisine].emoji} {cuisine}
                 </span>
                 <button
                   type="button"
                   onClick={() => toggle(cuisine)}
-                  className="h-8 rounded-full px-2 text-xs font-semibold text-ink-muted hover:bg-cream-200"
+                  className="h-8 rounded-full px-2 text-sm text-ink-muted hover:bg-cream-200"
                   aria-label={`Remove ${cuisine}`}
                 >
                   Remove
                 </button>
               </div>
               <SkillPicker cuisine={cuisine} value={level} onChange={(l) => setLevel(cuisine, l)} />
-              <p className="mt-2 px-1 text-xs text-ink-muted">{SKILL_BLURB[level]}</p>
+              <p className="mt-2 px-1 text-sm text-ink-muted">{SKILL_BLURB[level]}</p>
             </motion.div>
           ))}
         </AnimatePresence>
@@ -131,7 +131,7 @@ function SkillPicker({
     <div
       role="radiogroup"
       aria-label={`${cuisine} skill level`}
-      className="grid grid-cols-5 gap-1 rounded-2xl bg-cream-100 p-1"
+      className="grid grid-cols-5 gap-0.5 rounded-2xl bg-cream-100 p-1"
     >
       {SKILL_LEVELS.map((l) => {
         const active = l === value;
@@ -142,7 +142,7 @@ function SkillPicker({
             role="radio"
             aria-checked={active}
             onClick={() => onChange(l)}
-            className="relative flex h-14 flex-col items-center justify-center rounded-xl"
+            className="relative flex min-h-14 flex-col items-center justify-center rounded-xl py-1.5"
           >
             {active && (
               <motion.span
@@ -154,7 +154,7 @@ function SkillPicker({
             <span className="relative text-lg leading-none">{SKILL_EMOJI[l]}</span>
             <span
               className={cn(
-                'relative mt-1 whitespace-nowrap font-display text-[10px] font-semibold leading-none',
+                'relative mt-1 text-center text-sm leading-tight tracking-tight',
                 active ? 'text-white' : 'text-ink-soft',
               )}
             >

@@ -79,9 +79,7 @@ export function ForumScreen() {
           animate={{ opacity: 1, y: 0 }}
           className="relative overflow-hidden rounded-chunky bg-emergency-light px-4 py-3"
         >
-          <p className="font-display text-lg font-bold leading-tight text-emergency">
-            🚨 Bud-mergencies
-          </p>
+          <p className="font-display text-xl leading-snug text-emergency">🚨 Bud-mergencies</p>
           <p className="mt-0.5 pr-14 text-sm text-ink-soft">
             {activeCount > 0
               ? `${activeCount} ${activeCount === 1 ? 'bud needs' : 'buds need'} help using something up. Toss them an idea!`
@@ -145,9 +143,7 @@ export function ForumScreen() {
                 transition={{ type: 'spring', stiffness: 400, damping: 32 }}
               >
                 {filter === 'all' && i === firstResolvedIdx && (
-                  <p className="mb-2 mt-3 pl-1 font-display text-sm font-semibold text-ink-muted">
-                    ✓ Resolved
-                  </p>
+                  <p className="mb-2 mt-3 pl-1 font-display text-base text-ink-muted">✓ Resolved</p>
                 )}
                 <ThreadCard
                   thread={t}

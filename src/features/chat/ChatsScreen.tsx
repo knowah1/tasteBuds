@@ -45,7 +45,7 @@ export function ChatsScreen() {
               aria-selected={segment === s.id}
               onClick={() => setSegment(s.id)}
               className={cn(
-                'relative flex-1 rounded-full py-2 font-display text-sm font-semibold transition-colors',
+                'relative flex-1 rounded-full py-2 font-display text-sm transition-colors',
                 segment === s.id ? 'text-ink' : 'text-ink-muted',
               )}
             >
@@ -61,7 +61,7 @@ export function ChatsScreen() {
                 {count > 0 && (
                   <span
                     className={cn(
-                      'ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px]',
+                      'ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 font-display text-xs leading-none',
                       s.id === 'active' && incoming > 0
                         ? 'bg-mcgill text-white'
                         : 'bg-cream-300 text-ink-soft',
@@ -104,7 +104,7 @@ export function ChatsScreen() {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-2 mt-1 px-1 font-display text-sm font-semibold uppercase tracking-wide text-ink-muted">
+    <h2 className="mb-2 mt-1 px-1 font-display text-base uppercase tracking-wide text-ink-muted">
       {children}
     </h2>
   );
@@ -237,8 +237,8 @@ function RoomRow({ room, index }: { room: ChatRoom; index: number }) {
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
-          <p className="min-w-0 flex-1 truncate font-display font-semibold">{post.title}</p>
-          <span className="shrink-0 text-[11px] text-ink-muted">
+          <p className="min-w-0 flex-1 truncate font-display text-lg">{post.title}</p>
+          <span className="shrink-0 text-sm text-ink-muted">
             {listStamp(
               room.archived
                 ? (room.archivedAt ?? room.createdAt)
@@ -293,8 +293,8 @@ function WaitingRow({ post }: { post: Post }) {
         ⏳
       </motion.span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-display text-sm font-semibold">{post.title}</span>
-        <span className="block text-xs text-ink-muted">
+        <span className="block truncate font-display text-base">{post.title}</span>
+        <span className="block text-sm text-ink-muted">
           The chat opens when you accept your first Bud.
         </span>
       </span>
@@ -317,7 +317,7 @@ function ArchivedList({ rooms }: { rooms: ChatRoom[] }) {
   }
   return (
     <div className="space-y-3">
-      <p className="px-1 text-xs text-ink-muted">
+      <p className="px-1 text-sm text-ink-muted">
         Read-only copies of kitchens you hosted. Only you can see them.
       </p>
       {sorted.map((r, i) => (

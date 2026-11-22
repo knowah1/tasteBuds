@@ -36,7 +36,7 @@ export function StepLayout({
               {emoji}
             </motion.div>
           )}
-          <h1 className="font-display text-[28px] font-bold leading-tight text-ink">{title}</h1>
+          <h1 className="font-display text-[28px] leading-snug text-ink">{title}</h1>
           {subtitle && <p className="mt-1.5 text-ink-soft">{subtitle}</p>}
         </div>
         <div className="mt-6">{children}</div>

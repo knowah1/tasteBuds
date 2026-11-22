@@ -181,7 +181,7 @@ export default function GlobeMap({ buds, meId, filter, onOpen }: GlobeMapProps) 
           transition={{ type: 'spring', stiffness: 420, damping: 22, delay: 0.25 }}
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.05 }}
-          className="absolute bottom-4 right-4 z-10 flex h-12 items-center gap-1.5 rounded-full bg-white pl-3 pr-4 font-display text-sm font-semibold text-ink shadow-lift ring-2 ring-cream-300"
+          className="absolute bottom-4 right-4 z-10 flex h-12 items-center gap-1.5 rounded-full bg-white pl-3 pr-4 font-display text-sm text-ink shadow-lift ring-2 ring-cream-300"
         >
           <span className="text-lg" aria-hidden>
             📍

@@ -42,9 +42,9 @@ export function NotificationsScreen() {
                 if (n.href) navigate(n.href);
               }}
             >
-              <p className="font-display font-semibold">{n.title}</p>
+              <p className="font-display text-lg">{n.title}</p>
               {n.body && <p className="text-sm text-ink-soft">{n.body}</p>}
-              <p className="mt-1 text-xs text-ink-muted">{timeAgo(n.createdAt)}</p>
+              <p className="mt-1 text-sm text-ink-muted">{timeAgo(n.createdAt)}</p>
             </Card>
           ))
         )}

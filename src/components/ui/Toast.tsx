@@ -46,7 +46,7 @@ function ToastItem({ toast }: { toast: Toast }) {
     >
       <span className="mt-0.5 text-xl leading-none">{toast.emoji ?? style.emoji}</span>
       <div className="min-w-0 flex-1">
-        <p className="font-display text-sm font-semibold text-ink">{toast.title}</p>
+        <p className="font-display text-base text-ink">{toast.title}</p>
         {toast.body && (
           <p className={cn('text-sm text-ink-soft', toast.kind === 'inbox' && 'select-all')}>
             {toast.body}

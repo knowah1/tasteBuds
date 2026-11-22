@@ -17,7 +17,7 @@ export function TopBar({ title }: { title?: string }) {
         type="button"
         {...press}
         whileTap={{ scale: 0.94 }}
-        className="flex select-none items-center gap-1.5 font-display text-2xl font-bold text-ink"
+        className="flex select-none items-center gap-1.5 font-display text-2xl text-ink"
         aria-label="tasteBuds (long-press for demo panel)"
       >
         <span className="text-2xl">🌱</span>
@@ -42,7 +42,7 @@ export function BackBar({ title, right }: { title?: string; right?: React.ReactN
       <IconButton label="Back" onClick={() => navigate(-1)}>
         <Icon name="chevronLeft" size={22} />
       </IconButton>
-      <h1 className="min-w-0 flex-1 truncate font-display text-lg font-semibold">{title}</h1>
+      <h1 className="min-w-0 flex-1 truncate font-display text-xl">{title}</h1>
       {right}
     </header>
   );

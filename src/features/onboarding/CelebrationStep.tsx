@@ -44,7 +44,7 @@ export function CelebrationStep({ bud, cuisines, onFinish }: CelebrationStepProp
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55 }}
-          className="mt-6 font-display text-3xl font-bold leading-tight"
+          className="mt-6 font-display text-3xl leading-snug"
         >
           Welcome to the neighbourhood, {firstName}!
         </motion.h1>

@@ -82,12 +82,7 @@ export function ProfileView({
           bubbleType={live?.type}
           label={isMe ? 'Your Bud' : `${user.firstName}'s Bud`}
         />
-        <h2
-          className={cn(
-            'font-display text-2xl font-bold',
-            live?.type === 'budmergency' ? 'mt-8' : 'mt-3',
-          )}
-        >
+        <h2 className={cn('font-display text-2xl', live?.type === 'budmergency' ? 'mt-8' : 'mt-3')}>
           {user.firstName} {user.lastName}
         </h2>
         <p className="text-ink-muted">@{user.username}</p>
@@ -104,18 +99,18 @@ export function ProfileView({
             transition={{ type: 'spring', stiffness: 400, damping: 14 }}
             className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-leaf-500 text-white shadow-chunky"
           >
-            <span className="text-[10px] font-semibold uppercase leading-none">Lv</span>
-            <span className="font-display text-2xl font-bold leading-none">{lv.level}</span>
+            <span className="font-display text-xs uppercase leading-none">Lv</span>
+            <span className="font-display text-2xl leading-none">{lv.level}</span>
           </motion.div>
           <div className="min-w-0 flex-1">
             <div className="mb-1.5 flex items-baseline justify-between">
-              <span className="font-display font-semibold">Level {lv.level}</span>
-              <span className="text-xs tabular-nums text-ink-muted">
+              <span className="font-display text-lg">Level {lv.level}</span>
+              <span className="text-sm tabular-nums text-ink-muted">
                 {lv.current} / {lv.needed} XP
               </span>
             </div>
             <ProgressBar value={lv.progress} label="Level progress" />
-            <p className="mt-1.5 text-xs text-ink-muted">
+            <p className="mt-1.5 text-sm text-ink-muted">
               {lv.needed - lv.current} XP to Level {lv.level + 1} · {user.xp} XP total
             </p>
           </div>
@@ -129,7 +124,7 @@ export function ProfileView({
 
       {/* Cuisines */}
       <Card>
-        <h3 className="mb-3 font-display font-semibold">Cuisines</h3>
+        <h3 className="mb-3 font-display text-lg">Cuisines</h3>
         {user.cuisines.length === 0 ? (
           <p className="text-sm text-ink-muted">No cuisines yet.</p>
         ) : (
@@ -219,8 +214,8 @@ export function ProfileView({
 function Stat({ value, label }: { value: ReactNode; label: string }) {
   return (
     <div className="rounded-2xl bg-cream-100 py-2">
-      <p className="font-display text-xl font-bold tabular-nums">{value}</p>
-      <p className="text-[11px] font-semibold text-ink-muted">{label}</p>
+      <p className="font-display text-xl tabular-nums">{value}</p>
+      <p className="text-sm text-ink-muted">{label}</p>
     </div>
   );
 }
@@ -238,7 +233,7 @@ function SkillPips({ level }: { level: SkillLevel }) {
           />
         ))}
       </span>
-      <span className="text-[11px] font-medium opacity-80">{level}</span>
+      <span className="text-sm opacity-80">{level}</span>
     </span>
   );
 }
@@ -256,7 +251,7 @@ function EventSection({
 }) {
   return (
     <section>
-      <h3 className="mb-2 flex items-center gap-2 px-1 font-display text-lg font-semibold">
+      <h3 className="mb-2 flex items-center gap-2 px-1 font-display text-xl">
         {title}
         {count > 0 && <Badge>{count}</Badge>}
       </h3>

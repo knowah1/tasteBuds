@@ -67,7 +67,7 @@ export const ClusterPill = memo(function ClusterPill({ view, elRef, onTap }: Clu
             ))}
           </span>
           {view.count > view.faces.length && (
-            <span className="ml-1 min-w-[1.5rem] rounded-full bg-ink px-1.5 text-center font-display text-[11px] font-bold leading-5 text-white">
+            <span className="ml-1 min-w-[1.5rem] rounded-full bg-ink px-1.5 text-center font-display text-xs leading-5 text-white">
               +{view.count - view.faces.length}
             </span>
           )}

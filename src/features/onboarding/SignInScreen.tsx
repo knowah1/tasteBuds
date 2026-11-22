@@ -52,7 +52,7 @@ export function SignInScreen() {
         >
           <Avatar bud={{ color: 'leaf', type: 'sprout', accessories: ['chefHat'] }} size={112} />
         </motion.div>
-        <h1 className="mt-5 font-display text-3xl font-bold">Welcome back!</h1>
+        <h1 className="mt-5 font-display text-3xl">Welcome back!</h1>
         <p className="mt-1 max-w-xs text-ink-soft">Your Bud missed you. Sign in to get cooking.</p>
       </div>
 
@@ -94,7 +94,7 @@ export function SignInScreen() {
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               aria-pressed={showPassword}
-              className="-mr-1 min-h-[44px] rounded-xl px-2 font-display text-sm font-semibold text-leaf-600"
+              className="-mr-1 min-h-[44px] rounded-xl px-2 text-sm text-leaf-600"
             >
               {showPassword ? 'Hide' : 'Show'}
             </button>
@@ -110,7 +110,7 @@ export function SignInScreen() {
         New here?{' '}
         <Link
           to="/onboarding?start=account"
-          className="inline-flex min-h-[44px] items-center font-display font-semibold text-mcgill"
+          className="inline-flex min-h-[44px] items-center font-display text-mcgill"
         >
           Create an account
         </Link>

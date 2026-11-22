@@ -68,12 +68,12 @@ export function ReportMessageSheet({
           >
             {message && (
               <div className="rounded-2xl bg-white px-3 py-2 text-sm shadow-soft ring-1 ring-cream-200">
-                <p className="text-xs font-semibold text-ink-muted">{senderName ?? 'Someone'}</p>
+                <p className="text-sm text-ink-muted">{senderName ?? 'Someone'}</p>
                 <p className="break-words text-ink-soft">{message.text}</p>
               </div>
             )}
             <div>
-              <p className="mb-2 font-display text-sm font-semibold text-ink-soft">What’s wrong?</p>
+              <p className="mb-2 font-display text-base text-ink-soft">What’s wrong?</p>
               <div className="flex flex-wrap gap-2">
                 {REPORT_REASONS.map((r) => (
                   <Chip
@@ -95,7 +95,7 @@ export function ReportMessageSheet({
               rows={3}
               onChange={(e) => setDetails(e.target.value)}
             />
-            <p className="text-xs text-ink-muted">
+            <p className="text-sm text-ink-muted">
               Reports are private. {senderName ?? 'They'} won’t know it was you.
             </p>
           </motion.div>
@@ -114,7 +114,7 @@ export function ReportMessageSheet({
             >
               🛡️
             </motion.div>
-            <h3 className="font-display text-xl font-semibold">Thanks for telling us</h3>
+            <h3 className="font-display text-2xl">Thanks for telling us</h3>
             <p className="mt-1 max-w-xs text-sm text-ink-soft">
               Our team will review this message. Keeping kitchens kind keeps them cozy 💚
             </p>

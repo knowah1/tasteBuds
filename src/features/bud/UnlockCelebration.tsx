@@ -52,11 +52,11 @@ export function UnlockCelebration() {
           <motion.p
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="font-display text-sm font-semibold uppercase tracking-wider text-leaf-600"
+            className="font-display text-base uppercase tracking-wider text-leaf-600"
           >
             Level {ACCESSORY_UNLOCK_LEVEL[accessory]} reward
           </motion.p>
-          <h2 className="mt-1 font-display text-2xl font-bold">New accessory unlocked!</h2>
+          <h2 className="mt-1 font-display text-2xl">New accessory unlocked!</h2>
           <div className="relative mx-auto mt-4 flex h-40 w-40 items-center justify-center">
             <motion.svg
               viewBox="0 0 100 100"
@@ -87,7 +87,7 @@ export function UnlockCelebration() {
               <BudAvatar bud={wearAccessory(bud, accessory)} size={130} state="hasBubble" />
             </motion.div>
           </div>
-          <p className="mt-3 font-display text-xl font-semibold">
+          <p className="mt-3 font-display text-2xl">
             {meta.emoji} {meta.label}
           </p>
           <p className="mt-1 text-sm text-ink-soft">

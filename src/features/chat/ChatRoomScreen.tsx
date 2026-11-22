@@ -141,14 +141,14 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
               <span className="flex-1">
                 {pendingCount} Bud{pendingCount === 1 ? '' : 's'} asking to join
               </span>
-              <span className="font-display font-semibold">Review ›</span>
+              <span className="font-display">Review ›</span>
             </Banner>
           )}
           {isHost && !readOnly && ended && (
             <Banner key="end" tone="mcgill" onClick={() => openEndPrompt(room.id)}>
               <span className="text-lg">⏰</span>
               <span className="flex-1">Time’s up! Wrap up the kitchen.</span>
-              <span className="font-display font-semibold">Choose ›</span>
+              <span className="font-display">Choose ›</span>
             </Banner>
           )}
           {!isHost && !readOnly && ended && (
@@ -166,7 +166,7 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
                 Seeing what <b>{peekUser.firstName}</b> sees · {shown.length} of {messages.length}{' '}
                 messages
               </span>
-              <span className="font-display font-semibold">Stop</span>
+              <span className="font-display">Stop</span>
             </Banner>
           )}
         </AnimatePresence>
@@ -199,11 +199,11 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
 
       {readOnly ? (
         <div className="border-t border-cream-200 bg-cream-200/70 px-4 pb-6 pt-3 text-center">
-          <p className="font-display text-sm font-semibold text-ink-soft">
+          <p className="font-display text-base text-ink-soft">
             🗄️ Archived{room.archivedAt ? ` ${new Date(room.archivedAt).toLocaleDateString()}` : ''}{' '}
             · read-only
           </p>
-          <p className="text-xs text-ink-muted">Only you can see this copy.</p>
+          <p className="text-sm text-ink-muted">Only you can see this copy.</p>
         </div>
       ) : (
         <Composer
@@ -286,10 +286,10 @@ function LateJoinNotice({
 }) {
   return (
     <div className="mx-6 my-3 rounded-2xl border-2 border-dashed border-cream-300 px-3 py-2 text-center">
-      <p className="font-display text-xs font-semibold text-ink-soft">
+      <p className="font-display text-sm text-ink-soft">
         🔒 {name ? `${name} joined` : 'You joined'} at {formatTime(joinedAt)}
       </p>
-      <p className="text-[11px] text-ink-muted">
+      <p className="text-sm text-ink-muted">
         {hidden !== undefined
           ? `${hidden} earlier message${hidden === 1 ? ' is' : 's are'} hidden from ${name ?? 'them'}.`
           : 'Messages from before you arrived stay with the Buds who were there.'}

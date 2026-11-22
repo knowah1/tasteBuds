@@ -32,7 +32,7 @@ export function MessageList({
           return (
             <div key={item.id} className="flex items-center gap-2 py-3">
               <span className="h-px flex-1 bg-cream-300" />
-              <span className="font-display text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
+              <span className="text-sm uppercase tracking-wide text-ink-muted">
                 {dayLabel(item.at)}
               </span>
               <span className="h-px flex-1 bg-cream-300" />
@@ -49,7 +49,7 @@ export function MessageList({
               transition={{ type: 'spring', stiffness: 400, damping: 22 }}
               className="flex justify-center py-1.5"
             >
-              <span className="rounded-full bg-leaf-100 px-3 py-1 font-display text-xs font-semibold text-leaf-700">
+              <span className="rounded-full bg-leaf-100 px-3 py-1 text-sm text-leaf-700">
                 {item.message.text}
               </span>
             </motion.div>
@@ -81,7 +81,7 @@ export function MessageList({
             )}
             <div className={cn('flex max-w-[75%] flex-col', mine ? 'items-end' : 'items-start')}>
               {!mine && item.first && (
-                <span className="mb-0.5 pl-2 font-display text-[11px] font-semibold text-ink-muted">
+                <span className="mb-0.5 pl-2 text-sm text-ink-muted">
                   {sender?.firstName ?? 'Someone'}
                 </span>
               )}
@@ -113,7 +113,7 @@ export function MessageList({
                       mine ? 'flex-row-reverse' : 'flex-row',
                     )}
                   >
-                    <span className="text-[10px] text-ink-muted">{formatTime(m.createdAt)}</span>
+                    <span className="text-sm text-ink-muted">{formatTime(m.createdAt)}</span>
                     {canReport && (
                       <button
                         type="button"
@@ -124,13 +124,13 @@ export function MessageList({
                         }}
                         aria-label={`Report message from ${sender?.firstName ?? 'someone'}`}
                         className={cn(
-                          'flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold transition-colors',
+                          'flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-sm transition-colors',
                           isSelected
                             ? 'bg-mcgill-light text-mcgill'
                             : 'text-ink-muted hover:text-mcgill',
                         )}
                       >
-                        <Icon name="flag" size={11} />
+                        <Icon name="flag" size={13} />
                         {isSelected && 'Report'}
                       </button>
                     )}

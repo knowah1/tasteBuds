@@ -62,8 +62,8 @@ export function PostCard({
         {icon}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-display font-semibold text-ink">{post.title}</span>
-        <span className="mt-0.5 flex items-center gap-1.5 text-xs text-ink-muted">
+        <span className="block truncate font-display text-lg text-ink">{post.title}</span>
+        <span className="mt-0.5 flex items-center gap-1.5 text-sm text-ink-muted">
           {phase === 'live' && (
             <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-mcgill" aria-hidden />
           )}

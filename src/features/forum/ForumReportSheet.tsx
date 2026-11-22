@@ -81,12 +81,14 @@ export function ForumReportSheet({
           >
             {target && (
               <div className="rounded-2xl bg-white px-3 py-2 text-sm shadow-soft ring-1 ring-cream-200">
-                <p className="text-xs font-semibold text-ink-muted">{target.authorName}</p>
-                <p className="line-clamp-3 break-words text-ink-soft">{target.preview}</p>
+                <p className="text-sm text-ink-muted">{target.authorName}</p>
+                <p className="line-clamp-3 break-words leading-relaxed text-ink-soft">
+                  {target.preview}
+                </p>
               </div>
             )}
             <div>
-              <p className="mb-2 font-display text-sm font-semibold text-ink-soft">What’s wrong?</p>
+              <p className="mb-2 font-display text-base text-ink-soft">What’s wrong?</p>
               <div className="flex flex-wrap gap-2">
                 {REPORT_REASONS.map((r) => (
                   <Chip
@@ -108,7 +110,7 @@ export function ForumReportSheet({
               rows={3}
               onChange={(e) => setDetails(e.target.value)}
             />
-            <p className="text-xs text-ink-muted">
+            <p className="text-sm text-ink-muted">
               Reports are private. {target?.authorName ?? 'They'} won’t know it was you.
             </p>
           </motion.div>
@@ -127,7 +129,7 @@ export function ForumReportSheet({
             >
               🛡️
             </motion.div>
-            <h3 className="font-display text-xl font-semibold">Thanks for telling us</h3>
+            <h3 className="font-display text-2xl">Thanks for telling us</h3>
             <p className="mt-1 max-w-xs text-sm text-ink-soft">
               We’ll take a look at this {noun}. Keeping the forum kind keeps it cozy 💚
             </p>
@@ -162,7 +164,7 @@ export function ForumActionSheet({
           <button
             type="button"
             onClick={() => onReport(target.report)}
-            className="flex w-full items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-left font-display font-semibold text-ink shadow-soft ring-1 ring-cream-200 active:scale-[0.98]"
+            className="flex w-full items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-left font-display text-ink shadow-soft ring-1 ring-cream-200 active:scale-[0.98]"
           >
             <span className="text-xl" aria-hidden>
               🚩
@@ -172,14 +174,14 @@ export function ForumActionSheet({
           <button
             type="button"
             onClick={() => onBlock(target.userId, target.report.authorName)}
-            className="flex w-full items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-left font-display font-semibold text-mcgill shadow-soft ring-1 ring-cream-200 active:scale-[0.98]"
+            className="flex w-full items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-left font-display text-mcgill shadow-soft ring-1 ring-cream-200 active:scale-[0.98]"
           >
             <span className="text-xl" aria-hidden>
               🚫
             </span>
             Block {target.report.authorName}
           </button>
-          <p className="px-1 pt-1 text-xs text-ink-muted">
+          <p className="px-1 pt-1 text-sm text-ink-muted">
             Blocking hides their Bud, posts, replies and messages everywhere.
           </p>
         </div>

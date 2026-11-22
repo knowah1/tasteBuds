@@ -37,7 +37,7 @@ export function MemberSheet({
     <Sheet open={open} onClose={onClose} title={`In the kitchen · ${members.length}`}>
       <div className="space-y-2 pt-1">
         {isHost && !room.archived && (
-          <p className="rounded-2xl bg-leaf-50 px-3 py-2 text-xs text-leaf-700">
+          <p className="rounded-2xl bg-leaf-50 px-3 py-2 text-sm text-leaf-700">
             🔒 Late joiners only see messages sent after they arrived. Tap “Peek” to see the chat
             through a guest’s eyes.
           </p>
@@ -70,16 +70,16 @@ export function MemberSheet({
                 <UserAvatar userId={u.id} size={44} ring={u.id === meId} />
               </button>
               <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-1.5 truncate font-display font-semibold">
+                <p className="flex items-center gap-1.5 truncate font-display text-lg">
                   {u.id === meId ? 'You' : `${u.firstName} ${u.lastName}`}
                   {isOwner && <Badge className="bg-saffron-light text-ink">👑 Host</Badge>}
                 </p>
-                <p className="truncate text-xs text-ink-muted">
+                <p className="truncate text-sm text-ink-muted">
                   @{u.username} · Lv {levelFromXp(u.xp)}
                   {member && !isOwner && <> · joined {formatTime(member.joinedAt)}</>}
                 </p>
                 {isHost && !isOwner && (
-                  <p className="text-[11px] text-ink-soft">
+                  <p className="text-sm text-ink-soft">
                     Sees {sees} of {total} message{total === 1 ? '' : 's'}
                   </p>
                 )}
@@ -92,7 +92,7 @@ export function MemberSheet({
                     onClose();
                   }}
                   className={cn(
-                    'shrink-0 rounded-full px-3 py-1.5 font-display text-xs font-semibold',
+                    'shrink-0 rounded-full px-3 py-1.5 text-sm',
                     peeking ? 'bg-leaf-500 text-white' : 'bg-cream-200 text-ink-soft',
                   )}
                 >
