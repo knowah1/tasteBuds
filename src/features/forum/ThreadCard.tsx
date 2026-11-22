@@ -83,7 +83,7 @@ export const ThreadCard = memo(function ThreadCard({
           <div className="mt-1 flex items-center gap-1.5 text-xs text-ink-muted">
             {author && (
               <BudAvatar
-                bud={author.bud}
+                userId={author.id}
                 size={20}
                 animated={false}
                 state={resolved ? 'idle' : 'panicked'}

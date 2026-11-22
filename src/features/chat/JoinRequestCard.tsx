@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
-import { Avatar, Badge, Button } from '@/components/ui';
+import { Badge, Button } from '@/components/ui';
+import { UserAvatar } from '@/features/bud';
 import { useStore } from '@/store';
 import { selectIncomingRequests } from '@/store/chatSlice';
 import { CUISINE_META, POST_TYPE_META, TONE_CLASSES } from '@/lib/cuisine';
@@ -107,7 +108,7 @@ export function JoinRequestCard({
           aria-label={`Open ${user.firstName}'s profile`}
           className="shrink-0 rounded-full bg-leaf-50 p-1"
         >
-          <Avatar bud={user.bud} size={52} />
+          <UserAvatar userId={user.id} size={52} />
         </button>
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-1.5">

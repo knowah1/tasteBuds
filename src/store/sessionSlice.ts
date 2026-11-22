@@ -1,8 +1,10 @@
-import type { Account, User } from '@/types';
+import type { Account, ID, User } from '@/types';
 import { api, type Snapshot } from '@/mock/api';
 import type { SliceCreator } from './types';
 
 export interface SessionSlice {
+  currentUserId: ID | null;
+  /** Always the very same object as `usersById[currentUserId]`, never a separate copy. */
   me: User | null;
   account: Account | null;
   /** Pull the latest viewer-scoped snapshot from the mock API into every slice. */
@@ -16,10 +18,16 @@ export interface SessionSlice {
 
 /** Maps an API snapshot onto store fields. */
 export function snapshotToState(s: Snapshot) {
+  const currentUserId = s.me?.id ?? null;
+  const users = s.me && !s.users.some((u) => u.id === s.me?.id) ? [...s.users, s.me] : s.users;
+  const usersById: Record<ID, User> = {};
+  users.forEach((u) => (usersById[u.id] = u));
   return {
-    me: s.me,
+    currentUserId,
+    me: currentUserId ? usersById[currentUserId] : null,
     account: s.account,
-    users: s.users,
+    users,
+    usersById,
     posts: s.posts,
     requests: s.requests,
     rooms: s.rooms,
@@ -41,6 +49,7 @@ const clearedOverlays = {
 };
 
 export const createSessionSlice: SliceCreator<SessionSlice> = (set, get) => ({
+  currentUserId: null,
   me: null,
   account: null,
   sync: () => set(snapshotToState(api.snapshot())),

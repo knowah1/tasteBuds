@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { BudAvatar } from '@/features/bud';
 import { POST_TYPE_META } from '@/lib/cuisine';
 import { cn } from '@/lib/cn';
-import type { Bud, PostType } from '@/types';
+import type { ID, PostType } from '@/types';
 
 /** What one pooled cluster marker shows. Rebuilt only when membership changes. */
 export interface ClusterView {
@@ -10,8 +10,11 @@ export interface ClusterView {
   /** Still a live cluster (false while the marker fades out after a split). */
   active: boolean;
   count: number;
-  /** Up to 3 members, most interesting first. The rest show as a "+N" badge. */
-  faces: { id: string; bud: Bud; panicked: boolean }[];
+  /**
+   * Up to 3 members (by userId), most interesting first. The rest show as a "+N" badge.
+   * Each face looks up its Bud by id, so an edited Bud shows here without a re-cluster.
+   */
+  faces: { id: ID; panicked: boolean }[];
   /** Any member is having a Bud-mergency. */
   emergency: boolean;
   /** Post types (Learn/Teach/Potluck) open among the members, in a fixed order. */
@@ -54,7 +57,7 @@ export const ClusterPill = memo(function ClusterPill({ view, elRef, onTap }: Clu
                 style={{ zIndex: 3 - i }}
               >
                 <BudAvatar
-                  bud={f.bud}
+                  userId={f.id}
                   size={34}
                   state={f.panicked ? 'panicked' : 'idle'}
                   animated={false}

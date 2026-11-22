@@ -38,7 +38,7 @@ export function GlobeFallback({
               className="flex w-full items-center gap-3 rounded-chunky bg-white p-3 text-left shadow-soft ring-2 ring-cream-300 transition active:scale-[0.98]"
             >
               <BudAvatar
-                bud={b.user.bud}
+                userId={b.user.id}
                 size={48}
                 ring={b.isMe}
                 animated={false}

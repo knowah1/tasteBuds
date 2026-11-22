@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { BudAvatar, DEFAULT_BUD } from '@/features/bud';
+import { BudAvatar } from '@/features/bud';
 import { POST_TYPE_META } from '@/lib/cuisine';
 import { cn } from '@/lib/cn';
-import type { Bud, PostType } from '@/types';
+import type { ID, PostType } from '@/types';
 
 const BACKDROP: Record<PostType, string> = {
   learn: 'from-learn-light',
@@ -16,7 +16,7 @@ const BACKDROP: Record<PostType, string> = {
  * auto-generated title above its head. Re-pops whenever `popKey` changes.
  */
 export function BubblePreview({
-  bud,
+  userId,
   type,
   title,
   complete,
@@ -24,7 +24,8 @@ export function BubblePreview({
   size = 76,
   className,
 }: {
-  bud?: Bud;
+  /** Whose Bud to show (resolved from their user record). */
+  userId: ID | undefined;
   type: PostType;
   title: string;
   /** False while a title slot is still a placeholder (dims the bubble). */
@@ -51,7 +52,7 @@ export function BubblePreview({
         className={cn('transition-opacity', complete ? 'opacity-100' : 'opacity-60')}
       >
         <BudAvatar
-          bud={bud ?? DEFAULT_BUD}
+          userId={userId}
           size={size}
           state={emergency ? 'panicked' : 'hasBubble'}
           bubble={title}

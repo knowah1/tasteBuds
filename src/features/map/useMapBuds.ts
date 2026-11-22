@@ -5,6 +5,7 @@ import { api } from '@/mock/api';
 import type { Post, User, Zone } from '@/types';
 
 export interface MapBudInfo {
+  /** For name/cuisines. Render the Bud with `userId={user.id}`, never from a copy. */
   user: User;
   zone: Zone;
   /** The post whose bubble this Bud carries (Bud-mergencies win, then the newest). */
@@ -41,8 +42,8 @@ export function useMapBuds(filter: MapFilter): MapBudInfo[] {
     const byHost = new Map<string, Post[]>();
     live.forEach((p) => byHost.set(p.hostId, [...(byHost.get(p.hostId) ?? []), p]));
 
-    const all = me && !users.some((u) => u.id === me.id) ? [...users, me] : users;
-    return all.map((user) => {
+    // `users` already holds the signed-in user's record (see snapshotToState).
+    return users.map((user) => {
       const zone = api.zones.find((z) => z.id === user.zoneId) ?? api.zones[0];
       const hosted = byHost.get(user.id) ?? [];
       const pick = (list: Post[]) =>

@@ -4,8 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import { BackBar } from '@/app/TopBar';
 import { Screen } from '@/app/Screen';
-import { Avatar, Badge, Button, Card, EmptyState, Icon, Skeleton } from '@/components/ui';
-import { BudAvatar } from '@/features/bud';
+import { Badge, Button, Card, EmptyState, Icon, Skeleton } from '@/components/ui';
+import { BudAvatar, UserAvatar } from '@/features/bud';
 import { selectPost, selectUser, useStore } from '@/store';
 import { selectMyRequest, selectRequestsForPost, selectRoomForPost } from '@/store/postSlice';
 import { api } from '@/mock/api';
@@ -120,7 +120,7 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
         >
           <div className="flex justify-center">
             <BudAvatar
-              bud={host.bud}
+              userId={host.id}
               size={96}
               state={phase === 'ended' ? 'idle' : emergency ? 'panicked' : 'hasBubble'}
               bubble={phase === 'ended' ? undefined : post.title}
@@ -200,7 +200,7 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
           onClick={() => navigate(isHost ? '/profile' : `/user/${host.id}`)}
           className="flex items-center gap-3"
         >
-          <Avatar bud={host.bud} size={52} />
+          <UserAvatar userId={host.id} size={52} />
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">
               {isHost ? 'You’re hosting' : 'Hosted by'}
@@ -225,7 +225,7 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
             <div className="flex flex-wrap gap-3">
               {members.map((u) => (
                 <div key={u.id} className="flex w-14 flex-col items-center">
-                  <Avatar bud={u.bud} size={44} ring={u.id === me?.id} />
+                  <UserAvatar userId={u.id} size={44} ring={u.id === me?.id} />
                   <span className="mt-1 w-full truncate text-center text-[11px] text-ink-soft">
                     {u.id === me?.id ? 'You' : u.firstName}
                   </span>

@@ -217,7 +217,11 @@ export function ThreadScreen() {
                   className="shrink-0"
                 >
                   {author && (
-                    <BudAvatar bud={author.bud} size={60} state={resolved ? 'idle' : 'panicked'} />
+                    <BudAvatar
+                      userId={author.id}
+                      size={60}
+                      state={resolved ? 'idle' : 'panicked'}
+                    />
                   )}
                 </button>
                 <div className="min-w-0 flex-1">

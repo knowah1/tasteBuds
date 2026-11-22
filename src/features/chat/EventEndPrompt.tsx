@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Button, Modal } from '@/components/ui';
-import { Confetti } from '@/features/bud';
+import { Button, Modal } from '@/components/ui';
+import { Confetti, UserAvatar } from '@/features/bud';
 import { useStore } from '@/store';
 import { hasEventEnded } from '@/store/chatSlice';
 import { XP_REWARDS } from '@/lib/xp';
@@ -112,7 +112,7 @@ export function EventEndPrompt() {
               <div className="mt-3 flex justify-center -space-x-2">
                 {guests.slice(0, 6).map((u) => (
                   <span key={u.id} className="rounded-full bg-white ring-2 ring-cream">
-                    <Avatar bud={u.bud} size={34} />
+                    <UserAvatar userId={u.id} size={34} />
                   </span>
                 ))}
               </div>

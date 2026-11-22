@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Avatar, Icon } from '@/components/ui';
+import { Icon } from '@/components/ui';
+import { UserAvatar } from '@/features/bud';
 import { formatTime } from '@/lib/time';
 import { cn } from '@/lib/cn';
 import type { ID, Message, User } from '@/types';
@@ -75,7 +76,7 @@ export function MessageList({
           >
             {!mine && (
               <span className="w-8 shrink-0">
-                {item.last && sender && <Avatar bud={sender.bud} size={32} />}
+                {item.last && sender && <UserAvatar userId={sender.id} size={32} />}
               </span>
             )}
             <div className={cn('flex max-w-[75%] flex-col', mine ? 'items-end' : 'items-start')}>

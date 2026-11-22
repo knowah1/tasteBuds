@@ -69,7 +69,7 @@ export function ReplyItem({
           className="shrink-0 self-start"
         >
           {author ? (
-            <BudAvatar bud={author.bud} size={depth === 0 ? 38 : 30} animated={false} />
+            <BudAvatar userId={author.id} size={depth === 0 ? 38 : 30} animated={false} />
           ) : (
             <span className="block h-8 w-8 rounded-full bg-cream-200" />
           )}
