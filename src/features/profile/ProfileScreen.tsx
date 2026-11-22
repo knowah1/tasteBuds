@@ -47,7 +47,7 @@ function SignOutButton() {
       </Button>
       <Modal open={confirming} onClose={() => !busy && setConfirming(false)} className="text-center">
         <p className="text-4xl">👋</p>
-        <h2 className="mt-2 font-display text-xl font-bold">Sign out?</h2>
+        <h2 className="mt-2 font-display text-2xl">Sign out?</h2>
         <p className="mt-1 text-sm text-ink-soft">You'll go back to the welcome screen.</p>
         <div className="mt-5 grid grid-cols-2 gap-3">
           <Button variant="secondary" disabled={busy} onClick={() => setConfirming(false)}>

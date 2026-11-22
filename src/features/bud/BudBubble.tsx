@@ -42,8 +42,8 @@ export function BudBubble({ text, type, className, compact }: BudBubbleProps) {
     >
       <div
         className={cn(
-          'max-w-[150px] rounded-2xl bg-white text-center font-display font-semibold leading-tight text-ink shadow-soft ring-2',
-          compact ? 'px-2 py-1 text-[10px]' : 'px-3 py-1.5 text-xs',
+          'max-w-[150px] rounded-2xl bg-white text-center font-display leading-snug text-ink shadow-soft ring-2',
+          compact ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm',
           type ? RING[type] : 'ring-cream-300',
         )}
       >
@@ -72,7 +72,7 @@ export function EmergencyBanner({ className }: { className?: string }) {
         rotate: { duration: 1.2, repeat: Infinity, ease: 'easeInOut' },
       }}
       className={cn(
-        'pointer-events-none w-max whitespace-nowrap rounded-full bg-emergency px-2 py-0.5 font-display text-[10px] font-bold uppercase tracking-wide text-white shadow-chunky ring-2 ring-white',
+        'pointer-events-none w-max whitespace-nowrap rounded-full bg-emergency px-2 py-0.5 font-display text-xs uppercase tracking-wide text-white shadow-chunky ring-2 ring-white',
         className,
       )}
     >

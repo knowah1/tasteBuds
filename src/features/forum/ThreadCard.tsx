@@ -72,7 +72,7 @@ export const ThreadCard = memo(function ThreadCard({
           <div className="flex items-start justify-between gap-2">
             <p
               className={cn(
-                'font-display font-semibold leading-tight',
+                'font-display text-lg leading-snug',
                 resolved ? 'text-ink-soft' : 'text-ink',
               )}
             >
@@ -80,7 +80,7 @@ export const ThreadCard = memo(function ThreadCard({
             </p>
           </div>
 
-          <div className="mt-1 flex items-center gap-1.5 text-xs text-ink-muted">
+          <div className="mt-1 flex items-center gap-1.5 text-sm text-ink-muted">
             {author && (
               <BudAvatar
                 userId={author.id}
@@ -89,14 +89,14 @@ export const ThreadCard = memo(function ThreadCard({
                 state={resolved ? 'idle' : 'panicked'}
               />
             )}
-            <span className="truncate font-semibold text-ink-soft">
+            <span className="truncate text-ink-soft">
               {isMine ? 'You' : (author?.firstName ?? 'A bud')}
             </span>
             <span>· {timeAgo(thread.createdAt, now)}</span>
           </div>
 
           {thread.description && (
-            <p className="mt-1.5 line-clamp-2 break-words text-sm text-ink-soft">
+            <p className="mt-1.5 line-clamp-2 break-words text-sm leading-relaxed text-ink-soft">
               {thread.description}
             </p>
           )}

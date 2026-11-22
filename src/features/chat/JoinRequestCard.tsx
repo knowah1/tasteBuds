@@ -96,7 +96,7 @@ export function JoinRequestCard({
           className="mb-3 flex w-full items-center gap-2 rounded-2xl bg-cream-100 px-3 py-1.5 text-left"
         >
           <span aria-hidden>{meta.emoji}</span>
-          <span className="min-w-0 flex-1 truncate font-display text-xs font-semibold text-ink-soft">
+          <span className="min-w-0 flex-1 truncate font-display text-sm text-ink-soft">
             {post.title}
           </span>
         </button>
@@ -112,12 +112,12 @@ export function JoinRequestCard({
         </button>
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-1.5">
-            <p className="truncate font-display text-base font-semibold">
+            <p className="truncate font-display text-lg">
               {user.firstName} {user.lastName}
             </p>
-            <span className="shrink-0 text-xs text-ink-muted">· {timeAgo(request.createdAt)}</span>
+            <span className="shrink-0 text-sm text-ink-muted">· {timeAgo(request.createdAt)}</span>
           </div>
-          <p className="truncate text-xs text-ink-muted">
+          <p className="truncate text-sm text-ink-muted">
             @{user.username} · Lv {levelFromXp(user.xp)}
           </p>
           <div className="mt-1.5 flex flex-wrap gap-1">

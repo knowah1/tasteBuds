@@ -179,7 +179,7 @@ export function AccountStep() {
                   key={s}
                   type="button"
                   onClick={() => set('username')(s)}
-                  className="h-9 rounded-full bg-white px-3 font-display text-sm font-medium text-ink-soft ring-2 ring-cream-300 active:scale-95"
+                  className="h-9 rounded-full bg-white px-3 text-sm text-ink-soft ring-2 ring-cream-300 active:scale-95"
                 >
                   @{s}
                 </button>
@@ -241,7 +241,7 @@ export function AccountStep() {
                       set('email')(emailLocal + d);
                       touch('email')();
                     }}
-                    className="h-9 rounded-full bg-white px-3 font-display text-sm font-medium text-ink-soft ring-2 ring-cream-300 active:scale-95"
+                    className="h-9 rounded-full bg-white px-3 text-sm text-ink-soft ring-2 ring-cream-300 active:scale-95"
                   >
                     {emailLocal}
                     <b className="text-leaf-600">{d}</b>
@@ -266,7 +266,7 @@ export function AccountStep() {
               <button
                 type="button"
                 onClick={() => setShowPw((v) => !v)}
-                className="h-9 rounded-full px-2 font-display text-xs font-semibold text-ink-muted hover:bg-cream-200"
+                className="h-9 rounded-full px-2 text-sm text-ink-muted hover:bg-cream-200"
                 aria-label={showPw ? 'Hide password' : 'Show password'}
               >
                 {showPw ? 'Hide' : 'Show'}
@@ -287,12 +287,7 @@ export function AccountStep() {
                 />
               ))}
             </div>
-            <span
-              className={cn(
-                'w-20 text-right font-display text-xs font-semibold',
-                STRENGTH_TEXT[strength.level],
-              )}
-            >
+            <span className={cn('w-20 text-right text-sm', STRENGTH_TEXT[strength.level])}>
               {strength.label || 'Strength'}
             </span>
           </div>

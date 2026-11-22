@@ -1,3 +1,28 @@
+/*
+ * Hand-drawn faces. Root-absolute /fonts/... URLs point at public/fonts; Vite prefixes them
+ * with `base` at build time, so they keep working if the app moves under a sub-path.
+ * Each face has only a Regular (400) cut, so html sets font-synthesis: none (no faux bold).
+ */
+@font-face {
+  font-family: 'TasteBuds Display';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('/fonts/TasteBudsDisplay-Regular.woff') format('woff'),
+    url('/fonts/TasteBudsDisplay-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'TasteBuds Hand';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('/fonts/TasteBudsHand-Regular.woff') format('woff'),
+    url('/fonts/TasteBudsHand-Regular.ttf') format('truetype');
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,20 +33,43 @@
   #root {
     @apply h-full;
   }
+  html {
+    @apply font-body;
+    font-synthesis: none;
+  }
   body {
-    @apply bg-cream-200 font-sans text-ink antialiased;
+    @apply bg-cream-200 font-body text-ink antialiased;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior: none;
   }
   h1,
   h2,
   h3,
-  h4 {
-    @apply font-display;
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-normal;
+  }
+  /* Form controls don't inherit font by default; make sure they pick up the hand font. */
+  input,
+  textarea,
+  select,
+  button {
+    font-family: inherit;
+    font-synthesis: inherit;
   }
 }
 
 @layer utilities {
+  /*
+   * The hand-drawn faces' descenders (g, j, q) dip ~0.47em below the baseline, deeper than the
+   * fonts' declared descent, so overflow:hidden would shave them off. Grow the clip box without
+   * changing layout.
+   */
+  .truncate {
+    padding-bottom: 0.2em;
+    margin-bottom: -0.2em;
+  }
   .no-scrollbar {
     scrollbar-width: none;
   }

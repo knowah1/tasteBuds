@@ -32,7 +32,7 @@ export function Chip({
       animate={{ scale: selected ? 1.04 : 1 }}
       transition={{ type: 'spring', stiffness: 500, damping: 22 }}
       className={cn(
-        'inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-4 font-display text-sm font-medium ring-2 transition-colors',
+        'inline-flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-sm ring-2 transition-colors',
         selected ? selectedClassName : 'bg-white text-ink ring-cream-300 hover:bg-cream-50',
         disabled && 'opacity-50',
         className,
@@ -54,7 +54,7 @@ export function Badge({ children, className }: BadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-display text-xs font-semibold',
+        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-sm',
         className ?? 'bg-cream-200 text-ink-soft',
       )}
     >

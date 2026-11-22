@@ -74,17 +74,14 @@ export function PinnedEventHeader({
             📌
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate font-display text-sm font-semibold">{post.title}</span>
+            <span className="block truncate font-display text-base">{post.title}</span>
             <span className="mt-0.5 flex items-center gap-1.5">
               <span
-                className={cn(
-                  'rounded-full px-2 py-px font-display text-[11px] font-semibold tabular-nums',
-                  PHASE_STYLE[phase],
-                )}
+                className={cn('rounded-full px-2 py-px text-sm tabular-nums', PHASE_STYLE[phase])}
               >
                 {phaseLabel}
               </span>
-              <span className="truncate text-[11px] text-ink-muted">
+              <span className="truncate text-sm text-ink-muted">
                 {room.archived
                   ? formatDay(post.startAt, now)
                   : `${guests}/${post.maxParticipants} guests`}
@@ -132,7 +129,7 @@ export function PinnedEventHeader({
                 <button
                   type="button"
                   onClick={() => navigate(`/post/${post.id}`)}
-                  className="font-display text-xs font-semibold text-mcgill"
+                  className="font-display text-sm text-mcgill"
                 >
                   View full event →
                 </button>
@@ -154,14 +151,14 @@ export function PinnedEventHeader({
               </span>
             ))}
           </span>
-          <span className="min-w-0 flex-1 truncate text-left text-xs font-semibold text-ink-soft">
+          <span className="min-w-0 flex-1 truncate text-left text-sm text-ink-soft">
             {members
               .slice(0, 3)
               .map((u) => (u.id === meId ? 'You' : u.firstName))
               .join(', ')}
             {members.length > 3 && ` +${members.length - 3}`}
           </span>
-          <span className="font-display text-xs font-semibold text-ink-muted">
+          <span className="shrink-0 font-display text-sm text-ink-muted">
             {members.length} in the kitchen ›
           </span>
         </button>

@@ -44,7 +44,7 @@ export function BubblePreview({
       )}
       style={{ paddingTop: size * 0.95 }}
     >
-      <span className="absolute left-3 top-2.5 font-display text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
+      <span className="absolute left-3 top-2.5 text-sm uppercase tracking-wide text-ink-muted">
         Live preview
       </span>
       <motion.div
@@ -61,12 +61,7 @@ export function BubblePreview({
           label="Your Bud"
         />
       </motion.div>
-      <span
-        className={cn(
-          'mt-5 font-display text-xs font-semibold',
-          emergency ? 'text-emergency' : 'text-ink-muted',
-        )}
-      >
+      <span className={cn('mt-5 text-sm', emergency ? 'text-emergency' : 'text-ink-muted')}>
         {POST_TYPE_META[type].emoji} This is how your Bud will look on the map
       </span>
     </div>

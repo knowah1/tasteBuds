@@ -55,7 +55,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       whileHover={isDisabled ? undefined : { scale: 1.02 }}
       transition={{ type: 'spring', stiffness: 500, damping: 25 }}
       className={cn(
-        'inline-flex select-none items-center justify-center font-display font-semibold transition-colors',
+        'inline-flex select-none items-center justify-center font-display transition-colors',
         'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-leaf-200',
         VARIANTS[variant],
         SIZES[size],
@@ -99,7 +99,7 @@ export function IconButton({ label, children, badge, className, ...rest }: IconB
     >
       {children}
       {!!badge && badge > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-mcgill px-1 text-[11px] font-bold text-white ring-2 ring-cream">
+        <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-mcgill px-1 font-display text-xs leading-none text-white ring-2 ring-cream">
           {badge > 9 ? '9+' : badge}
         </span>
       )}

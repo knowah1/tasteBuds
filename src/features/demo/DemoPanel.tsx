@@ -80,7 +80,7 @@ export function DemoPanel() {
         >
           Reset all data
         </Button>
-        <p className="text-center text-xs text-ink-muted">
+        <p className="text-center text-sm text-ink-muted">
           Join requests, fast-forward and nearby posts arrive in Phase 4.
         </p>
       </div>

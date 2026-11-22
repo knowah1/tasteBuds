@@ -225,12 +225,12 @@ export function ThreadScreen() {
                   )}
                 </button>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs text-ink-muted">
-                    <span className="font-semibold text-ink-soft">{nameOf(thread.authorId)}</span>
+                  <p className="text-sm text-ink-muted">
+                    <span className="text-ink-soft">{nameOf(thread.authorId)}</span>
                     {author && !isOp && <> · @{author.username}</>} ·{' '}
                     {timeAgo(thread.createdAt, now)}
                   </p>
-                  <h2 className="mt-0.5 break-words font-display text-xl font-bold leading-tight">
+                  <h2 className="mt-0.5 break-words font-display text-2xl leading-snug">
                     {thread.title}
                   </h2>
                 </div>
@@ -278,7 +278,7 @@ export function ThreadScreen() {
                       style={{ width: `${timeLeftFraction(thread, now) * 100}%` }}
                     />
                   </div>
-                  <p className="mt-1 text-right text-[11px] text-ink-muted">
+                  <p className="mt-1 text-right text-sm text-ink-muted">
                     Ends at {formatTime(thread.expiresAt)}
                   </p>
                 </div>
@@ -297,7 +297,7 @@ export function ThreadScreen() {
                     <Icon name="check" size={22} />
                   </span>
                   <div className="min-w-0">
-                    <p className="font-display font-semibold text-leaf-700">Resolved</p>
+                    <p className="font-display text-lg text-leaf-700">Resolved</p>
                     <p className="text-sm text-ink-soft">
                       This bud-mergency ended {timeAgo(thread.expiresAt, now)}. Replies are closed,
                       but the tips stay here for the next bud stuck with{' '}
@@ -337,8 +337,8 @@ export function ThreadScreen() {
                     >
                       🌟
                     </motion.span>
-                    <p className="font-display text-sm font-bold text-ink">This saved me!</p>
-                    <span className="ml-auto flex items-center gap-1 text-[11px] font-semibold text-ink-soft">
+                    <p className="font-display text-base text-ink">This saved me!</p>
+                    <span className="ml-auto flex items-center gap-1 text-sm text-ink-soft">
                       <span aria-hidden>📌</span> Pinned by {nameOf(thread.authorId)}
                     </span>
                   </div>
@@ -349,7 +349,7 @@ export function ThreadScreen() {
 
             {/* Replies */}
             <div className="mt-5 flex items-baseline justify-between px-1">
-              <h3 className="font-display text-base font-semibold">
+              <h3 className="font-display text-lg">
                 {otherCount === 0
                   ? tree.pinned
                     ? 'Other tips'
@@ -357,7 +357,7 @@ export function ThreadScreen() {
                   : `${otherCount} ${tree.pinned ? 'other ' : ''}${otherCount === 1 ? 'tip' : 'tips'}`}
               </h3>
               {tree.nodes.length > 1 && (
-                <span className="text-xs text-ink-muted">Most 🌱 first</span>
+                <span className="text-sm text-ink-muted">Most 🌱 first</span>
               )}
             </div>
 
@@ -410,8 +410,8 @@ export function ThreadScreen() {
             >
               🌟
             </motion.div>
-            <h3 className="font-display text-xl font-bold">Did this save you?</h3>
-            <p className="mx-auto mt-2 line-clamp-3 max-w-xs break-words rounded-2xl bg-white px-3 py-2 text-sm text-ink-soft shadow-soft">
+            <h3 className="font-display text-2xl">Did this save you?</h3>
+            <p className="mx-auto mt-2 line-clamp-3 max-w-xs break-words leading-relaxed rounded-2xl bg-white px-3 py-2 text-sm text-ink-soft shadow-soft">
               “{confirmSave.text}”
             </p>
             <p className="mt-3 text-sm text-ink-soft">

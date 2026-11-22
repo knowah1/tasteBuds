@@ -83,7 +83,7 @@ export function MapScreen() {
                 initial={{ y: -12, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -12, opacity: 0 }}
-                className="rounded-full bg-white/90 px-3 py-1 font-display text-xs font-semibold text-ink-soft shadow-soft backdrop-blur"
+                className="rounded-full bg-white/90 px-3 py-1 text-sm text-ink-soft shadow-soft backdrop-blur"
               >
                 {mapFilter === 'all'
                   ? `${others.length} Buds around the world · ${withPosts} cooking`
@@ -103,7 +103,7 @@ export function MapScreen() {
               className="absolute inset-x-4 bottom-4 z-[3000] rounded-chunky bg-white p-4 text-center shadow-lift ring-2 ring-cream-300"
             >
               <div className="text-3xl">{POST_TYPE_META[mapFilter].emoji}</div>
-              <p className="mt-1 font-display text-base font-semibold text-ink">
+              <p className="mt-1 font-display text-lg text-ink">
                 No {POST_TYPE_META[mapFilter].label} posts right now
               </p>
               <p className="text-sm text-ink-soft">Be the first. Your Bud will get the bubble!</p>

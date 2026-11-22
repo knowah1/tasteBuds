@@ -23,7 +23,7 @@ export function EmptyState({ emoji = '🌱', art, title, body, action }: EmptySt
       >
         {art ?? emoji}
       </motion.div>
-      <h3 className="font-display text-xl font-semibold text-ink">{title}</h3>
+      <h3 className="font-display text-2xl text-ink">{title}</h3>
       {body && <p className="mt-1 max-w-xs text-sm text-ink-soft">{body}</p>}
       {action && <div className="mt-5">{action}</div>}
     </motion.div>

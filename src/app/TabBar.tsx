@@ -18,7 +18,7 @@ function Tab({ to, label, icon }: (typeof TABS)[number]) {
         <motion.span
           whileTap={{ scale: 0.88 }}
           className={cn(
-            'relative flex h-14 w-16 flex-col items-center justify-center gap-0.5 font-display text-[11px] font-semibold',
+            'relative flex h-14 w-16 flex-col items-center justify-center gap-0.5 font-display text-sm leading-none',
             isActive ? 'text-mcgill' : 'text-ink-muted',
           )}
         >

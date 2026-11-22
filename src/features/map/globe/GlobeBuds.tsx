@@ -945,7 +945,7 @@ const GlobeBud = memo(function GlobeBud({
                 />
               </div>
               {isMe && !panicked && (
-                <span className="pointer-events-none absolute left-1/2 top-full -mt-1 -translate-x-1/2 rounded-full bg-mcgill px-2 py-px font-display text-[10px] font-bold uppercase tracking-wide text-white shadow-chunky ring-2 ring-white">
+                <span className="pointer-events-none absolute left-1/2 top-full -mt-1 -translate-x-1/2 rounded-full bg-mcgill px-2 py-px font-display text-xs uppercase tracking-wide text-white shadow-chunky ring-2 ring-white">
                   You
                 </span>
               )}

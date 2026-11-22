@@ -53,8 +53,9 @@ export default {
         },
       },
       fontFamily: {
-        display: ['Fredoka', 'ui-rounded', 'system-ui', 'sans-serif'],
-        sans: ['Nunito', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // Custom hand-drawn faces (public/fonts, @font-face in src/index.css). Regular only.
+        display: ['"TasteBuds Display"', 'Fredoka', 'system-ui', 'sans-serif'],
+        body: ['"TasteBuds Hand"', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         chunky: '1.5rem',

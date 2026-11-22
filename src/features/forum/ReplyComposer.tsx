@@ -67,7 +67,7 @@ export function ReplyComposer({
             className="overflow-hidden"
           >
             <div className="mb-2 flex items-center gap-2 pl-1">
-              <span className="rounded-full bg-leaf-100 px-3 py-1 font-display text-xs font-semibold text-leaf-700">
+              <span className="rounded-full bg-leaf-100 px-3 py-1 text-sm text-leaf-700">
                 ↩ Replying to {replyingTo}
               </span>
               <button
@@ -99,7 +99,7 @@ export function ReplyComposer({
                     setText(q);
                     inputRef.current?.focus();
                   }}
-                  className="shrink-0 rounded-full bg-white px-3 py-1.5 font-display text-xs font-medium text-ink-soft shadow-soft ring-1 ring-cream-200"
+                  className="shrink-0 rounded-full bg-white px-3 py-1.5 text-sm text-ink-soft shadow-soft ring-1 ring-cream-200"
                 >
                   {q.trim()}
                 </motion.button>
@@ -132,7 +132,7 @@ export function ReplyComposer({
           {text.length > REPLY_MAX * 0.8 && (
             <span
               className={cn(
-                'pointer-events-none absolute -top-5 right-3 font-display text-[11px] font-semibold',
+                'pointer-events-none absolute -top-5 right-3 text-sm',
                 text.length >= REPLY_MAX ? 'text-mcgill' : 'text-ink-muted',
               )}
             >

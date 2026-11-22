@@ -86,7 +86,7 @@ export function OnboardingScreen() {
               <span className="flex h-11 w-11 items-center justify-center text-2xl">🌱</span>
             )}
             <div className="flex-1">
-              <div className="mb-1.5 flex justify-between font-display text-xs font-semibold text-ink-muted">
+              <div className="mb-1.5 flex justify-between text-sm text-ink-muted">
                 <span>
                   Step {numbered + 1} of {NUMBERED.length}
                 </span>

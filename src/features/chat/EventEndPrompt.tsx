@@ -93,11 +93,11 @@ export function EventEndPrompt() {
             >
               {timeUp ? '⏰' : '🎬'}
             </motion.div>
-            <h2 className="font-display text-2xl font-bold">
+            <h2 className="font-display text-2xl">
               {timeUp ? 'That’s a wrap!' : 'End the event?'}
             </h2>
-            <p className="mt-1 line-clamp-2 text-sm text-ink-soft">{post.title}</p>
-            <div className="mt-3 flex items-center justify-center gap-3 text-xs font-semibold text-ink-soft">
+            <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-ink-soft">{post.title}</p>
+            <div className="mt-3 flex items-center justify-center gap-3 text-sm text-ink-soft">
               <span>
                 👥 {guests.length} guest{guests.length === 1 ? '' : 's'}
               </span>
@@ -120,7 +120,7 @@ export function EventEndPrompt() {
           </div>
 
           <div className="space-y-2 px-5 pb-5 pt-3">
-            <p className="text-center text-xs text-ink-muted">
+            <p className="text-center text-sm text-ink-muted">
               Guests leave the kitchen either way. What about the chat?
             </p>
             <ChoiceCard
@@ -189,8 +189,8 @@ function ChoiceCard({
         {emoji}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block font-display font-semibold">{title}</span>
-        <span className="block text-xs text-ink-soft">{body}</span>
+        <span className="block font-display text-lg">{title}</span>
+        <span className="block text-sm text-ink-soft">{body}</span>
       </span>
       <span
         className={cn(

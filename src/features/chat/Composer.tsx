@@ -59,7 +59,7 @@ export function Composer({
                 type="button"
                 whileTap={{ scale: 0.92 }}
                 onClick={() => void send(q)}
-                className="shrink-0 rounded-full bg-white px-3 py-1.5 font-display text-xs font-medium text-ink-soft shadow-soft ring-1 ring-cream-200"
+                className="shrink-0 rounded-full bg-white px-3 py-1.5 text-sm text-ink-soft shadow-soft ring-1 ring-cream-200"
               >
                 {q}
               </motion.button>

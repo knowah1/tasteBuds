@@ -122,7 +122,7 @@ export function VerifyStep() {
                 animate={char ? { scale: [1, 1.12, 1] } : { scale: 1 }}
                 transition={{ duration: 0.18 }}
                 className={cn(
-                  'flex h-14 items-center justify-center rounded-2xl bg-white font-display text-2xl font-bold ring-2 transition-colors',
+                  'flex h-14 items-center justify-center rounded-2xl bg-white font-display text-2xl ring-2 transition-colors',
                   error
                     ? 'ring-mcgill'
                     : active
@@ -146,7 +146,7 @@ export function VerifyStep() {
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="mt-3 pl-1 text-sm font-semibold text-mcgill"
+            className="mt-3 pl-1 text-sm text-mcgill"
           >
             {error}
           </motion.p>
@@ -176,14 +176,12 @@ export function VerifyStep() {
           >
             <span className="text-2xl">✉️</span>
             <span className="min-w-0 flex-1">
-              <span className="block text-xs font-semibold uppercase tracking-wide text-ink-muted">
+              <span className="block text-sm uppercase tracking-wide text-ink-muted">
                 From Mail
               </span>
-              <span className="font-display text-lg font-bold tracking-[0.3em] text-ink">
-                {inboxCode}
-              </span>
+              <span className="font-display text-lg tracking-[0.3em] text-ink">{inboxCode}</span>
             </span>
-            <span className="font-display text-sm font-semibold text-ink-soft">Tap to fill</span>
+            <span className="font-display text-sm text-ink-soft">Tap to fill</span>
           </motion.button>
         )}
       </AnimatePresence>
@@ -195,7 +193,7 @@ export function VerifyStep() {
           disabled={cooldown > 0}
           onClick={send}
           className={cn(
-            'h-10 rounded-full px-3 font-display font-semibold',
+            'h-10 rounded-full px-3 font-display',
             cooldown > 0 ? 'text-ink-muted' : 'text-mcgill hover:bg-mcgill-light',
           )}
         >

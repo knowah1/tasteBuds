@@ -70,7 +70,7 @@ export function Sheet({
               </div>
               {title && (
                 <div className="flex items-center justify-between px-5 pb-2 pt-1">
-                  <h2 className="font-display text-xl font-semibold text-ink">{title}</h2>
+                  <h2 className="font-display text-2xl text-ink">{title}</h2>
                   <button
                     type="button"
                     onClick={onClose}
