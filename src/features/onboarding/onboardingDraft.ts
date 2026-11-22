@@ -1,18 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Bud, CuisineSkill } from '@/types';
+import type { Bud, CuisineSkill, DegreeLevel } from '@/types';
 import { DEFAULT_BUD } from '@/features/bud';
 
 /** Steps after email verification. Kept client-side until the final commit. */
-export type PostVerifyStep = 'cuisines' | 'bud' | 'celebrate';
+export type PostVerifyStep = 'studies' | 'cuisines' | 'bud' | 'celebrate';
 
 export interface OnboardingDraft {
   step: PostVerifyStep;
+  /** Studies are saved by their own step's Continue; the draft keeps them for Back. */
+  major?: string;
+  degreeLevel?: DegreeLevel;
   cuisines: CuisineSkill[];
   bud: Bud;
 }
 
 const KEY = 'tastebuds:onboarding-draft';
-const EMPTY: OnboardingDraft = { step: 'cuisines', cuisines: [], bud: DEFAULT_BUD };
+const EMPTY: OnboardingDraft = { step: 'studies', cuisines: [], bud: DEFAULT_BUD };
 
 function read(): OnboardingDraft {
   try {

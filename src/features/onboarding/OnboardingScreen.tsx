@@ -8,20 +8,23 @@ import { AccountStep } from './AccountStep';
 import { BudStep } from './BudStep';
 import { CelebrationStep } from './CelebrationStep';
 import { CuisineStep } from './CuisineStep';
+import { StudiesStep } from './StudiesStep';
 import { VerifyStep } from './VerifyStep';
 import { WelcomeStep } from './WelcomeStep';
 import { useOnboardingDraft } from './onboardingDraft';
 
-type Step = 'welcome' | 'account' | 'verify' | 'cuisines' | 'bud' | 'celebrate';
+type Step = 'welcome' | 'account' | 'verify' | 'studies' | 'cuisines' | 'bud' | 'celebrate';
 
-const ORDER: Step[] = ['welcome', 'account', 'verify', 'cuisines', 'bud', 'celebrate'];
-/** Numbered steps shown in the progress header. */
-const NUMBERED: Step[] = ['account', 'verify', 'cuisines', 'bud'];
+const ORDER: Step[] = ['welcome', 'account', 'verify', 'studies', 'cuisines', 'bud', 'celebrate'];
+/** Numbered steps shown in the progress header, with their labels. */
+const NUMBERED: Step[] = ['account', 'verify', 'studies', 'cuisines', 'bud'];
+const NUMBERED_LABELS = ['Account', 'Verify', 'Studies', 'Cuisines', 'Your Bud'];
 
 /**
- * First-launch flow: Account → Verify email → Cuisines → Bud → Celebration → Map.
+ * First-launch flow: Account → Verify email → Studies → Cuisines → Bud → Celebration → Map.
  * Account and verification state live in the mock API, so a reload resumes at the
- * right step; cuisines and Bud stay in a draft until the final "Take me to the map".
+ * right step. Studies save on their own (optional) step; cuisines and Bud stay in a
+ * draft until the final "Take me to the map".
  */
 export function OnboardingScreen() {
   const navigate = useNavigate();
@@ -41,8 +44,9 @@ export function OnboardingScreen() {
 
   // A fresh start (e.g. after "Reset all data") shouldn't inherit an old draft.
   useEffect(() => {
-    if (phase === 'pre' && (draft.cuisines.length || draft.step !== 'cuisines')) clear();
-  }, [phase, draft.cuisines.length, draft.step, clear]);
+    const dirty = draft.cuisines.length || draft.major || draft.degreeLevel;
+    if (phase === 'pre' && (dirty || draft.step !== 'studies')) clear();
+  }, [phase, draft.cuisines.length, draft.major, draft.degreeLevel, draft.step, clear]);
 
   // Slide forward or back depending on where we came from.
   const prev = useRef(step);
@@ -54,9 +58,11 @@ export function OnboardingScreen() {
   const back =
     step === 'account'
       ? () => setPreStep('welcome')
-      : step === 'bud'
-        ? () => update({ step: 'cuisines' })
-        : undefined;
+      : step === 'cuisines'
+        ? () => update({ step: 'studies' })
+        : step === 'bud'
+          ? () => update({ step: 'cuisines' })
+          : undefined;
 
   const finish = async () => {
     await updateProfile({ cuisines: draft.cuisines, bud: sanitizeBud(draft.bud, 1) });
@@ -91,7 +97,7 @@ export function OnboardingScreen() {
                 <span>
                   Step {numbered + 1} of {NUMBERED.length}
                 </span>
-                <span>{['Account', 'Verify', 'Cuisines', 'Your Bud'][numbered]}</span>
+                <span>{NUMBERED_LABELS[numbered]}</span>
               </div>
               <ProgressBar value={(numbered + 1) / NUMBERED.length} label="Onboarding progress" />
             </div>
@@ -117,6 +123,13 @@ export function OnboardingScreen() {
           {step === 'welcome' && <WelcomeStep onStart={() => setPreStep('account')} />}
           {step === 'account' && <AccountStep />}
           {step === 'verify' && <VerifyStep />}
+          {step === 'studies' && (
+            <StudiesStep
+              value={{ major: draft.major, degreeLevel: draft.degreeLevel }}
+              onChange={({ major, degreeLevel }) => update({ major, degreeLevel })}
+              onNext={() => update({ step: 'cuisines' })}
+            />
+          )}
           {step === 'cuisines' && (
             <CuisineStep
               value={draft.cuisines}
