@@ -1,12 +1,8 @@
 import { memo } from 'react';
-import { motion } from 'framer-motion';
 import type { ForumThread, User } from '@/types';
-import { Badge, Card } from '@/components/ui';
-import { BudAvatar } from '@/features/bud';
-import { ingredientEmoji } from '@/lib/cuisine';
-import { timeAgo } from '@/lib/time';
+import { AvatarTile, Card, Pill, type CardShape } from '@/components/ui';
 import { cn } from '@/lib/cn';
-import { URGENCY_META, shortCountdown, timeLeftFraction, urgencyOf } from './forumMeta';
+import { URGENCY_META, shortCountdown, urgencyOf } from './forumMeta';
 
 export interface ThreadCardProps {
   thread: ForumThread;
@@ -14,112 +10,79 @@ export interface ThreadCardProps {
   isMine: boolean;
   replyCount: number;
   now: number;
+  shape?: CardShape;
   onOpen: () => void;
 }
 
-/** One bud-mergency in the feed: ingredient tile, live countdown, draining time bar. */
+/**
+ * One bud-mergency in the feed (sketch 4): the poster's Bud on a tile, the title,
+ * then a countdown pill and a reply-count pill. Ending within the hour → blush outline,
+ * blush tile and a tomato countdown.
+ */
 export const ThreadCard = memo(function ThreadCard({
   thread,
   author,
   isMine,
   replyCount,
   now,
+  shape = 1,
   onOpen,
 }: ThreadCardProps) {
   const urgency = urgencyOf(thread, now);
   const meta = URGENCY_META[urgency];
   const resolved = urgency === 'resolved';
-  const fraction = timeLeftFraction(thread, now);
+  const urgent = urgency === 'critical';
+  const who = isMine ? 'You' : (author?.firstName ?? 'A bud');
 
   return (
     <Card
       interactive
+      shape={shape}
+      outline={meta.edge}
       role="link"
       tabIndex={0}
-      aria-label={`${thread.title}${resolved ? ', resolved' : ''}`}
+      aria-label={`${thread.title}, posted by ${who}${resolved ? ', resolved' : ''}`}
       onClick={onOpen}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpen()}
-      className={cn(
-        'relative overflow-hidden',
-        urgency === 'critical' && 'ring-2 ring-emergency/40',
-      )}
+      className={cn(urgent && 'edge-3')}
     >
-      <div className="flex gap-3">
-        <motion.div
-          className={cn(
-            'flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl text-4xl',
-            meta.tile,
-            resolved && 'grayscale-[40%]',
-          )}
-          animate={
-            urgency === 'critical'
-              ? { rotate: [-6, 6, -6] }
-              : urgency === 'soon'
-                ? { rotate: [-2, 2, -2] }
-                : { rotate: 0 }
-          }
-          transition={
-            resolved || urgency === 'chill'
-              ? undefined
-              : { duration: urgency === 'critical' ? 0.5 : 1.6, repeat: Infinity }
-          }
-          aria-hidden
-        >
-          {ingredientEmoji(thread.ingredient)}
-        </motion.div>
+      <div className="flex items-center gap-4">
+        <AvatarTile
+          userId={thread.authorId}
+          tone={meta.tile}
+          state={urgent ? 'panicked' : 'idle'}
+          animated={urgent}
+          title={`${who}'s Bud`}
+        />
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-2">
-            <p
-              className={cn(
-                'font-display text-lg leading-snug',
-                resolved ? 'text-ink-soft' : 'text-ink',
-              )}
-            >
-              {thread.title}
-            </p>
-          </div>
-
-          <div className="mt-1 flex items-center gap-1.5 text-sm text-ink-muted">
-            {author && (
-              <BudAvatar
-                userId={author.id}
-                size={20}
-                animated={false}
-                state={resolved ? 'idle' : 'panicked'}
-              />
+          <p
+            className={cn(
+              'font-display text-lg leading-snug',
+              resolved ? 'text-ink-soft' : 'text-ink',
             )}
-            <span className="truncate text-ink-soft">
-              {isMine ? 'You' : (author?.firstName ?? 'A bud')}
-            </span>
-            <span>· {timeAgo(thread.createdAt, now)}</span>
-          </div>
+          >
+            {thread.title}
+          </p>
 
-          {thread.description && (
-            <p className="mt-1.5 line-clamp-2 break-words text-sm leading-relaxed text-ink-soft">
-              {thread.description}
-            </p>
-          )}
-
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            <Badge className={cn(meta.badge, 'tabular-nums')}>
-              {resolved ? '✓ Resolved' : `⏱ ${shortCountdown(thread.expiresAt, now)} left`}
-            </Badge>
-            <Badge>💬 {replyCount}</Badge>
-            {thread.savedReplyId && <Badge className="bg-saffron-light text-ink">🌟 Saved</Badge>}
-            {isMine && <Badge className="bg-mcgill-light text-mcgill">Yours</Badge>}
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <Pill
+              icon={resolved ? 'check' : 'timer'}
+              tone={meta.pill}
+              className="min-w-[96px] tabular-nums"
+            >
+              {resolved ? 'Resolved' : `${shortCountdown(thread.expiresAt, now)} left`}
+            </Pill>
+            <Pill icon="reply">{replyCount}</Pill>
+            {thread.savedReplyId && (
+              <Pill icon="star" tone="mint">
+                Saved
+              </Pill>
+            )}
+            {isMine && <Pill tone="blush">Yours</Pill>}
           </div>
         </div>
       </div>
-
-      {!resolved && (
-        <div className="absolute inset-x-0 bottom-0 h-1.5 bg-cream-200" aria-hidden>
-          <div
-            className={cn('h-full rounded-r-full transition-[width] duration-1000', meta.bar)}
-            style={{ width: `${fraction * 100}%` }}
-          />
-        </div>
-      )}
     </Card>
   );
 });

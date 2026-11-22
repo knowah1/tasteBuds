@@ -71,21 +71,21 @@ export function ReplyItem({
           {author ? (
             <BudAvatar userId={author.id} size={depth === 0 ? 38 : 30} animated={false} />
           ) : (
-            <span className="block h-8 w-8 rounded-full bg-cream-200" />
+            <span className="sketch-round block h-8 w-8 bg-cream" />
           )}
         </button>
 
         <div className="min-w-0 flex-1">
           <div
             className={cn(
-              'relative overflow-hidden rounded-2xl rounded-tl-md bg-white px-3 py-2 shadow-soft ring-1',
-              pinned ? 'ring-saffron/50' : 'ring-cream-200',
+              'relative bg-paper px-3 py-2 [border-radius:6px_18px_20px_16px/8px_16px_19px_17px]',
+              pinned ? 'edge-sage edge-2' : 'edge-kraft edge-2',
             )}
           >
             {flashing && (
               <motion.span
                 aria-hidden
-                className="pointer-events-none absolute inset-0 bg-leaf-100"
+                className="pointer-events-none absolute inset-0 bg-mint [border-radius:inherit]"
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 0 }}
                 transition={{ duration: 1.8, ease: 'easeOut' }}
@@ -101,7 +101,7 @@ export function ReplyItem({
                   {name}
                 </button>
                 {isOp && (
-                  <span className="rounded-full bg-emergency-light px-1.5 py-px font-display text-xs uppercase tracking-wide text-emergency">
+                  <span className="sketch-pill bg-blush px-1.5 py-px font-display text-xs uppercase tracking-wide text-tomato">
                     OP
                   </span>
                 )}
@@ -121,14 +121,16 @@ export function ReplyItem({
               onClick={() => ctx.onUpvote(reply)}
             />
             {!ctx.closed && ctx.meId && (
-              <ActionButton onClick={() => ctx.onReply(reply)}>↩ Reply</ActionButton>
+              <ActionButton onClick={() => ctx.onReply(reply)}>
+                <Icon name="reply" size={16} className="text-kraft" /> Reply
+              </ActionButton>
             )}
             {ctx.canMarkSaved && !isMine && (
               <ActionButton
                 onClick={() => ctx.onMarkSaved(reply)}
-                className="text-saffron hover:bg-saffron-light"
+                className="text-leaf hover:bg-mint"
               >
-                🌟 This saved me!
+                <Icon name="star" size={16} /> This saved me!
               </ActionButton>
             )}
             {!isMine && ctx.meId && (
@@ -136,7 +138,7 @@ export function ReplyItem({
                 type="button"
                 onClick={() => ctx.onMore(reply)}
                 aria-label="More actions"
-                className="ml-auto flex h-8 w-8 items-center justify-center rounded-full text-ink-muted hover:bg-cream-200"
+                className="sketch-round ml-auto flex h-8 w-8 items-center justify-center text-kraft hover:bg-cream"
               >
                 <Icon name="more" size={16} />
               </button>
@@ -149,7 +151,7 @@ export function ReplyItem({
         <div
           className={cn(
             'mt-2 space-y-3',
-            depth < MAX_INDENT_DEPTH && 'ml-[18px] border-l-2 border-leaf-200 pl-3',
+            depth < MAX_INDENT_DEPTH && 'ml-[18px] border-l-2 border-sage pl-3',
           )}
         >
           {node.children.map((c) => (
@@ -175,14 +177,17 @@ function ActionButton({
       type="button"
       whileTap={{ scale: 0.9 }}
       onClick={onClick}
-      className={cn('h-8 rounded-full px-2.5 text-sm text-ink-soft hover:bg-cream-200', className)}
+      className={cn(
+        'sketch-pill inline-flex h-8 items-center gap-1 px-2.5 text-sm text-ink-soft hover:bg-cream',
+        className,
+      )}
     >
       {children}
     </motion.button>
   );
 }
 
-/** 🌱 upvote with a springy sprout pop when toggled on. */
+/** Sprout upvote with a springy pop when toggled on. */
 function UpvoteButton({
   count,
   active,
@@ -203,11 +208,9 @@ function UpvoteButton({
       aria-label={`${active ? 'Remove upvote' : 'Upvote'} (${count})`}
       whileTap={disabled ? undefined : { scale: 0.85 }}
       className={cn(
-        'flex h-8 items-center gap-1 rounded-full px-2.5 text-sm ring-1 transition-colors',
-        active
-          ? 'bg-leaf-100 text-leaf-700 ring-leaf-300'
-          : 'bg-white text-ink-soft ring-cream-300',
-        disabled ? 'cursor-default' : 'hover:bg-leaf-50',
+        'sketch-pill flex h-8 items-center gap-1 px-2.5 text-sm transition-colors',
+        active ? 'bg-mint text-leaf' : 'bg-cream text-kraft',
+        disabled ? 'cursor-default' : 'hover:bg-mint',
       )}
     >
       <motion.span
@@ -215,10 +218,10 @@ function UpvoteButton({
         initial={active ? { scale: 0.3, rotate: -30, y: 4 } : false}
         animate={{ scale: 1, rotate: 0, y: 0 }}
         transition={{ type: 'spring', stiffness: 600, damping: 12 }}
-        className={cn('inline-block', !active && 'opacity-70 grayscale-[30%]')}
+        className="inline-flex"
         aria-hidden
       >
-        🌱
+        <Icon name="sprout" size={18} strokeWidth={2.2} />
       </motion.span>
       <span className="relative inline-flex h-5 min-w-[1ch] overflow-hidden tabular-nums">
         <AnimatePresence mode="popLayout" initial={false}>
