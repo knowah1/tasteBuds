@@ -28,7 +28,16 @@ interface EventEntry {
 }
 
 /** Profile body: Bud, name, level & XP, cuisine badges, ongoing and past events. */
-export function ProfileView({ user, isMe }: { user: User; isMe?: boolean }) {
+export function ProfileView({
+  user,
+  isMe,
+  footer,
+}: {
+  user: User;
+  isMe?: boolean;
+  /** Rendered at the bottom of the profile (e.g. Sign out on your own profile). */
+  footer?: ReactNode;
+}) {
   const now = useMinuteNow();
   const lv = levelProgress(user.xp);
   const hosted = useStore(useShallow(selectHostedPosts(user.id)));
@@ -202,6 +211,7 @@ export function ProfileView({ user, isMe }: { user: User; isMe?: boolean }) {
           />
         ))}
       </EventSection>
+      {footer}
     </div>
   );
 }

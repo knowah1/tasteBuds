@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Sheet, useToast } from '@/components/ui';
-import { api } from '@/mock/api';
+import { api, DEMO_USERNAME } from '@/mock/api';
 import { useStore } from '@/store';
 
 /** Placeholder Demo Panel (long-press logo or `?demo=1`). Phase 4 adds the simulators' triggers. */
@@ -10,6 +10,8 @@ export function DemoPanel() {
   const setOpen = useStore((s) => s.setDemoPanelOpen);
   const me = useStore((s) => s.me);
   const resetAll = useStore((s) => s.resetAll);
+  const signOut = useStore((s) => s.signOut);
+  const [switching, setSwitching] = useState<'out' | 'in' | null>(null);
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -30,6 +32,42 @@ export function DemoPanel() {
         >
           +100 XP
         </Button>
+        <div className="grid grid-cols-2 gap-3">
+          <Button
+            variant="secondary"
+            disabled={!me || !!switching}
+            loading={switching === 'out'}
+            onClick={async () => {
+              setSwitching('out');
+              await signOut();
+              setSwitching(null);
+              setOpen(false);
+              navigate('/onboarding', { replace: true });
+              toast.success('Signed out', 'See you soon 🌱');
+            }}
+          >
+            Sign out
+          </Button>
+          <Button
+            variant="secondary"
+            disabled={me?.username === DEMO_USERNAME || !!switching}
+            loading={switching === 'in'}
+            onClick={async () => {
+              setSwitching('in');
+              if (me) await signOut();
+              const user = await api.quickStartDemoAccount();
+              setSwitching(null);
+              setOpen(false);
+              navigate('/', { replace: true });
+              toast.success(
+                `Welcome back, ${user.firstName}! 🌱`,
+                `Signed in as @${DEMO_USERNAME}`,
+              );
+            }}
+          >
+            Sign in as {DEMO_USERNAME}
+          </Button>
+        </div>
         <Button
           block
           variant="danger"

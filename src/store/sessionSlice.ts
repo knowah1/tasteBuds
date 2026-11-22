@@ -7,6 +7,10 @@ export interface SessionSlice {
   account: Account | null;
   /** Pull the latest viewer-scoped snapshot from the mock API into every slice. */
   sync: () => void;
+  /** Signs in with a username or McGill email. Throws `ApiError('bad_credentials')`. */
+  signIn: (identifier: string, password: string) => Promise<User>;
+  /** Clears the session (keeps all other data) so the welcome screen shows again. */
+  signOut: () => Promise<void>;
   resetAll: () => void;
 }
 
@@ -27,10 +31,32 @@ export function snapshotToState(s: Snapshot) {
   };
 }
 
-export const createSessionSlice: SliceCreator<SessionSlice> = (set) => ({
+/** Per-session overlays that shouldn't leak from one account into the next. */
+const clearedOverlays = {
+  toasts: [],
+  xpFloaters: [],
+  pendingUnlocks: [],
+  pendingLevelUp: null,
+  composerOpen: false,
+};
+
+export const createSessionSlice: SliceCreator<SessionSlice> = (set, get) => ({
   me: null,
   account: null,
   sync: () => set(snapshotToState(api.snapshot())),
+  signIn: async (identifier, password) => {
+    const user = await api.signIn({ identifier, password });
+    set(clearedOverlays);
+    get().sync();
+    return user;
+  },
+  signOut: async () => {
+    // Clear first: the shell guard redirects as soon as the session is gone.
+    set(clearedOverlays);
+    await api.signOut();
+    set(clearedOverlays);
+    get().sync();
+  },
   resetAll: () => {
     api.resetAll();
     set({ toasts: [], xpFloaters: [] });
