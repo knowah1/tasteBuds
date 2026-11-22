@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Sheet, useToast } from '@/components/ui';
 import { api, DEMO_USERNAME } from '@/mock/api';
 import { useStore } from '@/store';
+import { MyReportsList } from '@/features/safety';
 
 /** Placeholder Demo Panel (long-press logo or `?demo=1`). Phase 4 adds the simulators' triggers. */
 export function DemoPanel() {
@@ -80,6 +81,10 @@ export function DemoPanel() {
         <p className="text-center text-sm text-ink-muted">
           Join requests, fast-forward and nearby posts arrive in Phase 4.
         </p>
+        <section className="pt-2">
+          <h3 className="mb-2 px-1 font-display text-lg text-ink">Reports</h3>
+          <MyReportsList />
+        </section>
       </div>
     </Sheet>
   );

@@ -36,6 +36,9 @@ export function snapshotToState(s: Snapshot) {
     replies: s.replies,
     notifications: s.notifications,
     xpEvents: s.xpEvents,
+    reports: s.reports,
+    blockedUserIds: s.account?.blockedUserIds ?? [],
+    blockedUsersById: Object.fromEntries(s.blockedUsers.map((u) => [u.id, u])),
   };
 }
 
