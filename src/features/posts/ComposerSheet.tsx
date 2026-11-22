@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Button, Icon, Sheet } from '@/components/ui';
@@ -59,15 +59,21 @@ export function ComposerSheet() {
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fresh drafter every time the sheet opens.
-  useEffect(() => {
-    if (open) {
-      setStep({ kind: 'type' });
-      setDraft(null);
-      setError(null);
-      setPublishing(false);
-    }
+  // Fresh drafter every time the sheet opens. A layout effect runs before paint, and nothing
+  // renders until it has, so a preset type opens straight on its form with no flash of the
+  // type picker (or of the previous draft). Only the body needs the guard: its AnimatePresence
+  // would otherwise play an exit animation for the stale step.
+  const [resetFor, setResetFor] = useState(false);
+  useLayoutEffect(() => {
+    setResetFor(open);
+    if (!open) return;
+    const { composerPresetType: preset, me: user } = useStore.getState();
+    setDraft(preset ? initialDraft(preset, user?.cuisines ?? [], Date.now()) : null);
+    setStep(preset ? { kind: 'form' } : { kind: 'type' });
+    setError(null);
+    setPublishing(false);
   }, [open]);
+  const resetting = open && !resetFor;
 
   // Keep the start time on a valid future slot as the clock moves.
   useEffect(() => {
@@ -195,7 +201,7 @@ export function ComposerSheet() {
   return (
     <Sheet open={open} onClose={close} title={sheetTitle} footer={footer} maxHeight={0.94}>
       <AnimatePresence mode="wait" initial={false}>
-        {step.kind === 'type' && (
+        {!resetting && step.kind === 'type' && (
           <motion.div
             key="type"
             initial={{ opacity: 0, x: -24 }}
@@ -206,7 +212,7 @@ export function ComposerSheet() {
           </motion.div>
         )}
 
-        {step.kind === 'form' && draft && (
+        {!resetting && step.kind === 'form' && draft && (
           <motion.div
             key="form"
             initial={{ opacity: 0, x: 24 }}
@@ -272,7 +278,7 @@ export function ComposerSheet() {
           </motion.div>
         )}
 
-        {step.kind === 'done' && (
+        {!resetting && step.kind === 'done' && (
           <motion.div key="done" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <Published
               post={step.post}
