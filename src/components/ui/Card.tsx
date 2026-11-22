@@ -9,11 +9,12 @@ export type CardShape = 1 | 2 | 3 | 4;
 /** Static class strings so Tailwind can see them. */
 const OUTLINE: Record<CardOutline, string> = {
   none: '',
-  kraft: 'edge-kraft',
-  blush: 'edge-blush',
-  tomato: 'edge-tomato',
-  leaf: 'edge-leaf',
+  kraft: 'border-kraft',
+  blush: 'border-blush',
+  tomato: 'border-tomato',
+  leaf: 'border-leaf',
 };
+const OUTLINE_WIDTH = { 2: 'border-2', 3: 'border-[3px]' } as const;
 const TONE: Record<CardTone, string> = {
   paper: 'bg-paper',
   mint: 'bg-mint',
@@ -30,18 +31,21 @@ const SHAPE: Record<CardShape, string> = {
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   padded?: boolean;
   interactive?: boolean;
-  /** Hand-drawn outline colour (default none). */
+  /** Solid outline colour (default none). */
   outline?: CardOutline;
+  /** Outline width in px (default 2). */
+  outlineWidth?: 2 | 3;
   /** Fill (default paper). */
   tone?: CardTone;
   shape?: CardShape;
 }
 
-/** Flat card with sketchy corners. No shadow: outlines carry the emphasis. */
+/** Flat card with sketchy corners. No shadow: a solid outline carries the emphasis. */
 export function Card({
   padded = true,
   interactive,
   outline = 'none',
+  outlineWidth = 2,
   tone = 'paper',
   shape = 1,
   className,
@@ -52,7 +56,7 @@ export function Card({
       className={cn(
         TONE[tone],
         SHAPE[shape],
-        OUTLINE[outline],
+        outline !== 'none' && [OUTLINE_WIDTH[outlineWidth], OUTLINE[outline]].join(' '),
         padded && 'p-4',
         interactive && 'cursor-pointer transition-transform active:scale-[0.98]',
         className,

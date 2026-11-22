@@ -73,7 +73,9 @@ export function Pill({ children, icon, tone = 'neutral', outlined, className }: 
         'sketch-pill inline-flex items-center gap-1 px-2.5 py-0.5 text-sm',
         PILL_TONE[tone],
         outlined &&
-          (tone === 'blush' || tone === 'urgent' ? 'edge-tomato edge-2' : 'edge-kraft edge-2'),
+          (tone === 'blush' || tone === 'urgent'
+            ? 'border-2 border-tomato'
+            : 'border-2 border-kraft'),
         className,
       )}
     >
