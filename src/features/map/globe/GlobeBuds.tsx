@@ -194,9 +194,7 @@ function viewOf(id: string, members: Slot[]): ClusterView {
     id,
     active: true,
     count: members.length,
-    faces: sorted
-      .slice(0, 3)
-      .map((m) => ({ id: m.key, bud: m.info.user.bud, panicked: isPanicked(m) })),
+    faces: sorted.slice(0, 3).map((m) => ({ id: m.key, panicked: isPanicked(m) })),
     emergency: types.has('budmergency'),
     types: TYPE_ORDER.filter((t) => types.has(t)),
   };
@@ -205,7 +203,7 @@ function viewOf(id: string, members: Slot[]): ClusterView {
 /** Everything a marker shows, so the pool re-renders only when that changes. */
 const signatureOf = (v: ClusterView | null) =>
   v
-    ? `${v.id}|${v.active ? 1 : 0}|${v.count}|${v.faces.map((f) => `${f.id}${f.bud.color}${f.bud.type}`).join(',')}|${v.emergency ? 1 : 0}|${v.types.join(',')}`
+    ? `${v.id}|${v.active ? 1 : 0}|${v.count}|${v.faces.map((f) => `${f.id}${f.panicked ? '!' : ''}`).join(',')}|${v.emergency ? 1 : 0}|${v.types.join(',')}`
     : '-';
 
 interface GlobeBudsProps {
@@ -932,7 +930,7 @@ const GlobeBud = memo(function GlobeBud({
             >
               <div style={{ pointerEvents: 'var(--tb-pe, none)' as 'none' }}>
                 <BudAvatar
-                  bud={user.bud}
+                  userId={user.id}
                   size={BUD_SIZE}
                   state={state}
                   facing={facing}
