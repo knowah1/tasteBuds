@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Icon, IconButton, ProgressBar } from '@/components/ui';
 import { sanitizeBud } from '@/features/bud';
 import { useStore } from '@/store';
@@ -30,7 +30,11 @@ export function OnboardingScreen() {
   const updateProfile = useStore((s) => s.updateProfile);
   const pushToast = useStore((s) => s.pushToast);
   const { draft, update, clear } = useOnboardingDraft();
-  const [preStep, setPreStep] = useState<'welcome' | 'account'>('welcome');
+  const [searchParams] = useSearchParams();
+  // `/onboarding?start=account` (from "Create an account" on /sign-in) skips the welcome step.
+  const [preStep, setPreStep] = useState<'welcome' | 'account'>(() =>
+    searchParams.get('start') === 'account' ? 'account' : 'welcome',
+  );
 
   const phase = !me ? 'pre' : !verified ? 'verify' : 'post';
   const step: Step = phase === 'pre' ? preStep : phase === 'verify' ? 'verify' : draft.step;
