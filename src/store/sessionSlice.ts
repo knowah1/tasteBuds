@@ -49,6 +49,7 @@ const clearedOverlays = {
   pendingUnlocks: [],
   pendingLevelUp: null,
   composerOpen: false,
+  composerPresetType: null,
 };
 
 export const createSessionSlice: SliceCreator<SessionSlice> = (set, get) => ({
