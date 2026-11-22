@@ -74,7 +74,18 @@ export function BudEditor({
       </div>
 
       {/* Tabs */}
-      <div className="mt-4 flex rounded-full bg-cream-200 p-1" role="tablist">
+      <div className="relative mt-4 flex rounded-full bg-cream-200 p-1" role="tablist">
+        {/* Sliding pill. A plain x tween, not a shared `layoutId`: a layout animation left
+            behind by switching tabs stalled the Sheet's exit, so the closed editor's
+            invisible backdrop kept swallowing every tap after "Save my Bud". */}
+        <motion.span
+          aria-hidden
+          className="absolute inset-y-1 left-1 rounded-full bg-white shadow-soft"
+          style={{ width: `calc((100% - 0.5rem) / ${TABS.length})` }}
+          initial={false}
+          animate={{ x: `${TABS.findIndex((t) => t.id === tab) * 100}%` }}
+          transition={{ type: 'spring', stiffness: 500, damping: 34 }}
+        />
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -87,13 +98,6 @@ export function BudEditor({
               tab === t.id ? 'text-ink' : 'text-ink-muted',
             )}
           >
-            {tab === t.id && (
-              <motion.span
-                layoutId="bud-editor-tab"
-                className="absolute inset-0 rounded-full bg-white shadow-soft"
-                transition={{ type: 'spring', stiffness: 500, damping: 34 }}
-              />
-            )}
             <span className="relative">{t.emoji}</span>
             <span className="relative">{t.label}</span>
             {t.id === 'accessories' && (
