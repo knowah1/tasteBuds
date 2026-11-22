@@ -8,7 +8,7 @@ import type { BudState } from '@/types';
 import type { MapBudInfo } from '../useMapBuds';
 import type { Region } from './regions';
 import type { GlobeRig } from './rig';
-import { CAMERA_FOV, fitDistance, MIN_DISTANCE } from './CameraRig';
+import { CAMERA_FOV, fitDistance, maxDistanceFor, MIN_DISTANCE } from './CameraRig';
 import { GLOBE_RADIUS } from './sphere';
 import { getWalker, holdWalker, stepWalker, type Walker } from './walkers';
 import './globe.css';
@@ -61,6 +61,29 @@ interface Slot {
 }
 
 type Registry = Map<string, Slot>;
+
+/** On-screen Bud scale at the farthest zoom, the default fit, and the closest zoom. */
+const SCALE_FAR = 0.55;
+const SCALE_FIT = 0.75;
+const SCALE_NEAR = 0.95;
+
+/**
+ * Where `dist` sits between the zoom stops: -1 at the farthest zoom, 0 at the default fit,
+ * 1 at MIN_DISTANCE. Piecewise linear, so it's continuous through the fit distance.
+ */
+function zoomT(dist: number, fit: number, maxDist: number) {
+  return dist >= fit
+    ? -MathUtils.clamp((dist - fit) / Math.max(1e-3, maxDist - fit), 0, 1)
+    : MathUtils.clamp((fit - dist) / Math.max(1e-3, fit - MIN_DISTANCE), 0, 1);
+}
+
+/** Buds shrink as you zoom out and grow (never past 1) as you zoom in. */
+function zoomScaleAt(dist: number, fit: number, maxDist: number) {
+  const t = zoomT(dist, fit, maxDist);
+  return t < 0
+    ? MathUtils.lerp(SCALE_FIT, SCALE_FAR, -t)
+    : MathUtils.lerp(SCALE_FIT, SCALE_NEAR, t);
+}
 
 function smoothstep(a: number, b: number, x: number) {
   const t = MathUtils.clamp((x - a) / (b - a), 0, 1);
@@ -152,9 +175,9 @@ export function GlobeBuds({ buds, rig, hiddenId, onOpen, reducedMotion }: GlobeB
     vCam.copy(camera.position).normalize();
     const horizon = GLOBE_RADIUS / dist;
     const fit = fitDistance(size.width, size.height);
-    // Zoomed out → smaller Buds and bubbles; zoomed in → a little bigger.
-    const zoomK = MathUtils.clamp((fit - dist) / (fit - MIN_DISTANCE), -1, 1);
-    const zoomScale = zoomK >= 0 ? 0.9 + 0.28 * zoomK : 0.9 + 0.14 * zoomK;
+    const maxDist = maxDistanceFor(size.width, size.height);
+    // Zoomed out → small Buds and bubbles; zoomed in → a little bigger (never past 1).
+    const zoomScale = zoomScaleAt(dist, fit, maxDist);
 
     // The globe's disc on screen (Buds and their offsets must stay inside it).
     const [cx, cy] = toScreen(vCenter.set(0, 0, 0));
