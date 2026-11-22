@@ -1,4 +1,5 @@
 export { Avatar, BUD_FILL, BUD_BG, type AvatarProps } from './Avatar';
+export { AvatarTile, type AvatarTileProps, type AvatarTileTone } from './AvatarTile';
 export {
   Button,
   IconButton,
@@ -6,14 +7,23 @@ export {
   type ButtonVariant,
   type IconButtonProps,
 } from './Button';
-export { Card, type CardProps } from './Card';
-export { Chip, Badge, type ChipProps } from './Chip';
-export { EmptyState, type EmptyStateProps } from './EmptyState';
-export { Icon, type IconName } from './Icon';
+export {
+  Card,
+  shapeFor,
+  type CardProps,
+  type CardOutline,
+  type CardShape,
+  type CardTone,
+} from './Card';
+export { Chip, Badge, Pill, type ChipProps, type PillProps, type PillTone } from './Chip';
+export { EmptyState, type EmptyStateProps, type EmptyTone } from './EmptyState';
+export * from './icons';
 export { Modal, type ModalProps } from './Modal';
 export { Portal, OVERLAY_ROOT_ID } from './Portal';
 export { ProgressBar } from './ProgressBar';
 export { Sheet, type SheetProps } from './Sheet';
 export { Skeleton, SkeletonList } from './Skeleton';
+export { SpeechBubble, type BubbleTone, type SpeechBubbleProps } from './SpeechBubble';
 export { TextField, TextArea } from './TextField';
 export { ToastHost, useToast } from './Toast';
+export { WavyLine } from './WavyLine';

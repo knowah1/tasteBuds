@@ -52,8 +52,8 @@ function Topper({ type, fill }: { type: BudType; fill: string }) {
       return (
         <g className={OUTLINE} strokeWidth={SW} strokeLinejoin="round">
           <path d="M50 33 V22" className="fill-none" strokeLinecap="round" />
-          <path d="M50 24 C42 24 36 18 36 12 C44 12 50 17 50 24Z" className="fill-leaf-400" />
-          <path d="M50 22 C57 22 64 16 64 9 C56 9 50 14 50 22Z" className="fill-leaf-500" />
+          <path d="M50 24 C42 24 36 18 36 12 C44 12 50 17 50 24Z" className="fill-bud-leaf" />
+          <path d="M50 22 C57 22 64 16 64 9 C56 9 50 14 50 22Z" className="fill-bud-leaf-dark" />
         </g>
       );
     case 'rosebud':
@@ -69,7 +69,7 @@ function Topper({ type, fill }: { type: BudType; fill: string }) {
         <g className={OUTLINE} strokeWidth={SW} strokeLinejoin="round">
           <path
             d="M36 34 L36 18 L43 25 L50 14 L57 25 L64 18 L64 34 Z"
-            className="fill-eggplant-light"
+            className="fill-bud-plum-light"
           />
           <path d="M43 25 L43 34 M57 25 L57 34" className="fill-none" />
         </g>
@@ -84,7 +84,7 @@ function Topper({ type, fill }: { type: BudType; fill: string }) {
             rx="6"
             ry="4.5"
             transform="rotate(-20 57 14)"
-            className="fill-saffron"
+            className="fill-bud-saffron"
           />
         </g>
       );
@@ -102,7 +102,7 @@ function Topper({ type, fill }: { type: BudType; fill: string }) {
         <g className={OUTLINE} strokeWidth={SW} strokeLinejoin="round">
           <path d="M20 62 C12 62 12 46 18 46 C22 46 22 54 22 56" className={fill} />
           <path d="M80 58 C88 58 88 42 82 42 C78 42 78 50 78 52" className={fill} />
-          <circle cx="50" cy="26" r="5" className="fill-mcgill" />
+          <circle cx="50" cy="26" r="5" className="fill-tomato" />
         </g>
       );
   }
@@ -125,7 +125,7 @@ function Face({ panicked }: { panicked: boolean }) {
         <ellipse cx="50" cy="72" rx="5" ry="4" className="fill-ink" />
         <path
           d="M74 40 C70 46 70 50 74 50 C78 50 78 46 74 40Z"
-          className="fill-sky stroke-ink"
+          className="fill-bud-sky stroke-ink"
           strokeWidth={1.5}
         />
       </g>
@@ -178,7 +178,7 @@ function AccessoryLayer({ accessory }: { accessory: Accessory }) {
             rx="22"
             ry="8"
             transform="rotate(-10 46 33)"
-            className="fill-eggplant"
+            className="fill-bud-plum"
           />
           <path d="M46 25 L47 20" className="fill-none" strokeLinecap="round" />
         </g>
@@ -194,8 +194,8 @@ function AccessoryLayer({ accessory }: { accessory: Accessory }) {
     case 'scarf':
       return (
         <g {...o}>
-          <path d="M24 74 C40 82 60 82 76 74 L76 80 C60 88 40 88 24 80 Z" className="fill-mcgill" />
-          <path d="M62 82 L66 96 L58 96 L56 84" className="fill-mcgill" />
+          <path d="M24 74 C40 82 60 82 76 74 L76 80 C60 88 40 88 24 80 Z" className="fill-tomato" />
+          <path d="M62 82 L66 96 L58 96 L56 84" className="fill-tomato" />
         </g>
       );
     case 'headphones':
@@ -209,7 +209,7 @@ function AccessoryLayer({ accessory }: { accessory: Accessory }) {
     case 'toque':
       return (
         <g {...o}>
-          <path d="M28 38 C28 14 72 14 72 38 Z" className="fill-mcgill" />
+          <path d="M28 38 C28 14 72 14 72 38 Z" className="fill-tomato" />
           <rect x="26" y="34" width="48" height="8" rx="4" className="fill-white" />
           <circle cx="50" cy="13" r="6" className="fill-white" />
         </g>
@@ -217,8 +217,14 @@ function AccessoryLayer({ accessory }: { accessory: Accessory }) {
     case 'ovenMitts':
       return (
         <g {...o}>
-          <path d="M12 70 C10 60 18 58 22 64 L24 74 C20 80 14 78 12 70Z" className="fill-saffron" />
-          <path d="M88 70 C90 60 82 58 78 64 L76 74 C80 80 86 78 88 70Z" className="fill-saffron" />
+          <path
+            d="M12 70 C10 60 18 58 22 64 L24 74 C20 80 14 78 12 70Z"
+            className="fill-bud-saffron"
+          />
+          <path
+            d="M88 70 C90 60 82 58 78 64 L76 74 C80 80 86 78 88 70Z"
+            className="fill-bud-saffron"
+          />
         </g>
       );
   }
@@ -235,9 +241,19 @@ export interface AvatarProps {
   ring?: boolean;
   className?: string;
   title?: string;
+  /** Turn off the idle bob (lists of tiles, thumbnails). */
+  animated?: boolean;
 }
 
-export function Avatar({ bud, size = 56, state = 'idle', ring, className, title }: AvatarProps) {
+export function Avatar({
+  bud,
+  size = 56,
+  state = 'idle',
+  ring,
+  className,
+  title,
+  animated = true,
+}: AvatarProps) {
   const fill = BUD_FILL[bud.color];
   const panicked = state === 'panicked';
   const hasHat = bud.accessories.some((a) => ['chefHat', 'beret', 'toque'].includes(a));
@@ -249,11 +265,13 @@ export function Avatar({ bud, size = 56, state = 'idle', ring, className, title 
       className={cn('relative inline-flex shrink-0', className)}
       style={{ width: size, height: size }}
       animate={
-        panicked
-          ? { x: [0, -2, 2, -2, 0] }
-          : state === 'walking'
-            ? { y: [0, -3, 0], rotate: [-3, 3, -3] }
-            : { y: [0, -1.5, 0] }
+        !animated
+          ? undefined
+          : panicked
+            ? { x: [0, -2, 2, -2, 0] }
+            : state === 'walking'
+              ? { y: [0, -3, 0], rotate: [-3, 3, -3] }
+              : { y: [0, -1.5, 0] }
       }
       transition={{
         duration: panicked ? 0.4 : state === 'walking' ? 0.6 : 2.6,
@@ -262,7 +280,7 @@ export function Avatar({ bud, size = 56, state = 'idle', ring, className, title 
       }}
     >
       {ring && (
-        <span className="absolute -inset-1 rounded-full ring-4 ring-mcgill ring-offset-2 ring-offset-cream" />
+        <span className="absolute -inset-1 rounded-full ring-4 ring-tomato ring-offset-2 ring-offset-cream" />
       )}
       <svg
         viewBox="0 0 100 100"

@@ -3,13 +3,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useStore, type Toast } from '@/store';
 import { cn } from '@/lib/cn';
-import { Icon } from './Icon';
+import { Icon, type IconName } from './icons';
 
-const KIND_STYLES: Record<Toast['kind'], { emoji: string; ring: string }> = {
-  success: { emoji: '✅', ring: 'ring-leaf-200' },
-  info: { emoji: '🔔', ring: 'ring-cream-300' },
-  error: { emoji: '⚠️', ring: 'ring-mcgill-light' },
-  inbox: { emoji: '📬', ring: 'ring-sky' },
+/** Each kind gets a hand-drawn icon on a flat tile and a matching outline. */
+const KIND_STYLES: Record<Toast['kind'], { icon: IconName; tile: string; edge: string }> = {
+  success: { icon: 'check', tile: 'bg-mint text-leaf', edge: 'edge-leaf' },
+  info: { icon: 'bell', tile: 'bg-cream text-kraft', edge: 'edge-kraft' },
+  error: { icon: 'warning', tile: 'bg-blush text-tomato', edge: 'edge-tomato' },
+  inbox: { icon: 'mail', tile: 'bg-blush text-tomato', edge: 'edge-tomato' },
 };
 
 function ToastItem({ toast }: { toast: Toast }) {
@@ -33,8 +34,8 @@ function ToastItem({ toast }: { toast: Toast }) {
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={(_, info) => Math.abs(info.offset.x) > 80 && dismiss(toast.id)}
       className={cn(
-        'pointer-events-auto flex w-full items-start gap-3 rounded-2xl bg-white p-3 pr-2 shadow-lift ring-2',
-        style.ring,
+        'sketch-2 pointer-events-auto flex w-full items-start gap-3 bg-paper p-3 pr-2',
+        style.edge,
         toast.href && 'cursor-pointer',
       )}
       onClick={() => {
@@ -44,7 +45,11 @@ function ToastItem({ toast }: { toast: Toast }) {
         }
       }}
     >
-      <span className="mt-0.5 text-xl leading-none">{toast.emoji ?? style.emoji}</span>
+      <span
+        className={cn('sketch-sm-2 flex h-9 w-9 shrink-0 items-center justify-center', style.tile)}
+      >
+        <Icon name={style.icon} size={20} />
+      </span>
       <div className="min-w-0 flex-1">
         <p className="font-display text-base text-ink">{toast.title}</p>
         {toast.body && (
@@ -60,7 +65,7 @@ function ToastItem({ toast }: { toast: Toast }) {
           e.stopPropagation();
           dismiss(toast.id);
         }}
-        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-ink-muted hover:bg-cream-200"
+        className="sketch-round flex h-7 w-7 shrink-0 items-center justify-center text-kraft hover:bg-cream"
       >
         <Icon name="close" size={14} />
       </button>

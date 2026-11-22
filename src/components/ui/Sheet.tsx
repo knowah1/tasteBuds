@@ -1,7 +1,8 @@
 import { useEffect, type ReactNode } from 'react';
 import { AnimatePresence, motion, type PanInfo } from 'framer-motion';
 import { Portal } from './Portal';
-import { Icon } from './Icon';
+import { Icon } from './icons';
+import { WavyLine } from './WavyLine';
 import { cn } from '@/lib/cn';
 
 export interface SheetProps {
@@ -42,7 +43,7 @@ export function Sheet({
         {open && (
           <div className="pointer-events-auto absolute inset-0 z-40 flex flex-col justify-end">
             <motion.div
-              className="absolute inset-0 bg-ink/40 backdrop-blur-[2px]"
+              className="absolute inset-0 bg-ink/40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -52,7 +53,7 @@ export function Sheet({
               role="dialog"
               aria-modal
               className={cn(
-                'relative flex flex-col rounded-t-blob bg-cream shadow-lift',
+                'relative flex flex-col border-2 border-b-0 border-kraft bg-cream [border-radius:30px_26px_0_0/26px_32px_0_0]',
                 className,
               )}
               style={{ maxHeight: `${maxHeight * 100}%` }}
@@ -66,7 +67,7 @@ export function Sheet({
               onDragEnd={onDragEnd}
             >
               <div className="flex justify-center pb-1 pt-3">
-                <div className="h-1.5 w-12 rounded-full bg-cream-300" />
+                <div className="sketch-pill h-1.5 w-12 bg-kraft/60" />
               </div>
               {title && (
                 <div className="flex items-center justify-between px-5 pb-2 pt-1">
@@ -75,7 +76,7 @@ export function Sheet({
                     type="button"
                     onClick={onClose}
                     aria-label="Close"
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-cream-200 text-ink-soft"
+                    className="sketch-round flex h-9 w-9 items-center justify-center bg-paper text-kraft"
                   >
                     <Icon name="close" size={18} />
                   </button>
@@ -87,7 +88,12 @@ export function Sheet({
               >
                 {children}
               </div>
-              {footer && <div className="border-t border-cream-200 px-5 pb-6 pt-3">{footer}</div>}
+              {footer && (
+                <div className="px-5 pb-6 pt-1">
+                  <WavyLine className="mb-3 text-kraft/70" />
+                  {footer}
+                </div>
+              )}
             </motion.div>
           </div>
         )}

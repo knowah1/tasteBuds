@@ -38,7 +38,7 @@
     font-synthesis: none;
   }
   body {
-    @apply bg-cream-200 font-body text-ink antialiased;
+    @apply bg-cream font-body text-ink antialiased;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior: none;
   }

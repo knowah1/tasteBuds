@@ -1,15 +1,38 @@
 import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/cn';
+import { Icon, type IconName } from './icons';
+
+export type EmptyTone = 'cream' | 'blush' | 'mint';
+
+const TONE: Record<EmptyTone, string> = {
+  cream: 'bg-cream text-kraft',
+  blush: 'bg-blush text-tomato',
+  mint: 'bg-mint text-leaf',
+};
 
 export interface EmptyStateProps {
-  emoji?: string;
+  /** Hand-drawn icon in the tile (default sprout). */
+  icon?: IconName;
+  tone?: EmptyTone;
+  /** Custom art instead of an icon (e.g. a Bud). */
   art?: ReactNode;
   title: string;
   body?: string;
   action?: ReactNode;
+  /** @deprecated Ignored: empty states use hand-drawn icons now. Removed once callers move off it. */
+  emoji?: string;
 }
 
-export function EmptyState({ emoji = '🌱', art, title, body, action }: EmptyStateProps) {
+/** Flat colour tile + icon, a title and a nudge. No emoji illustrations. */
+export function EmptyState({
+  icon = 'sprout',
+  tone = 'mint',
+  art,
+  title,
+  body,
+  action,
+}: EmptyStateProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -17,11 +40,11 @@ export function EmptyState({ emoji = '🌱', art, title, body, action }: EmptySt
       className="flex flex-col items-center px-8 py-12 text-center"
     >
       <motion.div
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        className="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-leaf-100 text-5xl"
+        animate={{ rotate: [-3, 3, -3] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        className={cn('sketch mb-4 flex h-24 w-24 items-center justify-center', TONE[tone])}
       >
-        {art ?? emoji}
+        {art ?? <Icon name={icon} size={44} strokeWidth={2} />}
       </motion.div>
       <h3 className="font-display text-2xl text-ink">{title}</h3>
       {body && <p className="mt-1 max-w-xs text-sm text-ink-soft">{body}</p>}
