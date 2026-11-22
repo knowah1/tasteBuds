@@ -94,18 +94,18 @@ export function startStoreBridge() {
 // ─── Selectors ──────────────────────────────────────────────────────
 
 export const selectUser =
-  (id: ID | undefined) =>
+  (id: ID | null | undefined) =>
   (s: AppState): User | undefined =>
     id ? s.usersById[id] : undefined;
 
 /** A user's Bud, straight from their user record (the only place it's stored). */
 export const selectUserBud =
-  (id: ID | undefined) =>
+  (id: ID | null | undefined) =>
   (s: AppState): Bud | undefined =>
     id ? s.usersById[id]?.bud : undefined;
 
 /** Re-renders when that user's record is replaced (records are immutable). */
-export function useUser(id: ID | undefined): User | undefined {
+export function useUser(id: ID | null | undefined): User | undefined {
   return useStore(selectUser(id));
 }
 
@@ -113,7 +113,7 @@ export function useUser(id: ID | undefined): User | undefined {
  * Re-renders only when that user's Bud changes: the Bud object keeps its reference
  * across unrelated updates (XP, cuisines), so this doesn't cause extra renders.
  */
-export function useUserBud(id: ID | undefined): Bud | undefined {
+export function useUserBud(id: ID | null | undefined): Bud | undefined {
   return useStore(selectUserBud(id));
 }
 
