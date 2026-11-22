@@ -1,4 +1,4 @@
-import type { ChatRoom, ID, JoinRequest, Post, PostDraft } from '@/types';
+import type { ChatRoom, ID, JoinRequest, Post, PostDraft, PostType } from '@/types';
 import { api } from '@/mock/api';
 import { onPostPublished } from '@/mock/simulators';
 import type { AppState, SliceCreator } from './types';
@@ -36,6 +36,25 @@ export const createPostSlice: SliceCreator<PostSlice> = (set) => ({
 
 // ─── Post selectors ─────────────────────────────────────────────────
 // Array-returning selectors should be wrapped in `useShallow` by callers.
+
+/**
+ * The one definition of an "active" post: it's on the map with a bubble, and it counts toward
+ * the map's "N posts right now". Open, or full (a meetup that hit its cap is still an ongoing
+ * event, so its bubble stays up), and its end time hasn't passed yet. Checking `endAt` too
+ * matters: the mock only flips a Bud-mergency to `ended` on its next write.
+ */
+export function isActivePost(post: Post, now: number): boolean {
+  return (post.status === 'open' || post.status === 'full') && post.endAt > now;
+}
+
+/**
+ * Active posts at `now`, of one type or (with `undefined`) every type. Includes the signed-in
+ * user's own posts. Returns a new array: wrap in `useShallow`.
+ */
+export const selectActivePostsByType =
+  (type: PostType | undefined, now: number) =>
+  (s: Pick<AppState, 'posts'>): Post[] =>
+    s.posts.filter((p) => (type === undefined || p.type === type) && isActivePost(p, now));
 
 /** The signed-in user's join request for a post, if any. */
 export const selectMyRequest =

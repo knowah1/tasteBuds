@@ -52,9 +52,11 @@ export function MapScreen() {
       openComposer: s.openComposer,
     })),
   );
-  const buds = useMapBuds(mapFilter);
+  const { buds, matchingPosts } = useMapBuds(mapFilter);
   const others = buds.filter((b) => !b.isMe && b.visible);
   const withPosts = others.filter((b) => b.post).length;
+  // Posts, not Buds, and your own count too: same selector and clock as the globe's bubbles.
+  const postCount = matchingPosts.length;
 
   return (
     <Screen scroll={false}>
@@ -101,14 +103,14 @@ export function MapScreen() {
               >
                 {mapFilter === 'all'
                   ? `${others.length} Buds around the world · ${withPosts} cooking`
-                  : `${others.length} ${POST_TYPE_META[mapFilter].label} ${others.length === 1 ? 'post' : 'posts'} right now`}
+                  : `${postCount} ${POST_TYPE_META[mapFilter].label} ${postCount === 1 ? 'post' : 'posts'} right now`}
               </motion.div>
             </AnimatePresence>
           </div>
         )}
 
         <AnimatePresence>
-          {!loading && !composerOpen && mapFilter !== 'all' && others.length === 0 && (
+          {!loading && !composerOpen && mapFilter !== 'all' && postCount === 0 && (
             <motion.div
               initial={{ y: 30, opacity: 0, scale: 0.95 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
