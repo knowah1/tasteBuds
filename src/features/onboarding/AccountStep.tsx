@@ -18,18 +18,18 @@ type Field = 'username' | 'firstName' | 'lastName' | 'email' | 'password';
 type NameCheck = 'idle' | 'checking' | 'available' | 'taken';
 
 const STRENGTH_BAR: Record<StrengthLevel, string> = {
-  0: 'bg-cream-300',
-  1: 'bg-mcgill',
-  2: 'bg-saffron',
-  3: 'bg-leaf-400',
-  4: 'bg-leaf-600',
+  0: 'bg-kraft/40',
+  1: 'bg-tomato',
+  2: 'bg-kraft',
+  3: 'bg-leaf',
+  4: 'bg-leaf',
 };
 const STRENGTH_TEXT: Record<StrengthLevel, string> = {
   0: 'text-ink-muted',
-  1: 'text-mcgill',
-  2: 'text-saffron',
-  3: 'text-leaf-500',
-  4: 'text-leaf-600',
+  1: 'text-tomato',
+  2: 'text-kraft',
+  3: 'text-leaf',
+  4: 'text-leaf',
 };
 
 const EMAIL_DOMAINS = ['@mail.mcgill.ca', '@mcgill.ca'];
@@ -120,12 +120,12 @@ export function AccountStep() {
 
   const nameTrailing =
     nameCheck === 'checking' ? (
-      <span className="h-5 w-5 animate-spin rounded-full border-[3px] border-leaf-400 border-t-transparent" />
+      <span className="h-5 w-5 animate-spin sketch-round border-[3px] border-leaf border-t-transparent" />
     ) : nameCheck === 'available' && !formatErr ? (
       <motion.span
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        className="flex h-6 w-6 items-center justify-center rounded-full bg-leaf-500 text-white"
+        className="flex h-6 w-6 items-center justify-center sketch-round bg-leaf text-white"
       >
         <Icon name="check" size={14} strokeWidth={3} />
       </motion.span>
@@ -133,7 +133,8 @@ export function AccountStep() {
 
   return (
     <StepLayout
-      emoji="👋"
+      icon="hand"
+      tone="mint"
       title="Let's get you cooking"
       subtitle="A few basics first. Only McGill students can join."
       footer={
@@ -163,7 +164,7 @@ export function AccountStep() {
           onBlur={touch('username')}
           trailing={nameTrailing}
           error={shown('username')}
-          success={nameCheck === 'available' && !formatErr ? `@${username} is all yours 🌱` : null}
+          success={nameCheck === 'available' && !formatErr ? `@${username} is all yours` : null}
           hint="3–20 characters: letters, numbers, . or _"
         />
         <AnimatePresence>
@@ -179,7 +180,7 @@ export function AccountStep() {
                   key={s}
                   type="button"
                   onClick={() => set('username')(s)}
-                  className="h-9 rounded-full bg-white px-3 text-sm text-ink-soft ring-2 ring-cream-300 active:scale-95"
+                  className="h-9 sketch-pill bg-paper px-3 text-sm text-ink-soft ring-2 ring-kraft active:scale-95"
                 >
                   @{s}
                 </button>
@@ -223,7 +224,7 @@ export function AccountStep() {
             onChange={(e) => set('email')(e.target.value.replace(/\s/g, ''))}
             onBlur={touch('email')}
             error={touched.email ? errors.email : null}
-            success={!errors.email ? 'McGill email ✓' : null}
+            success={!errors.email ? 'McGill email' : null}
           />
           <AnimatePresence>
             {suggestDomains && (
@@ -241,10 +242,10 @@ export function AccountStep() {
                       set('email')(emailLocal + d);
                       touch('email')();
                     }}
-                    className="h-9 rounded-full bg-white px-3 text-sm text-ink-soft ring-2 ring-cream-300 active:scale-95"
+                    className="h-9 sketch-pill bg-paper px-3 text-sm text-ink-soft ring-2 ring-kraft active:scale-95"
                   >
                     {emailLocal}
-                    <b className="text-leaf-600">{d}</b>
+                    <b className="text-leaf">{d}</b>
                   </button>
                 )).slice(0, emailLocal.length > 14 ? 1 : 2)}
               </motion.div>
@@ -266,7 +267,7 @@ export function AccountStep() {
               <button
                 type="button"
                 onClick={() => setShowPw((v) => !v)}
-                className="h-9 rounded-full px-2 text-sm text-ink-muted hover:bg-cream-200"
+                className="h-9 sketch-pill px-2 text-sm text-ink-muted hover:bg-cream"
                 aria-label={showPw ? 'Hide password' : 'Show password'}
               >
                 {showPw ? 'Hide' : 'Show'}
@@ -279,8 +280,8 @@ export function AccountStep() {
                 <motion.span
                   key={i}
                   className={cn(
-                    'h-2 flex-1 rounded-full transition-colors duration-300',
-                    strength.level >= i ? STRENGTH_BAR[strength.level] : 'bg-cream-300',
+                    'h-2 flex-1 sketch-pill transition-colors duration-300',
+                    strength.level >= i ? STRENGTH_BAR[strength.level] : 'bg-kraft/40',
                   )}
                   animate={strength.level === i ? { scaleY: [1, 1.6, 1] } : undefined}
                   transition={{ duration: 0.25 }}

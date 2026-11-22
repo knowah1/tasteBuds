@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
 import type { Accessory, Bud, BudState } from '@/types';
 import { BUD_COLORS, BUD_TYPES } from '@/types';
-import { BUD_BG, Icon } from '@/components/ui';
+import { BUD_BG, Icon, type IconName } from '@/components/ui';
 import { ACCESSORY_UNLOCK_LEVEL, isAccessoryUnlocked } from '@/lib/xp';
 import { cn } from '@/lib/cn';
 import { BudAvatar } from './BudAvatar';
@@ -17,10 +17,10 @@ import {
 
 type Tab = 'color' | 'type' | 'accessories';
 
-const TABS: { id: Tab; label: string; emoji: string }[] = [
-  { id: 'color', label: 'Colour', emoji: '🎨' },
-  { id: 'type', label: 'Type', emoji: '🌱' },
-  { id: 'accessories', label: 'Style', emoji: '🧢' },
+const TABS: { id: Tab; label: string; icon: IconName }[] = [
+  { id: 'color', label: 'Colour', icon: 'pencil' },
+  { id: 'type', label: 'Type', icon: 'sprout' },
+  { id: 'accessories', label: 'Style', icon: 'chefHat' },
 ];
 
 /** Little poses the preview cycles through when tapped. */
@@ -52,7 +52,7 @@ export function BudEditor({
     <div className={cn('flex flex-col', className)}>
       {/* Preview on a little pedestal */}
       <div className="relative flex flex-col items-center">
-        <div className="absolute bottom-3 h-10 w-48 rounded-[50%] bg-leaf-100" />
+        <div className="absolute bottom-3 h-10 w-48 bg-mint [border-radius:52%_48%_50%_46%/60%_55%_45%_50%]" />
         <div className="relative pt-6">
           <BudAvatar
             bud={value}
@@ -66,21 +66,21 @@ export function BudEditor({
           type="button"
           whileTap={{ scale: 0.9, rotate: -20 }}
           onClick={() => onChange(randomBud(level))}
-          className="absolute right-0 top-2 flex h-11 items-center gap-1 rounded-full bg-white px-3 text-sm text-ink-soft shadow-soft"
+          className="sketch-pill border-2 border-kraft absolute right-0 top-2 flex h-11 items-center gap-1 bg-paper px-3 text-sm text-ink-soft"
           aria-label="Surprise me: random look"
         >
-          🎲 <span>Surprise me</span>
+          <Icon name="dice" size={18} /> <span>Surprise me</span>
         </motion.button>
       </div>
 
       {/* Tabs */}
-      <div className="relative mt-4 flex rounded-full bg-cream-200 p-1" role="tablist">
+      <div className="relative mt-4 flex sketch-pill bg-cream p-1" role="tablist">
         {/* Sliding pill. A plain x tween, not a shared `layoutId`: a layout animation left
             behind by switching tabs stalled the Sheet's exit, so the closed editor's
             invisible backdrop kept swallowing every tap after "Save my Bud". */}
         <motion.span
           aria-hidden
-          className="absolute inset-y-1 left-1 rounded-full bg-white shadow-soft"
+          className="absolute inset-y-1 left-1 sketch-pill-2 bg-paper"
           style={{ width: `calc((100% - 0.5rem) / ${TABS.length})` }}
           initial={false}
           animate={{ x: `${TABS.findIndex((t) => t.id === tab) * 100}%` }}
@@ -94,14 +94,14 @@ export function BudEditor({
             aria-selected={tab === t.id}
             onClick={() => setTab(t.id)}
             className={cn(
-              'relative flex h-11 flex-1 items-center justify-center gap-1 rounded-full font-display text-sm transition-colors',
+              'relative flex h-11 flex-1 items-center justify-center gap-1 sketch-pill font-display text-sm transition-colors',
               tab === t.id ? 'text-ink' : 'text-ink-muted',
             )}
           >
-            <span className="relative">{t.emoji}</span>
+            <Icon name={t.icon} size={18} className="relative text-kraft" />
             <span className="relative">{t.label}</span>
             {t.id === 'accessories' && (
-              <span className="relative rounded-full bg-cream-200 px-1.5 font-body text-sm text-ink-soft">
+              <span className="relative sketch-pill bg-cream px-1.5 font-body text-sm text-ink-soft">
                 {unlockedCount}/{ACCESSORIES_BY_LEVEL.length}
               </span>
             )}
@@ -149,12 +149,12 @@ function ColorPicker({ value, onChange }: { value: Bud; onChange: (b: Bud) => vo
               transition={{ type: 'spring', stiffness: 500, damping: 20 }}
               onClick={() => onChange({ ...value, color: c })}
               className={cn(
-                'flex h-12 w-12 items-center justify-center rounded-full ring-[3px] ring-offset-2 ring-offset-cream',
+                'flex h-12 w-12 items-center justify-center sketch-round ring-[3px] ring-offset-2 ring-offset-cream',
                 BUD_BG[c],
                 selected ? 'ring-ink' : 'ring-transparent',
               )}
             >
-              {selected && <Icon name="check" size={22} className="text-white drop-shadow" />}
+              {selected && <Icon name="check" size={22} strokeWidth={2.6} className="text-ink" />}
             </motion.button>
           );
         })}
@@ -177,8 +177,8 @@ function TypePicker({ value, onChange }: { value: Bud; onChange: (b: Bud) => voi
             whileTap={{ scale: 0.92 }}
             onClick={() => onChange({ ...value, type: t })}
             className={cn(
-              'flex flex-col items-center rounded-2xl pb-2 pt-1 ring-2 transition-colors',
-              selected ? 'bg-leaf-50 ring-leaf-500' : 'bg-white ring-cream-300',
+              'flex flex-col items-center sketch-sm pb-2 pt-1 transition-colors',
+              selected ? 'border-2 border-leaf bg-mint' : 'border-2 border-kraft bg-paper',
             )}
           >
             <BudAvatar
@@ -232,17 +232,18 @@ function AccessoryPicker({
         >
           {nudge ? (
             <>
-              🔒 {ACCESSORY_META[nudge].label} unlocks at{' '}
+              <Icon name="lock" size={15} className="-mt-0.5 inline text-kraft" />{' '}
+              {ACCESSORY_META[nudge].label} unlocks at{' '}
               <b className="text-ink">Lv {ACCESSORY_UNLOCK_LEVEL[nudge]}</b>. You're Lv {level}.
               Post, reply and cook to earn XP!
             </>
           ) : nextUnlock ? (
             <>
-              Next unlock: {ACCESSORY_META[nextUnlock].emoji} {ACCESSORY_META[nextUnlock].label} at
-              Lv {ACCESSORY_UNLOCK_LEVEL[nextUnlock]}
+              Next unlock: {ACCESSORY_META[nextUnlock].label} at Lv{' '}
+              {ACCESSORY_UNLOCK_LEVEL[nextUnlock]}
             </>
           ) : (
-            <>Every accessory unlocked. Absolute chef. 👑</>
+            <>Every accessory unlocked. Absolute chef.</>
           )}
         </motion.p>
       </AnimatePresence>
@@ -284,9 +285,9 @@ function AccessoryCard({
       aria-pressed={unlocked ? worn : undefined}
       aria-label={unlocked ? meta.label : `${meta.label}, locked until level ${unlockLv}`}
       className={cn(
-        'relative flex flex-col items-center rounded-2xl pb-1.5 pt-1 ring-2 transition-colors',
-        worn ? 'bg-leaf-50 ring-leaf-500' : 'bg-white ring-cream-300',
-        !unlocked && 'bg-cream-100',
+        'relative flex flex-col items-center sketch-sm pb-1.5 pt-1 transition-colors',
+        worn ? 'border-2 border-leaf bg-mint' : 'border-2 border-kraft bg-paper',
+        !unlocked && 'bg-cream',
       )}
     >
       <div className={cn(!unlocked && 'opacity-35 grayscale')}>
@@ -306,7 +307,7 @@ function AccessoryCard({
       </span>
       {!unlocked && (
         <span className="absolute inset-x-0 top-5 flex justify-center">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-white shadow-soft">
+          <span className="flex h-8 w-8 items-center justify-center sketch-round bg-kraft text-white">
             <Icon name="lock" size={16} />
           </span>
         </span>
@@ -315,7 +316,7 @@ function AccessoryCard({
         <motion.span
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-leaf-500 text-white ring-2 ring-cream"
+          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center sketch-round bg-leaf text-white ring-2 ring-cream"
         >
           <Icon name="check" size={12} strokeWidth={3} />
         </motion.span>

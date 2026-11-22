@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import { BackBar } from '@/app/TopBar';
 import { Screen } from '@/app/Screen';
-import { Button, EmptyState, Sheet, Skeleton } from '@/components/ui';
+import { Button, EmptyState, Sheet, Skeleton, Icon, WavyLine } from '@/components/ui';
 import { UserAvatar } from '@/features/bud';
 import { useStore } from '@/store';
 import {
@@ -136,8 +136,8 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
       <div className="space-y-2 px-3">
         <AnimatePresence initial={false}>
           {isHost && !readOnly && pendingCount > 0 && (
-            <Banner key="req" tone="saffron" onClick={() => setRequestsOpen(true)}>
-              <span className="text-lg">🙋</span>
+            <Banner key="req" tone="cream" onClick={() => setRequestsOpen(true)}>
+              <Icon name="hand" size={20} className="shrink-0 text-kraft" />
               <span className="flex-1">
                 {pendingCount} Bud{pendingCount === 1 ? '' : 's'} asking to join
               </span>
@@ -145,15 +145,15 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
             </Banner>
           )}
           {isHost && !readOnly && ended && (
-            <Banner key="end" tone="mcgill" onClick={() => openEndPrompt(room.id)}>
-              <span className="text-lg">⏰</span>
+            <Banner key="end" tone="blush" onClick={() => openEndPrompt(room.id)}>
+              <Icon name="timer" size={20} className="shrink-0" />
               <span className="flex-1">Time’s up! Wrap up the kitchen.</span>
               <span className="font-display">Choose ›</span>
             </Banner>
           )}
           {!isHost && !readOnly && ended && (
             <Banner key="guest-end" tone="cream">
-              <span className="text-lg">🍽️</span>
+              <Icon name="pan" size={20} className="shrink-0 text-kraft" />
               <span className="flex-1">
                 The event is over. The host will close the kitchen soon.
               </span>
@@ -182,7 +182,7 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
         )}
         {shown.length === 0 ? (
           <EmptyState
-            emoji="👋"
+            icon="hand"
             title="The kitchen is quiet"
             body="Say hi and sort out who’s bringing what."
           />
@@ -198,10 +198,12 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
       </div>
 
       {readOnly ? (
-        <div className="border-t border-cream-200 bg-cream-200/70 px-4 pb-6 pt-3 text-center">
-          <p className="font-display text-base text-ink-soft">
-            🗄️ Archived{room.archivedAt ? ` ${new Date(room.archivedAt).toLocaleDateString()}` : ''}{' '}
-            · read-only
+        <div className="bg-cream px-4 pb-6 pt-1 text-center">
+          <WavyLine className="mb-3" />
+          <p className="flex items-center justify-center gap-1 font-display text-base text-ink-soft">
+            <Icon name="archive" size={18} className="text-kraft" /> Archived
+            {room.archivedAt ? ` ${new Date(room.archivedAt).toLocaleDateString()}` : ''} ·
+            read-only
           </p>
           <p className="text-sm text-ink-muted">Only you can see this copy.</p>
         </div>
@@ -228,7 +230,7 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
         <div className="pt-1">
           <JoinRequestList postId={post.id} />
           {pendingCount === 0 && (
-            <p className="py-6 text-center text-sm text-ink-muted">All caught up ✨</p>
+            <p className="py-6 text-center text-sm text-ink-muted">All caught up</p>
           )}
         </div>
       </Sheet>
@@ -243,10 +245,9 @@ function ChatRoomView({ room, post }: { room: ChatRoom; post: Post }) {
 }
 
 const BANNER_TONES = {
-  saffron: 'bg-saffron-light text-ink ring-saffron/40',
-  mcgill: 'bg-mcgill-light text-mcgill ring-mcgill/30',
-  cream: 'bg-cream-200 text-ink-soft ring-cream-300',
-  leaf: 'bg-leaf-100 text-leaf-700 ring-leaf-300',
+  cream: 'bg-paper text-ink-soft border-2 border-kraft',
+  blush: 'bg-blush text-tomato',
+  leaf: 'bg-mint text-leaf',
 } as const;
 
 function Banner({
@@ -268,7 +269,7 @@ function Banner({
       whileTap={onClick ? { scale: 0.97 } : undefined}
       onClick={onClick}
       disabled={!onClick}
-      className={`flex w-full items-center gap-2 rounded-2xl px-3 py-2 text-left text-sm ring-1 ${BANNER_TONES[tone]}`}
+      className={`flex w-full items-center gap-2 sketch-sm px-3 py-2 text-left text-sm ${BANNER_TONES[tone]}`}
     >
       {children}
     </motion.button>
@@ -285,9 +286,10 @@ function LateJoinNotice({
   hidden?: number;
 }) {
   return (
-    <div className="mx-6 my-3 rounded-2xl border-2 border-dashed border-cream-300 px-3 py-2 text-center">
+    <div className="mx-6 my-3 sketch-sm border-2 border-dashed border-kraft px-3 py-2 text-center">
       <p className="font-display text-sm text-ink-soft">
-        🔒 {name ? `${name} joined` : 'You joined'} at {formatTime(joinedAt)}
+        <Icon name="lock" size={15} className="-mt-0.5 inline text-kraft" />{' '}
+        {name ? `${name} joined` : 'You joined'} at {formatTime(joinedAt)}
       </p>
       <p className="text-sm text-ink-muted">
         {hidden !== undefined
@@ -303,7 +305,7 @@ function RoomSkeleton() {
     <Screen scroll={false}>
       <BackBar title="Kitchen chat" />
       <div className="space-y-3 px-3">
-        <Skeleton className="h-20 w-full rounded-chunky" />
+        <Skeleton className="h-20 w-full sketch" />
         <Skeleton className="ml-10 h-10 w-2/3" />
         <Skeleton className="ml-auto h-10 w-1/2" />
         <Skeleton className="ml-10 h-14 w-3/4" />
@@ -319,7 +321,8 @@ function RoomGone() {
     <Screen>
       <BackBar title="Chat" />
       <EmptyState
-        emoji="🚪"
+        icon="door"
+        tone="cream"
         title="This kitchen has closed"
         body="The event ended or you’re not a member of this chat."
         action={

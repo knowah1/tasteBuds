@@ -14,6 +14,7 @@ import { latLonToVec3 } from './sphere';
 import { Sparkles } from './Sparkles';
 import { peekWalker } from './walkers';
 import './globe.css';
+import { Icon } from '@/components/ui';
 
 export interface GlobeMapProps {
   buds: MapBudInfo[];
@@ -127,7 +128,7 @@ export default function GlobeMap({ buds, meId, filter, onOpen }: GlobeMapProps) 
   if (!webgl) return <GlobeFallback buds={globeBuds} onOpen={onOpen} />;
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-cream via-cream to-sky-light">
+    <div className="absolute inset-0 overflow-hidden bg-cream">
       <Sparkles />
       <GlobeErrorBoundary fallback={<GlobeFallback buds={globeBuds} onOpen={onOpen} />}>
         <motion.div
@@ -181,11 +182,9 @@ export default function GlobeMap({ buds, meId, filter, onOpen }: GlobeMapProps) 
           transition={{ type: 'spring', stiffness: 420, damping: 22, delay: 0.25 }}
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.05 }}
-          className="absolute bottom-4 right-4 z-10 flex h-12 items-center gap-1.5 rounded-full bg-white pl-3 pr-4 font-display text-sm text-ink shadow-lift ring-2 ring-cream-300"
+          className="absolute bottom-4 right-4 z-10 flex h-12 items-center gap-1.5 sketch-pill border-2 border-kraft bg-paper pl-3 pr-4 font-display text-sm text-ink"
         >
-          <span className="text-lg" aria-hidden>
-            📍
-          </span>
+          <Icon name="pin" size={20} className="text-tomato" />
           Find me
         </motion.button>
       )}

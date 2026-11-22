@@ -30,7 +30,6 @@ export function UnlockCelebration() {
       await updateProfile({ bud: wearAccessory(bud, accessory) });
       pushToast({
         kind: 'success',
-        emoji: meta.emoji,
         title: `${meta.label} on!`,
         body: 'Your Bud is styling.',
       });
@@ -52,7 +51,7 @@ export function UnlockCelebration() {
           <motion.p
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="font-display text-base uppercase tracking-wider text-leaf-600"
+            className="font-display text-base uppercase tracking-wider text-leaf"
           >
             Level {ACCESSORY_UNLOCK_LEVEL[accessory]} reward
           </motion.p>
@@ -74,10 +73,10 @@ export function UnlockCelebration() {
                   key={i}
                   d="M50 50 L46 0 L54 0 Z"
                   transform={`rotate(${i * 30} 50 50)`}
-                  className="fill-saffron opacity-25"
+                  className="fill-sage opacity-50"
                 />
               ))}
-              <circle cx="50" cy="50" r="30" className="fill-saffron-light" />
+              <circle cx="50" cy="50" r="30" className="fill-mint" />
             </motion.svg>
             <motion.div
               initial={{ scale: 0.3, y: 30 }}
@@ -87,9 +86,7 @@ export function UnlockCelebration() {
               <BudAvatar bud={wearAccessory(bud, accessory)} size={130} state="hasBubble" />
             </motion.div>
           </div>
-          <p className="mt-3 font-display text-2xl">
-            {meta.emoji} {meta.label}
-          </p>
+          <p className="mt-3 font-display text-2xl">{meta.label}</p>
           <p className="mt-1 text-sm text-ink-soft">
             Try it on now, or find it any time in Edit my Bud.
           </p>

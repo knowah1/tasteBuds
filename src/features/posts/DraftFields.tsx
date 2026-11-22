@@ -1,7 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Chip, TextArea, TextField } from '@/components/ui';
-import { CUISINE_META, ingredientEmoji } from '@/lib/cuisine';
+import { Chip, TextArea, TextField, Icon } from '@/components/ui';
 import { formatDay, formatTime, MINUTE } from '@/lib/time';
 import { INGREDIENT_MAX } from '@/lib/titles';
 import { cn } from '@/lib/cn';
@@ -82,15 +81,14 @@ export function CuisinePicker({
               key={c}
               selected={value.includes(c)}
               onClick={() => onToggle(c)}
-              leading={<span aria-hidden>{CUISINE_META[c].emoji}</span>}
               className="h-9 px-3"
             >
               {c}
               {level && (
                 <span
                   className={cn(
-                    'ml-0.5 rounded-full px-1.5 text-sm',
-                    value.includes(c) ? 'bg-white/25' : 'bg-leaf-100 text-leaf-700',
+                    'ml-0.5 sketch-pill px-1.5 text-sm',
+                    value.includes(c) ? 'bg-paper/25' : 'bg-paper/30',
                   )}
                 >
                   {level}
@@ -123,7 +121,7 @@ export function IngredientField({
   value: string;
   onChange: (v: string) => void;
 }) {
-  const emoji = value.trim() ? ingredientEmoji(value) : '🥫';
+  const filled = !!value.trim();
   return (
     <Field label="Ingredient to rescue">
       <TextField
@@ -135,14 +133,14 @@ export function IngredientField({
         aria-label="Ingredient"
         trailing={
           <motion.span
-            key={emoji}
+            key={filled ? 'filled' : 'empty'}
             initial={{ scale: 0, rotate: -30 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-            className="text-2xl"
+            className={filled ? 'text-tomato' : 'text-kraft'}
             aria-hidden
           >
-            {emoji}
+            <Icon name="basket" size={24} />
           </motion.span>
         }
       />
@@ -152,8 +150,7 @@ export function IngredientField({
             key={idea}
             selected={value.trim().toLowerCase() === idea}
             onClick={() => onChange(idea)}
-            selectedClassName="bg-emergency text-white ring-emergency"
-            leading={<span aria-hidden>{ingredientEmoji(idea)}</span>}
+            selectedClassName="bg-tomato text-white"
             className="h-9 px-3"
           >
             {idea}
@@ -242,7 +239,7 @@ export function StartPicker({
               selected={s === value}
               onClick={() => onChange(s)}
               className="h-9 px-3 tabular-nums"
-              selectedClassName="bg-ink text-white ring-ink"
+              selectedClassName="bg-leaf text-white"
             >
               {formatTime(s)}
             </Chip>
@@ -297,7 +294,7 @@ export function EmergencyDurationPicker({
             key={min}
             selected={value === min}
             onClick={() => onChange(min)}
-            selectedClassName="bg-emergency text-white ring-emergency"
+            selectedClassName="bg-tomato text-white"
             className="justify-center px-0 text-sm"
           >
             {label}
@@ -320,7 +317,7 @@ export function ParticipantStepper({
   const set = (n: number) => onChange(Math.max(1, Math.min(MAX_PARTICIPANTS_LIMIT, n)));
   return (
     <Field label="Guests" hint={`Up to ${MAX_PARTICIPANTS_LIMIT}`}>
-      <div className="flex items-center gap-3 rounded-chunky bg-white p-2 shadow-soft ring-1 ring-cream-200">
+      <div className="flex items-center gap-3 sketch bg-paper p-2">
         <StepButton label="Fewer guests" disabled={value <= 1} onClick={() => set(value - 1)}>
           −
         </StepButton>
@@ -343,8 +340,8 @@ export function ParticipantStepper({
                 key={i}
                 animate={{ scale: i < value ? 1 : 0.7 }}
                 className={cn(
-                  'h-2 w-2 rounded-full transition-colors',
-                  i < value ? 'bg-leaf-500' : 'bg-cream-300',
+                  'h-2 w-2 sketch-round transition-colors',
+                  i < value ? 'bg-leaf' : 'bg-kraft/40',
                 )}
               />
             ))}
@@ -381,7 +378,7 @@ function StepButton({
       onClick={onClick}
       whileTap={disabled ? undefined : { scale: 0.85 }}
       className={cn(
-        'flex h-12 w-12 items-center justify-center rounded-2xl bg-cream-200 font-display text-2xl text-ink',
+        'flex h-12 w-12 items-center justify-center sketch-sm bg-cream font-display text-2xl text-ink',
         disabled && 'opacity-40',
       )}
     >

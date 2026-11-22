@@ -1,14 +1,9 @@
 import { useState, type FormEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Icon } from '@/components/ui';
+import { Icon, WavyLine } from '@/components/ui';
 import { cn } from '@/lib/cn';
 
-const QUICK_REPLIES = [
-  'On my way! 🚶',
-  'What should I bring? 🛒',
-  'Running 5 min late ⏱️',
-  'Yum 😋',
-];
+const QUICK_REPLIES = ['On my way!', 'What should I bring?', 'Running 5 min late', 'Yum'];
 
 /** Message input with quick replies. */
 export function Composer({
@@ -44,7 +39,8 @@ export function Composer({
   };
 
   return (
-    <div className="border-t border-cream-200 bg-cream/95 px-3 pb-5 pt-2 backdrop-blur">
+    <div className="bg-cream px-3 pb-5 pt-1">
+      <WavyLine className="mb-2" />
       <AnimatePresence initial={false}>
         {!text && !disabled && (
           <motion.div
@@ -59,7 +55,7 @@ export function Composer({
                 type="button"
                 whileTap={{ scale: 0.92 }}
                 onClick={() => void send(q)}
-                className="shrink-0 rounded-full bg-white px-3 py-1.5 text-sm text-ink-soft shadow-soft ring-1 ring-cream-200"
+                className="sketch-pill border-2 border-kraft shrink-0 bg-paper px-3 py-1.5 text-sm text-ink-soft"
               >
                 {q}
               </motion.button>
@@ -76,7 +72,7 @@ export function Composer({
           maxLength={1000}
           aria-label="Message"
           enterKeyHint="send"
-          className="h-12 min-w-0 flex-1 rounded-full bg-white px-4 text-[15px] text-ink shadow-soft ring-2 ring-cream-300 placeholder:text-ink-muted focus:outline-none focus:ring-leaf-400 disabled:opacity-60"
+          className="h-12 min-w-0 flex-1 sketch-pill border-2 border-kraft bg-paper px-4 text-[15px] text-ink placeholder:text-ink-muted focus:border-leaf focus:outline-none disabled:opacity-60"
         />
         <motion.button
           type="submit"
@@ -86,8 +82,8 @@ export function Composer({
           animate={{ scale: canSend ? 1 : 0.9, rotate: canSend ? 0 : -15 }}
           transition={{ type: 'spring', stiffness: 500, damping: 20 }}
           className={cn(
-            'flex h-12 w-12 shrink-0 items-center justify-center rounded-full shadow-chunky transition-colors',
-            canSend ? 'bg-mcgill text-white' : 'bg-cream-200 text-ink-muted',
+            'flex h-12 w-12 shrink-0 items-center justify-center sketch-round transition-colors',
+            canSend ? 'bg-tomato text-white' : 'bg-paper text-kraft',
           )}
         >
           <Icon name="send" size={20} />

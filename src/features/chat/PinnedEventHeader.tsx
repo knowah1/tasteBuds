@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Badge } from '@/components/ui';
+import { Badge, Icon, Pill } from '@/components/ui';
 import { UserAvatar } from '@/features/bud';
-import { CUISINE_META, POST_TYPE_META, TONE_CLASSES, ingredientEmoji } from '@/lib/cuisine';
+import { POST_TYPE_META } from '@/lib/cuisine';
 import { countdown, formatDay, formatRange, formatTime } from '@/lib/time';
 import { cn } from '@/lib/cn';
 import type { ChatRoom, Post, User } from '@/types';
@@ -19,9 +19,9 @@ export function useNow(ms = 1000) {
 }
 
 const PHASE_STYLE = {
-  upcoming: 'bg-sky-light text-ink',
-  live: 'bg-mcgill text-white',
-  over: 'bg-cream-200 text-ink-muted',
+  upcoming: 'bg-cream text-ink',
+  live: 'bg-tomato text-white',
+  over: 'bg-cream text-ink-muted',
 } as const;
 
 /** Event details pinned to the top of a chat, plus the member strip. */
@@ -54,10 +54,7 @@ export function PinnedEventHeader({
 
   return (
     <div className="sticky top-0 z-10 px-3 pb-2">
-      <motion.div
-        layout
-        className="overflow-hidden rounded-chunky bg-white/95 shadow-soft ring-1 ring-cream-200 backdrop-blur"
-      >
+      <motion.div layout className="sketch border-2 border-kraft overflow-hidden bg-paper">
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
@@ -66,18 +63,18 @@ export function PinnedEventHeader({
         >
           <span
             className={cn(
-              'flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-xl',
+              'flex h-10 w-10 shrink-0 items-center justify-center sketch-sm',
               meta.classes,
             )}
             aria-hidden
           >
-            📌
+            <Icon name="pin" size={22} />
           </span>
           <span className="min-w-0 flex-1">
             <span className="block truncate font-display text-base">{post.title}</span>
             <span className="mt-0.5 flex items-center gap-1.5">
               <span
-                className={cn('rounded-full px-2 py-px text-sm tabular-nums', PHASE_STYLE[phase])}
+                className={cn('sketch-pill px-2 py-px text-sm tabular-nums', PHASE_STYLE[phase])}
               >
                 {phaseLabel}
               </span>
@@ -88,12 +85,8 @@ export function PinnedEventHeader({
               </span>
             </span>
           </span>
-          <motion.span
-            animate={{ rotate: expanded ? 180 : 0 }}
-            className="text-ink-muted"
-            aria-hidden
-          >
-            ▾
+          <motion.span animate={{ rotate: expanded ? 180 : 0 }} className="text-kraft" aria-hidden>
+            <Icon name="chevronRight" size={18} className="rotate-90" />
           </motion.span>
         </button>
 
@@ -106,30 +99,33 @@ export function PinnedEventHeader({
               transition={{ type: 'spring', stiffness: 380, damping: 34 }}
               className="overflow-hidden"
             >
-              <div className="space-y-2 border-t border-cream-200 px-3 pb-3 pt-2 text-sm">
-                <p className="text-ink-soft">🕒 {formatRange(post.startAt, post.endAt)}</p>
+              <div className="space-y-2 border-t border-cream px-3 pb-3 pt-2 text-sm">
+                <p className="flex items-center gap-1 text-ink-soft">
+                  <Icon name="clock" size={16} className="text-kraft" />
+                  {formatRange(post.startAt, post.endAt)}
+                </p>
                 {post.description && (
                   <p className="break-words text-ink-soft">{post.description}</p>
                 )}
                 <div className="flex flex-wrap gap-1">
                   <Badge className={meta.classes}>
-                    {meta.emoji} {meta.label}
+                    <Icon name={meta.icon} size={15} /> {meta.label}
                   </Badge>
                   {post.cuisines.map((c) => (
-                    <Badge key={c} className={TONE_CLASSES[CUISINE_META[c].tone]}>
-                      {CUISINE_META[c].emoji} {c}
+                    <Badge key={c} className="bg-blush text-tomato">
+                      {c}
                     </Badge>
                   ))}
                   {post.ingredient && (
-                    <Badge className="bg-emergency-light text-emergency">
-                      {ingredientEmoji(post.ingredient)} {post.ingredient}
-                    </Badge>
+                    <Pill icon="basket" tone="blush">
+                      {post.ingredient}
+                    </Pill>
                   )}
                 </div>
                 <button
                   type="button"
                   onClick={() => navigate(`/post/${post.id}`)}
-                  className="font-display text-sm text-mcgill"
+                  className="font-display text-sm text-tomato"
                 >
                   View full event →
                 </button>
@@ -141,12 +137,12 @@ export function PinnedEventHeader({
         <button
           type="button"
           onClick={onMembers}
-          className="flex w-full items-center gap-2 border-t border-cream-200 bg-cream-50 px-3 py-1.5"
+          className="flex w-full items-center gap-2 border-t border-cream bg-cream px-3 py-1.5"
           aria-label="Show members"
         >
           <span className="flex -space-x-2">
             {members.slice(0, 6).map((u) => (
-              <span key={u.id} className="rounded-full bg-white ring-2 ring-cream-50">
+              <span key={u.id} className="sketch-round bg-paper ring-2 ring-paper">
                 <UserAvatar userId={u.id} size={26} ring={false} />
               </span>
             ))}

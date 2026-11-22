@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import { BudAvatar } from '@/features/bud';
-import { CUISINE_META, POST_TYPE_META } from '@/lib/cuisine';
 import type { GlobeBudInfo } from './GlobeBuds';
 
 /**
@@ -19,9 +18,9 @@ export function GlobeFallback({
     .sort((a, b) => Number(b.isMe) - Number(a.isMe) || Number(!!b.post) - Number(!!a.post));
 
   return (
-    <div className="no-scrollbar absolute inset-0 overflow-y-auto bg-gradient-to-b from-cream to-sky-light px-4 pb-24 pt-12">
-      <div className="mb-3 rounded-chunky bg-white/80 p-3 text-center shadow-soft ring-2 ring-cream-300">
-        <p className="font-display text-base text-ink">🌍 The globe needs WebGL</p>
+    <div className="no-scrollbar absolute inset-0 overflow-y-auto bg-cream px-4 pb-24 pt-12">
+      <div className="sketch border-2 border-kraft mb-3 bg-paper p-3 text-center">
+        <p className="font-display text-base text-ink">The globe needs WebGL</p>
         <p className="text-sm text-ink-soft">Here are the Buds around the world instead.</p>
       </div>
       <ul className="flex flex-col gap-2">
@@ -35,7 +34,7 @@ export function GlobeFallback({
             <button
               type="button"
               onClick={() => onOpen(b.user.id)}
-              className="flex w-full items-center gap-3 rounded-chunky bg-white p-3 text-left shadow-soft ring-2 ring-cream-300 transition active:scale-[0.98]"
+              className="flex w-full items-center gap-3 sketch-2 border-2 border-kraft bg-paper p-3 text-left transition active:scale-[0.98]"
             >
               <BudAvatar
                 userId={b.user.id}
@@ -51,11 +50,11 @@ export function GlobeFallback({
                 </span>
                 <span className="block truncate text-sm text-ink-soft">
                   {b.post
-                    ? `${POST_TYPE_META[b.post.type].emoji} ${b.post.title}`
+                    ? b.post.title
                     : b.user.cuisines
                         .slice(0, 3)
-                        .map((c) => `${CUISINE_META[c.cuisine].emoji} ${c.cuisine}`)
-                        .join('  ')}
+                        .map((c) => c.cuisine)
+                        .join(' · ')}
                 </span>
               </span>
             </button>

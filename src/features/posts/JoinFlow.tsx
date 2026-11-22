@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Button, Chip, Modal, Sheet, TextArea } from '@/components/ui';
+import { Button, Chip, Modal, Sheet, TextArea, Icon, type IconName } from '@/components/ui';
 import { useStore } from '@/store';
 import { cn } from '@/lib/cn';
 import type { Post } from '@/types';
@@ -8,10 +8,10 @@ import type { JoinState } from './postMeta';
 
 const JOIN_MESSAGE_MAX = 150;
 const QUICK_LINES = [
-  'First time trying this! 🙈',
-  'I can bring ingredients 🛒',
-  'Vegetarian here 🌱',
-  'Happy to help clean up 🧽',
+  'First time trying this!',
+  'I can bring ingredients',
+  'Vegetarian here',
+  'Happy to help clean up',
 ];
 
 const STEPS = ['Ask', 'Requested', 'Accepted'] as const;
@@ -26,24 +26,26 @@ export function JoinTracker({ state }: { state: JoinState }) {
         const isLast = i === STEPS.length - 1;
         const text = isLast && declined ? 'Declined' : label;
         const done = i <= reached || (isLast && declined);
-        const tone = isLast && declined ? 'bg-mcgill text-white' : 'bg-leaf-500 text-white';
+        const tone = isLast && declined ? 'bg-tomato text-white' : 'bg-leaf text-white';
         return (
           <li key={label} className="flex flex-1 items-center gap-1">
             <motion.span
               animate={{ scale: done ? 1 : 0.9 }}
               className={cn(
-                'flex h-7 shrink-0 items-center gap-1 rounded-full px-2 text-sm',
-                done ? tone : 'bg-cream-200 text-ink-muted',
+                'flex h-7 shrink-0 items-center gap-1 sketch-pill px-2 text-sm',
+                done ? tone : 'bg-cream text-ink-muted',
               )}
             >
-              {done && <span aria-hidden>{isLast && declined ? '✕' : '✓'}</span>}
+              {done && (
+                <Icon name={isLast && declined ? 'close' : 'check'} size={14} strokeWidth={2.8} />
+              )}
               {text}
             </motion.span>
             {!isLast && (
               <span
                 className={cn(
-                  'h-1 flex-1 rounded-full',
-                  i < reached || (declined && i === 1) ? 'bg-leaf-300' : 'bg-cream-200',
+                  'h-1 flex-1 sketch-pill',
+                  i < reached || (declined && i === 1) ? 'bg-sage' : 'bg-cream',
                 )}
               />
             )}
@@ -64,25 +66,28 @@ export function SafetyTipModal({
   onDone: () => void;
   onClose: () => void;
 }) {
-  const tips = [
-    ['👯', 'Meet with the group', 'Cook with the whole party, not one-on-one with strangers.'],
-    ['📍', 'Share your plans', 'Tell a friend where you’re going and when you’ll be back.'],
-    ['🚩', 'Trust your gut', 'Leave any time. Report or block anyone who makes you uneasy.'],
-  ] as const;
+  const tips: [IconName, string, string][] = [
+    ['users', 'Meet with the group', 'Cook with the whole party, not one-on-one with strangers.'],
+    ['pin', 'Share your plans', 'Tell a friend where you’re going and when you’ll be back.'],
+    ['flag', 'Trust your gut', 'Leave any time. Report or block anyone who makes you uneasy.'],
+  ];
   return (
     <Modal open={open} onClose={onClose}>
       <div className="text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-leaf-100 text-4xl">
-          🛡️
+        <div className="mx-auto flex h-16 w-16 items-center justify-center sketch-round bg-mint text-leaf">
+          <Icon name="shield" size={36} />
         </div>
         <h2 className="mt-3 font-display text-2xl">Before you head over</h2>
         <p className="mt-1 text-sm text-ink-soft">tasteBuds meetups happen in real kitchens.</p>
       </div>
       <ul className="mt-4 space-y-3">
-        {tips.map(([emoji, title, body]) => (
-          <li key={title} className="flex gap-3 rounded-2xl bg-white p-3 shadow-soft">
-            <span className="text-2xl" aria-hidden>
-              {emoji}
+        {tips.map(([icon, title, body], i) => (
+          <li
+            key={title}
+            className={cn('flex gap-3 bg-paper p-3', i % 2 ? 'sketch-sm-2' : 'sketch-sm')}
+          >
+            <span className="sketch-sm-2 flex h-10 w-10 shrink-0 items-center justify-center bg-cream text-kraft">
+              <Icon name={icon} size={22} />
             </span>
             <div>
               <p className="font-display text-base">{title}</p>
@@ -123,7 +128,6 @@ export function AskToJoinSheet({
       await requestToJoin(post.id, message);
       pushToast({
         kind: 'success',
-        emoji: '📨',
         title: 'Request sent!',
         body: `We’ll let you know when ${hostName} replies.`,
       });

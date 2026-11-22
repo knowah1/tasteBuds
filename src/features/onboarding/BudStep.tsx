@@ -17,7 +17,7 @@ export function BudStep({ value, onChange, onNext }: BudStepProps) {
       subtitle="Your Bud wanders your neighbourhood on the map, never your exact spot."
       footer={
         <Button block size="lg" onClick={onNext}>
-          Plant my Bud 🌱
+          Plant my Bud
         </Button>
       }
     >

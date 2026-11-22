@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Button, Chip, Sheet, TextArea } from '@/components/ui';
+import { Button, Chip, Sheet, TextArea, Icon } from '@/components/ui';
 import { useStore } from '@/store';
 import { REPORT_REASONS, type Message, type ReportReason } from '@/types';
 
@@ -67,7 +67,7 @@ export function ReportMessageSheet({
             className="space-y-4"
           >
             {message && (
-              <div className="rounded-2xl bg-white px-3 py-2 text-sm shadow-soft ring-1 ring-cream-200">
+              <div className="sketch-sm bg-paper px-3 py-2 text-sm">
                 <p className="text-sm text-ink-muted">{senderName ?? 'Someone'}</p>
                 <p className="break-words text-ink-soft">{message.text}</p>
               </div>
@@ -80,7 +80,7 @@ export function ReportMessageSheet({
                     key={r}
                     selected={reason === r}
                     onClick={() => setReason(r)}
-                    selectedClassName="bg-mcgill text-white ring-mcgill"
+                    selectedClassName="bg-tomato text-white ring-tomato"
                   >
                     {r}
                   </Chip>
@@ -110,13 +110,13 @@ export function ReportMessageSheet({
               initial={{ scale: 0, rotate: -20 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: 'spring', stiffness: 400, damping: 14 }}
-              className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-leaf-100 text-4xl"
+              className="mb-4 flex h-20 w-20 items-center justify-center sketch-round bg-mint text-leaf"
             >
-              🛡️
+              <Icon name="shield" size={42} />
             </motion.div>
             <h3 className="font-display text-2xl">Thanks for telling us</h3>
             <p className="mt-1 max-w-xs text-sm text-ink-soft">
-              Our team will review this message. Keeping kitchens kind keeps them cozy 💚
+              Our team will review this message. Keeping kitchens kind keeps them cozy.
             </p>
           </motion.div>
         )}

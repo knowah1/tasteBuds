@@ -19,40 +19,21 @@ export type Urgency = 'critical' | 'soon' | 'chill' | 'resolved';
 export function urgencyOf(t: ForumThread, now = Date.now()): Urgency {
   const left = t.expiresAt - now;
   if (left <= 0) return 'resolved';
-  if (left <= 30 * MINUTE) return 'critical';
+  // Ending within the hour: blush outline, blush tile, tomato countdown pill.
+  if (left <= 60 * MINUTE) return 'critical';
   if (left <= 3 * HOUR) return 'soon';
   return 'chill';
 }
 
-/** Static class strings so Tailwind's JIT can see them. */
+/** Static class strings so Tailwind's JIT can see them. Only "critical" is loud. */
 export const URGENCY_META: Record<
   Urgency,
-  { label: string; badge: string; bar: string; tile: string }
+  { label: string; pill: 'urgent' | 'neutral'; tile: 'blush' | 'cream'; edge: 'blush' | 'none' }
 > = {
-  critical: {
-    label: 'Super urgent',
-    badge: 'bg-emergency text-white',
-    bar: 'bg-emergency',
-    tile: 'bg-emergency-light',
-  },
-  soon: {
-    label: 'Soon',
-    badge: 'bg-saffron-light text-ink',
-    bar: 'bg-saffron',
-    tile: 'bg-saffron-light',
-  },
-  chill: {
-    label: 'Plenty of time',
-    badge: 'bg-leaf-100 text-leaf-700',
-    bar: 'bg-leaf-400',
-    tile: 'bg-leaf-50',
-  },
-  resolved: {
-    label: 'Resolved',
-    badge: 'bg-leaf-100 text-leaf-700',
-    bar: 'bg-leaf-300',
-    tile: 'bg-cream-200',
-  },
+  critical: { label: 'Ending soon', pill: 'urgent', tile: 'blush', edge: 'blush' },
+  soon: { label: 'A few hours left', pill: 'neutral', tile: 'cream', edge: 'none' },
+  chill: { label: 'Plenty of time', pill: 'neutral', tile: 'cream', edge: 'none' },
+  resolved: { label: 'Resolved', pill: 'neutral', tile: 'cream', edge: 'none' },
 };
 
 /** Fraction of the emergency window still remaining (1 → just posted, 0 → over). */

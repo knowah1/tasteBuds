@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Icon } from '@/components/ui';
+import { Icon, WavyLine } from '@/components/ui';
 import { cn } from '@/lib/cn';
 
 export const REPLY_MAX = 500;
@@ -56,7 +56,8 @@ export function ReplyComposer({
   };
 
   return (
-    <div className="border-t border-cream-200 bg-cream/95 px-3 pb-5 pt-2 backdrop-blur">
+    <div className="bg-cream px-3 pb-5 pt-1">
+      <WavyLine className="mb-2" />
       <AnimatePresence initial={false} mode="wait">
         {replyingTo ? (
           <motion.div
@@ -67,14 +68,14 @@ export function ReplyComposer({
             className="overflow-hidden"
           >
             <div className="mb-2 flex items-center gap-2 pl-1">
-              <span className="rounded-full bg-leaf-100 px-3 py-1 text-sm text-leaf-700">
-                ↩ Replying to {replyingTo}
+              <span className="sketch-pill inline-flex items-center gap-1 bg-mint px-3 py-1 text-sm text-leaf">
+                <Icon name="reply" size={16} /> Replying to {replyingTo}
               </span>
               <button
                 type="button"
                 onClick={onCancelReply}
                 aria-label="Cancel reply"
-                className="flex h-7 w-7 items-center justify-center rounded-full text-ink-muted hover:bg-cream-200"
+                className="flex h-7 w-7 items-center justify-center sketch-round text-kraft hover:bg-paper"
               >
                 <Icon name="close" size={14} />
               </button>
@@ -99,7 +100,7 @@ export function ReplyComposer({
                     setText(q);
                     inputRef.current?.focus();
                   }}
-                  className="shrink-0 rounded-full bg-white px-3 py-1.5 text-sm text-ink-soft shadow-soft ring-1 ring-cream-200"
+                  className="sketch-pill border-2 border-kraft shrink-0 bg-paper px-3 py-1.5 text-sm text-ink-soft"
                 >
                   {q.trim()}
                 </motion.button>
@@ -127,13 +128,13 @@ export function ReplyComposer({
             maxLength={REPLY_MAX}
             aria-label="Reply"
             enterKeyHint="send"
-            className="no-scrollbar block min-h-12 w-full resize-none rounded-3xl bg-white px-4 py-3 text-[15px] leading-snug text-ink shadow-soft ring-2 ring-cream-300 placeholder:text-ink-muted focus:outline-none focus:ring-leaf-400 disabled:opacity-60"
+            className="no-scrollbar block min-h-12 w-full resize-none sketch-sm border-2 border-kraft bg-paper px-4 py-3 text-[15px] leading-snug text-ink placeholder:text-ink-muted focus:border-leaf focus:outline-none disabled:opacity-60"
           />
           {text.length > REPLY_MAX * 0.8 && (
             <span
               className={cn(
                 'pointer-events-none absolute -top-5 right-3 text-sm',
-                text.length >= REPLY_MAX ? 'text-mcgill' : 'text-ink-muted',
+                text.length >= REPLY_MAX ? 'text-tomato' : 'text-ink-muted',
               )}
             >
               {text.length}/{REPLY_MAX}
@@ -148,12 +149,12 @@ export function ReplyComposer({
           animate={{ scale: canSend ? 1 : 0.9, rotate: canSend ? 0 : -15 }}
           transition={{ type: 'spring', stiffness: 500, damping: 20 }}
           className={cn(
-            'flex h-12 w-12 shrink-0 items-center justify-center rounded-full shadow-chunky transition-colors',
-            canSend ? 'bg-leaf-500 text-white' : 'bg-cream-200 text-ink-muted',
+            'flex h-12 w-12 shrink-0 items-center justify-center sketch-round transition-colors',
+            canSend ? 'bg-tomato text-white' : 'bg-paper text-kraft',
           )}
         >
           {sending ? (
-            <span className="h-5 w-5 animate-spin rounded-full border-[3px] border-current border-t-transparent" />
+            <span className="h-5 w-5 animate-spin sketch-round border-[3px] border-current border-t-transparent" />
           ) : (
             <Icon name="send" size={20} />
           )}
