@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Bud } from '@/types';
-import { Button, Sheet } from '@/components/ui';
+import { Button, Sheet, Icon } from '@/components/ui';
 import { selectMyLevel, useStore, useUserBud } from '@/store';
 import { BudEditor } from './BudEditor';
 import { DEFAULT_BUD, budsEqual, sanitizeBud } from './budMeta';
@@ -33,7 +33,6 @@ export function BudEditorSheet({ open, onClose }: BudEditorSheetProps) {
       await updateProfile({ bud: sanitizeBud(draft, level) });
       pushToast({
         kind: 'success',
-        emoji: '🌱',
         title: 'Looking fresh!',
         body: 'Your Bud is updated.',
       });
@@ -67,8 +66,14 @@ export function EditBudButton({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button variant="secondary" size="sm" className={className} onClick={() => setOpen(true)}>
-        ✏️ Edit my Bud
+      <Button
+        variant="sage"
+        size="sm"
+        className={className}
+        onClick={() => setOpen(true)}
+        leftIcon={<Icon name="pencil" size={16} />}
+      >
+        Edit bud
       </Button>
       <BudEditorSheet open={open} onClose={() => setOpen(false)} />
     </>

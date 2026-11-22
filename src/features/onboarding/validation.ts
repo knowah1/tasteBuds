@@ -20,7 +20,7 @@ export function passwordStrength(pw: string): PasswordStrength {
   if (/[^A-Za-z0-9]/.test(pw)) score++;
   if (score <= 1) return { level: 2, label: 'Okay' };
   if (score === 2) return { level: 3, label: 'Good' };
-  return { level: 4, label: 'Strong 💪' };
+  return { level: 4, label: 'Strong' };
 }
 
 export function usernameFormatError(name: string): string | null {

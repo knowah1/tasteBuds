@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useAnimationControls } from 'framer-motion';
-import { Button } from '@/components/ui';
+import { Button, Icon } from '@/components/ui';
 import { api } from '@/mock/api';
 import { useStore } from '@/store';
 import { cn } from '@/lib/cn';
@@ -60,7 +60,7 @@ export function VerifyStep() {
     setChecking(false);
     if (ok) {
       clearInboxToasts();
-      pushToast({ kind: 'success', emoji: '✉️', title: 'Email verified!', body: email });
+      pushToast({ kind: 'success', title: 'Email verified!', body: email });
       return; // store sync moves the flow to the next step
     }
     setError("That code doesn't match. Check your inbox and try again.");
@@ -78,7 +78,8 @@ export function VerifyStep() {
 
   return (
     <StepLayout
-      emoji="📬"
+      icon="mail"
+      tone="blush"
       title="Check your inbox"
       subtitle={
         <>
@@ -122,17 +123,11 @@ export function VerifyStep() {
                 animate={char ? { scale: [1, 1.12, 1] } : { scale: 1 }}
                 transition={{ duration: 0.18 }}
                 className={cn(
-                  'flex h-14 items-center justify-center rounded-2xl bg-white font-display text-2xl ring-2 transition-colors',
-                  error
-                    ? 'ring-mcgill'
-                    : active
-                      ? 'ring-leaf-500'
-                      : char
-                        ? 'ring-leaf-300'
-                        : 'ring-cream-300',
+                  'flex h-14 items-center justify-center sketch-sm bg-paper font-display text-2xl ring-2 transition-colors',
+                  error ? 'ring-tomato' : active ? 'ring-leaf' : char ? 'ring-sage' : 'ring-kraft',
                 )}
               >
-                {char ?? (active && <span className="h-6 w-0.5 animate-pulse bg-leaf-500" />)}
+                {char ?? (active && <span className="h-6 w-0.5 animate-pulse bg-leaf" />)}
               </motion.div>
             );
           })}
@@ -146,7 +141,7 @@ export function VerifyStep() {
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="mt-3 pl-1 text-sm text-mcgill"
+            className="mt-3 pl-1 text-sm text-tomato"
           >
             {error}
           </motion.p>
@@ -172,9 +167,11 @@ export function VerifyStep() {
             exit={{ opacity: 0, scale: 0.9 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onChange(inboxCode)}
-            className="mt-5 flex w-full items-center gap-3 rounded-2xl bg-sky-light px-4 py-3 text-left ring-2 ring-sky"
+            className="sketch-sm edge-kraft mt-5 flex w-full items-center gap-3 bg-paper px-4 py-3 text-left"
           >
-            <span className="text-2xl">✉️</span>
+            <span className="sketch-sm-2 flex h-10 w-10 shrink-0 items-center justify-center bg-blush text-tomato">
+              <Icon name="mail" size={22} />
+            </span>
             <span className="min-w-0 flex-1">
               <span className="block text-sm uppercase tracking-wide text-ink-muted">
                 From Mail
@@ -193,8 +190,8 @@ export function VerifyStep() {
           disabled={cooldown > 0}
           onClick={send}
           className={cn(
-            'h-10 rounded-full px-3 font-display',
-            cooldown > 0 ? 'text-ink-muted' : 'text-mcgill hover:bg-mcgill-light',
+            'h-10 sketch-pill px-3 font-display',
+            cooldown > 0 ? 'text-ink-muted' : 'text-tomato hover:bg-blush',
           )}
         >
           {cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend code'}

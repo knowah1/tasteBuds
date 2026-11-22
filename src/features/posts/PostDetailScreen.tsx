@@ -4,12 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
 import { BackBar } from '@/app/TopBar';
 import { Screen } from '@/app/Screen';
-import { Badge, Button, Card, EmptyState, Icon, Skeleton } from '@/components/ui';
+import { Badge, Button, Card, EmptyState, Icon, Skeleton, Pill, WavyLine } from '@/components/ui';
 import { BudAvatar, UserAvatar } from '@/features/bud';
 import { selectPost, selectUser, useStore } from '@/store';
 import { selectMyRequest, selectRequestsForPost, selectRoomForPost } from '@/store/postSlice';
 import { api } from '@/mock/api';
-import { CUISINE_META, POST_TYPE_META, TONE_CLASSES, ingredientEmoji } from '@/lib/cuisine';
+import { POST_TYPE_META } from '@/lib/cuisine';
 import { countdown, formatRange, timeAgo } from '@/lib/time';
 import { levelFromXp } from '@/lib/xp';
 import { useFakeLoading } from '@/lib/useFakeLoading';
@@ -28,16 +28,16 @@ import {
 } from './postMeta';
 
 const HERO_BG: Record<Post['type'], string> = {
-  learn: 'from-learn-light',
-  teach: 'from-teach-light',
-  potluck: 'from-potluck-light',
-  budmergency: 'from-emergency-light',
+  learn: 'bg-mint edge-leaf',
+  teach: 'bg-mint edge-leaf',
+  potluck: 'bg-paper edge-kraft',
+  budmergency: 'bg-blush edge-tomato',
 };
 
 const PHASE_BADGE: Record<EventPhase, { label: string; className: string }> = {
-  upcoming: { label: 'Upcoming', className: 'bg-sky-light text-ink' },
-  live: { label: '● Happening now', className: 'bg-mcgill text-white' },
-  ended: { label: 'Ended', className: 'bg-cream-200 text-ink-muted' },
+  upcoming: { label: 'Upcoming', className: 'bg-cream text-ink' },
+  live: { label: '● Happening now', className: 'bg-tomato text-white' },
+  ended: { label: 'Ended', className: 'bg-cream text-ink-muted' },
 };
 
 function useNow(ms = 1000) {
@@ -62,7 +62,8 @@ export function PostDetailScreen() {
       <Screen>
         <BackBar title="Event" />
         <EmptyState
-          emoji="🍽️"
+          icon="pan"
+          tone="cream"
           title="Event not found"
           body="It may have ended, or the host is hidden from you."
         />
@@ -113,10 +114,7 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className={cn(
-            'relative overflow-hidden rounded-blob bg-gradient-to-b to-white px-5 pb-5 pt-28 shadow-soft ring-1 ring-cream-200',
-            HERO_BG[post.type],
-          )}
+          className={cn('sketch-2 px-5 pb-5 pt-28', HERO_BG[post.type])}
         >
           <div className="flex justify-center">
             <BudAvatar
@@ -131,8 +129,8 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
             />
           </div>
           <div className="mt-8 flex flex-wrap items-center gap-1.5">
-            <Badge className={meta.classes}>
-              {meta.emoji} {meta.label}
+            <Badge className="bg-paper text-ink-soft">
+              <Icon name={meta.icon} size={15} /> {meta.label}
             </Badge>
             <Badge className={PHASE_BADGE[phase].className}>
               {emergency && phase === 'ended' ? 'Resolved' : PHASE_BADGE[phase].label}
@@ -147,14 +145,14 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
           {(post.cuisines.length > 0 || post.ingredient) && (
             <div className="mt-3 flex flex-wrap gap-1.5">
               {post.cuisines.map((c) => (
-                <Badge key={c} className={TONE_CLASSES[CUISINE_META[c].tone]}>
-                  {CUISINE_META[c].emoji} {c}
-                </Badge>
+                <Pill key={c} tone="blush">
+                  {c}
+                </Pill>
               ))}
               {post.ingredient && (
-                <Badge className="bg-emergency-light text-emergency">
-                  {ingredientEmoji(post.ingredient)} {post.ingredient}
-                </Badge>
+                <Pill icon="basket" tone="blush" outlined>
+                  {post.ingredient}
+                </Pill>
               )}
             </div>
           )}
@@ -173,7 +171,7 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
               <>
                 {formatRange(post.startAt, post.endAt)}
                 {phase === 'live' && (
-                  <span className="ml-1 text-mcgill tabular-nums">
+                  <span className="ml-1 text-tomato tabular-nums">
                     · {countdown(post.endAt, now)}
                   </span>
                 )}
@@ -183,7 +181,7 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
           {!emergency && (
             <Fact icon="users" label="Spots">
               <SpotsMeter max={post.maxParticipants} taken={guests} />
-              <span className={cn('ml-2', left === 0 && 'text-mcgill')}>{spotsLabel(left)}</span>
+              <span className={cn('ml-2', left === 0 && 'text-tomato')}>{spotsLabel(left)}</span>
             </Fact>
           )}
           {zone && (
@@ -237,7 +235,8 @@ function PostDetail({ post, host }: { post: Post; host: User }) {
       </div>
 
       {/* Sticky action area */}
-      <div className="sticky bottom-0 mt-auto border-t border-cream-200 bg-cream/95 px-4 pb-6 pt-3 backdrop-blur">
+      <div className="sticky bottom-0 mt-auto bg-cream px-4 pb-6 pt-1">
+        <WavyLine className="mb-3" />
         <JoinActions
           state={state}
           request={myRequest?.message}
@@ -303,7 +302,7 @@ function JoinActions({
         >
           {state === 'none' && (
             <Button block size="lg" onClick={onAsk}>
-              🙋 Ask to join
+              <Icon name="hand" size={20} /> Ask to join
             </Button>
           )}
           {state === 'pending' && (
@@ -313,8 +312,9 @@ function JoinActions({
                   animate={{ rotate: [0, 15, -15, 0] }}
                   transition={{ duration: 1.6, repeat: Infinity }}
                   aria-hidden
+                  className="inline-flex"
                 >
-                  ⏳
+                  <Icon name="hourglass" size={20} />
                 </motion.span>
                 Requested
               </Button>
@@ -331,13 +331,13 @@ function JoinActions({
               disabled={!roomId}
               onClick={() => roomId && onChat(roomId)}
             >
-              🎉 Accepted · Open chat
+              <Icon name="check" size={20} strokeWidth={2.6} /> Accepted · Open chat
             </Button>
           )}
           {state === 'declined' && (
             <>
               <Button block size="lg" variant="secondary" onClick={onMap}>
-                Find another kitchen 🗺️
+                Find another kitchen
               </Button>
               <p className="text-center text-sm text-ink-muted">
                 The host couldn’t fit you in this time. No worries!
@@ -346,7 +346,7 @@ function JoinActions({
           )}
           {state === 'full' && (
             <Button block size="lg" variant="secondary" disabled>
-              🍽️ This kitchen is full
+              <Icon name="pan" size={20} /> This kitchen is full
             </Button>
           )}
           {state === 'ended' && (
@@ -356,13 +356,15 @@ function JoinActions({
           )}
           {state === 'emergency' && (
             <Button block size="lg" variant="danger" onClick={onForum}>
-              💡 Suggest a recipe in the Forum
+              <Icon name="bulb" size={20} /> Suggest a recipe in the Forum
             </Button>
           )}
           {state === 'host' && (
             <div className="flex items-center gap-2">
-              <div className="flex-1 rounded-2xl bg-white px-4 py-2 shadow-soft ring-1 ring-cream-200">
-                <p className="font-display text-base">You’re the host 👩‍🍳</p>
+              <div className="sketch-sm edge-kraft edge-2 flex-1 bg-paper px-4 py-2">
+                <p className="flex items-center gap-1 font-display text-base">
+                  <Icon name="chefHat" size={18} className="text-leaf" /> You’re the host
+                </p>
                 <p className="text-sm text-ink-muted">
                   {pending === 0
                     ? 'No pending requests'
@@ -393,7 +395,7 @@ function Fact({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cream-200 text-ink-soft">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center sketch-sm-2 bg-cream text-ink-soft">
         <Icon name={icon} size={18} />
       </span>
       <div className="min-w-0">
@@ -412,7 +414,7 @@ function SpotsMeter({ max, taken }: { max: number; taken: number }) {
           key={i}
           initial={false}
           animate={{ scale: i < taken ? 1 : 0.8 }}
-          className={cn('h-3 w-3 rounded-full', i < taken ? 'bg-leaf-500' : 'bg-cream-300')}
+          className={cn('h-3 w-3 sketch-round', i < taken ? 'bg-leaf' : 'bg-kraft/40')}
         />
       ))}
     </span>
@@ -424,7 +426,7 @@ function DetailSkeleton() {
     <Screen>
       <BackBar title="Event" />
       <div className="space-y-4 px-4">
-        <Skeleton className="h-72 w-full rounded-blob" />
+        <Skeleton className="h-72 w-full sketch-2" />
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-20 w-full" />
       </div>

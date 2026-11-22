@@ -64,7 +64,7 @@ export function lastMessagePreview(
   meId: string | undefined,
 ): string {
   const last = messages?.at(-1);
-  if (!last) return 'No messages yet — say hi 👋';
+  if (!last) return 'No messages yet — say hi';
   if (last.kind === 'system') return last.text;
   const name =
     last.senderId === meId ? 'You' : (users.find((u) => u.id === last.senderId)?.firstName ?? '…');

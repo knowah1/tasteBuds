@@ -20,8 +20,6 @@ export interface EmptyStateProps {
   title: string;
   body?: string;
   action?: ReactNode;
-  /** @deprecated Ignored: empty states use hand-drawn icons now. Removed once callers move off it. */
-  emoji?: string;
 }
 
 /** Flat colour tile + icon, a title and a nudge. No emoji illustrations. */

@@ -3,12 +3,14 @@ import { BudAvatar } from '@/features/bud';
 import { POST_TYPE_META } from '@/lib/cuisine';
 import { cn } from '@/lib/cn';
 import type { ID, PostType } from '@/types';
+import { Icon } from '@/components/ui';
 
+/** Flat tint behind the preview (no gradients). */
 const BACKDROP: Record<PostType, string> = {
-  learn: 'from-learn-light',
-  teach: 'from-teach-light',
-  potluck: 'from-potluck-light',
-  budmergency: 'from-emergency-light',
+  learn: 'bg-mint',
+  teach: 'bg-mint',
+  potluck: 'bg-paper',
+  budmergency: 'bg-blush',
 };
 
 /**
@@ -38,7 +40,7 @@ export function BubblePreview({
   return (
     <div
       className={cn(
-        'relative flex flex-col items-center overflow-hidden rounded-chunky bg-gradient-to-b to-cream px-4 pb-3 ring-1 ring-cream-200',
+        'relative flex flex-col items-center overflow-hidden sketch px-4 pb-3',
         BACKDROP[type],
         className,
       )}
@@ -61,8 +63,14 @@ export function BubblePreview({
           label="Your Bud"
         />
       </motion.div>
-      <span className={cn('mt-5 text-sm', emergency ? 'text-emergency' : 'text-ink-muted')}>
-        {POST_TYPE_META[type].emoji} This is how your Bud will look on the map
+      <span
+        className={cn(
+          'mt-5 flex items-center gap-1 text-sm',
+          emergency ? 'text-tomato' : 'text-ink-muted',
+        )}
+      >
+        <Icon name={POST_TYPE_META[type].icon} size={16} /> This is how your Bud will look on the
+        map
       </span>
     </div>
   );

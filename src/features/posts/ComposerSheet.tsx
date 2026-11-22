@@ -121,7 +121,6 @@ export function ComposerSheet() {
       setStep({ kind: 'done', post });
       pushToast({
         kind: 'success',
-        emoji: POST_TYPE_META[post.type].emoji,
         title: post.type === 'budmergency' ? 'Bud-mergency sent!' : 'Post published!',
         body: post.title,
       });
@@ -144,14 +143,15 @@ export function ComposerSheet() {
           type="button"
           onClick={() => setStep({ kind: 'type' })}
           aria-label="Change post type"
-          className="-ml-2 flex h-9 w-9 items-center justify-center rounded-full text-ink-soft hover:bg-cream-200"
+          className="-ml-2 flex h-9 w-9 items-center justify-center sketch-round text-ink-soft hover:bg-cream"
         >
           <Icon name="chevronLeft" size={20} />
         </button>
-        {POST_TYPE_META[draft.type].emoji} {POST_TYPE_META[draft.type].label}
+        <Icon name={POST_TYPE_META[draft.type].icon} size={24} className="mr-1 text-kraft" />
+        {POST_TYPE_META[draft.type].label}
       </span>
     ) : step.kind === 'done' ? (
-      'Bubble popped! 🎉'
+      'Bubble popped!'
     ) : (
       'What’s cooking?'
     );
@@ -166,7 +166,7 @@ export function ComposerSheet() {
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className={cn('text-center text-sm', error ? 'text-mcgill' : 'text-ink-muted')}
+              className={cn('text-center text-sm', error ? 'text-tomato' : 'text-ink-muted')}
               role={error ? 'alert' : undefined}
             >
               {error ?? problem}
@@ -181,7 +181,13 @@ export function ComposerSheet() {
           onClick={publish}
           variant={draft.type === 'budmergency' ? 'danger' : 'primary'}
         >
-          {draft.type === 'budmergency' ? '🚨 Send Bud-mergency' : 'Publish · +10 XP'}
+          {draft.type === 'budmergency' ? (
+            <>
+              <Icon name="warning" size={20} /> Send Bud-mergency
+            </>
+          ) : (
+            'Publish · +10 XP'
+          )}
         </Button>
       </div>
     ) : undefined;
@@ -216,7 +222,7 @@ export function ComposerSheet() {
               popKey={popKey}
             />
             <p className="-mt-2 text-center text-sm text-ink-muted">
-              Titles are written for you from what you pick ✨
+              Titles are written for you from what you pick
             </p>
 
             {draft.type === 'budmergency' ? (
@@ -302,17 +308,18 @@ function TypePicker({ selected, onPick }: { selected?: PostType; onPick: (t: Pos
             whileTap={{ scale: 0.95 }}
             whileHover={{ y: -2 }}
             className={cn(
-              'flex min-h-[132px] flex-col items-start gap-1 rounded-chunky p-4 text-left shadow-chunky ring-2 ring-transparent',
+              'flex min-h-[132px] flex-col items-start gap-1 p-4 text-left',
+              ['sketch', 'sketch-2', 'sketch-3', 'sketch-4'][i],
               meta.classes,
-              selected === type && 'ring-ink/30',
+              selected === type && 'edge-kraft',
             )}
           >
             <motion.span
-              className="text-3xl"
+              className="sketch-sm flex h-12 w-12 items-center justify-center bg-paper"
               whileHover={{ rotate: [0, -12, 12, 0] }}
               transition={{ duration: 0.4 }}
             >
-              {meta.emoji}
+              <Icon name={meta.icon} size={28} />
             </motion.span>
             <span className="font-display text-xl">{meta.label}</span>
             <span className="text-sm text-ink-soft">{POST_TYPE_BLURB[type]}</span>
@@ -362,10 +369,15 @@ function Published({
           : 'Buds nearby can see it on the map. We’ll ping you when someone asks to join.'}
       </p>
       <div className="mt-6 grid w-full grid-cols-2 gap-3">
-        <Button variant="secondary" onClick={onMap}>
-          🗺️ See on map
+        <Button variant="secondary" onClick={onMap} leftIcon={<Icon name="map" size={18} />}>
+          See on map
         </Button>
-        <Button onClick={onView}>{emergency ? '💬 Open thread' : '📋 View event'}</Button>
+        <Button
+          onClick={onView}
+          leftIcon={<Icon name={emergency ? 'forum' : 'arrowRight'} size={18} />}
+        >
+          {emergency ? 'Open thread' : 'View event'}
+        </Button>
       </div>
     </div>
   );

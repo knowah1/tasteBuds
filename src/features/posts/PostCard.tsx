@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Badge, Icon } from '@/components/ui';
-import { POST_TYPE_META, ingredientEmoji } from '@/lib/cuisine';
+import { POST_TYPE_META } from '@/lib/cuisine';
 import { countdown, formatRange, timeAgo } from '@/lib/time';
 import { cn } from '@/lib/cn';
 import type { Post } from '@/types';
@@ -29,7 +29,6 @@ export function PostCard({
   const meta = POST_TYPE_META[post.type];
   const phase = eventPhase(post, now);
   const emergency = post.type === 'budmergency';
-  const icon = emergency && post.ingredient ? ingredientEmoji(post.ingredient) : meta.emoji;
 
   const when =
     phase === 'ended'
@@ -48,36 +47,34 @@ export function PostCard({
       animate={{ opacity: 1, y: 0, transition: { delay: index * 0.04 } }}
       whileTap={{ scale: 0.98 }}
       className={cn(
-        'flex w-full items-center gap-3 rounded-chunky bg-white p-3 text-left shadow-soft ring-1 ring-cream-200',
+        'flex w-full items-center gap-3 sketch bg-paper p-3 text-left',
         phase === 'ended' && 'opacity-75',
       )}
     >
       <span
         className={cn(
-          'flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-2xl',
+          'flex h-12 w-12 shrink-0 items-center justify-center sketch-sm',
           meta.classes,
         )}
         aria-hidden
       >
-        {icon}
+        <Icon name={meta.icon} size={26} />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate font-display text-lg text-ink">{post.title}</span>
         <span className="mt-0.5 flex items-center gap-1.5 text-sm text-ink-muted">
           {phase === 'live' && (
-            <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-mcgill" aria-hidden />
+            <span className="h-2 w-2 shrink-0 animate-breathe sketch-round bg-tomato" aria-hidden />
           )}
           <span className="truncate">{when}</span>
         </span>
       </span>
       {role && (
-        <Badge
-          className={role === 'host' ? 'bg-leaf-100 text-leaf-700' : 'bg-cream-200 text-ink-soft'}
-        >
+        <Badge className={role === 'host' ? 'bg-mint text-leaf' : 'bg-cream text-ink-soft'}>
           {role === 'host' ? 'Hosting' : 'Guest'}
         </Badge>
       )}
-      <Icon name="chevronRight" size={18} className="shrink-0 text-ink-muted" />
+      <Icon name="chevronRight" size={18} className="shrink-0 text-kraft" />
     </motion.button>
   );
 }

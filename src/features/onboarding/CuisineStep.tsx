@@ -2,17 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { Cuisine, CuisineSkill, SkillLevel } from '@/types';
 import { CUISINES, SKILL_LEVELS } from '@/types';
 import { Button, Chip } from '@/components/ui';
-import { CUISINE_META } from '@/lib/cuisine';
 import { cn } from '@/lib/cn';
 import { StepLayout } from './StepLayout';
-
-const SKILL_EMOJI: Record<SkillLevel, string> = {
-  Curious: '👀',
-  Beginner: '🌱',
-  'Home Cook': '🍳',
-  Confident: '🔥',
-  Expert: '👑',
-};
 
 const SKILL_BLURB: Record<SkillLevel, string> = {
   Curious: "Never tried cooking it, but I'm curious",
@@ -46,7 +37,8 @@ export function CuisineStep({ value, onChange, onNext }: CuisineStepProps) {
 
   return (
     <StepLayout
-      emoji="🍜"
+      icon="pot"
+      tone="mint"
       title="What do you love to cook?"
       subtitle="Pick cuisines you know or want to learn. You can change these later."
       footer={
@@ -61,12 +53,7 @@ export function CuisineStep({ value, onChange, onNext }: CuisineStepProps) {
     >
       <div className="flex flex-wrap gap-2">
         {CUISINES.map((c) => (
-          <Chip
-            key={c}
-            selected={selected.has(c)}
-            onClick={() => toggle(c)}
-            leading={<span className="text-base">{CUISINE_META[c].emoji}</span>}
-          >
+          <Chip key={c} selected={selected.has(c)} onClick={() => toggle(c)}>
             {c}
           </Chip>
         ))}
@@ -93,16 +80,14 @@ export function CuisineStep({ value, onChange, onNext }: CuisineStepProps) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, x: -40, transition: { duration: 0.15 } }}
               transition={{ type: 'spring', stiffness: 420, damping: 30 }}
-              className="rounded-chunky bg-white p-3 shadow-soft ring-1 ring-cream-200"
+              className="sketch edge-kraft edge-2 bg-paper p-3"
             >
               <div className="mb-2 flex items-center justify-between px-1">
-                <span className="font-display text-lg">
-                  {CUISINE_META[cuisine].emoji} {cuisine}
-                </span>
+                <span className="font-display text-lg">{cuisine}</span>
                 <button
                   type="button"
                   onClick={() => toggle(cuisine)}
-                  className="h-8 rounded-full px-2 text-sm text-ink-muted hover:bg-cream-200"
+                  className="h-8 sketch-pill px-2 text-sm text-ink-muted hover:bg-cream"
                   aria-label={`Remove ${cuisine}`}
                 >
                   Remove
@@ -131,7 +116,7 @@ function SkillPicker({
     <div
       role="radiogroup"
       aria-label={`${cuisine} skill level`}
-      className="grid grid-cols-5 gap-0.5 rounded-2xl bg-cream-100 p-1"
+      className="grid grid-cols-5 gap-0.5 sketch-sm bg-cream p-1"
     >
       {SKILL_LEVELS.map((l) => {
         const active = l === value;
@@ -142,16 +127,28 @@ function SkillPicker({
             role="radio"
             aria-checked={active}
             onClick={() => onChange(l)}
-            className="relative flex min-h-14 flex-col items-center justify-center rounded-xl py-1.5"
+            className="relative flex min-h-14 flex-col items-center justify-center sketch-sm-2 py-1.5"
           >
             {active && (
               <motion.span
                 layoutId={`skill-${cuisine}`}
-                className="absolute inset-0 rounded-xl bg-leaf-500 shadow-chunky"
+                className="absolute inset-0 sketch-sm-2 bg-leaf"
                 transition={{ type: 'spring', stiffness: 500, damping: 34 }}
               />
             )}
-            <span className="relative text-lg leading-none">{SKILL_EMOJI[l]}</span>
+            {/* Hand-drawn pips: one more filled per step from Curious to Expert. */}
+            <span className="relative flex gap-0.5" aria-hidden>
+              {SKILL_LEVELS.map((p, i) => (
+                <span
+                  key={p}
+                  className={cn(
+                    'sketch-round h-1.5 w-1.5',
+                    active ? 'bg-paper' : 'bg-kraft',
+                    i > SKILL_LEVELS.indexOf(l) && 'opacity-25',
+                  )}
+                />
+              ))}
+            </span>
             <span
               className={cn(
                 'relative mt-1 text-center text-sm leading-tight tracking-tight',

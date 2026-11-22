@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
-import { Badge, Button } from '@/components/ui';
+import { Badge, Button, Icon } from '@/components/ui';
 import { UserAvatar } from '@/features/bud';
 import { useStore } from '@/store';
 import { selectIncomingRequests } from '@/store/chatSlice';
@@ -45,7 +45,6 @@ export function JoinRequestCard({
       const { room } = await accept(request.id);
       pushToast({
         kind: 'success',
-        emoji: '🍳',
         title: `${user.firstName} joined the kitchen!`,
         body: room ? 'Tap to open the chat' : undefined,
         href: room ? `/chats/${room.id}` : undefined,
@@ -66,7 +65,6 @@ export function JoinRequestCard({
       await decline(request.id);
       pushToast({
         kind: 'info',
-        emoji: '👋',
         title: `Declined ${user.firstName}`,
         body: post.title,
       });
@@ -87,15 +85,15 @@ export function JoinRequestCard({
         transition: { duration: 0.22 },
       }}
       transition={{ type: 'spring', stiffness: 420, damping: 30 }}
-      className="rounded-chunky bg-white p-4 shadow-soft ring-1 ring-cream-200"
+      className="sketch edge-kraft edge-2 bg-paper p-4"
     >
       {showPost && (
         <button
           type="button"
           onClick={() => navigate(`/post/${post.id}`)}
-          className="mb-3 flex w-full items-center gap-2 rounded-2xl bg-cream-100 px-3 py-1.5 text-left"
+          className="mb-3 flex w-full items-center gap-2 sketch-sm bg-cream px-3 py-1.5 text-left"
         >
-          <span aria-hidden>{meta.emoji}</span>
+          <Icon name={meta.icon} size={16} className="shrink-0 text-kraft" />
           <span className="min-w-0 flex-1 truncate font-display text-sm text-ink-soft">
             {post.title}
           </span>
@@ -106,7 +104,7 @@ export function JoinRequestCard({
           type="button"
           onClick={() => navigate(`/user/${user.id}`)}
           aria-label={`Open ${user.firstName}'s profile`}
-          className="shrink-0 rounded-full bg-leaf-50 p-1"
+          className="shrink-0 sketch-round bg-mint p-1"
         >
           <UserAvatar userId={user.id} size={52} />
         </button>
@@ -125,19 +123,17 @@ export function JoinRequestCard({
               <Badge
                 key={s.cuisine}
                 className={cn(
-                  s.match
-                    ? TONE_CLASSES[CUISINE_META[s.cuisine].tone]
-                    : 'bg-cream-200 text-ink-soft',
+                  s.match ? TONE_CLASSES[CUISINE_META[s.cuisine].tone] : 'bg-cream text-ink-soft',
                 )}
               >
-                {CUISINE_META[s.cuisine].emoji} {s.cuisine} · {s.level}
+                {s.cuisine} · {s.level}
               </Badge>
             ))}
           </div>
         </div>
       </div>
       {request.message && (
-        <div className="relative mt-3 rounded-2xl rounded-tl-md bg-leaf-50 px-3 py-2 text-sm text-ink-soft">
+        <div className="relative mt-3 bg-mint px-3 py-2 text-sm text-ink-soft [border-radius:6px_18px_20px_16px/8px_16px_19px_17px]">
           “{request.message}”
         </div>
       )}
@@ -158,7 +154,7 @@ export function JoinRequestCard({
           loading={busy === 'accept'}
           disabled={!!busy}
         >
-          ✓ Accept
+          <Icon name="check" size={18} strokeWidth={2.6} /> Accept
         </Button>
       </div>
     </motion.div>

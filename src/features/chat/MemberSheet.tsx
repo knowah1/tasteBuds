@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Badge, Sheet } from '@/components/ui';
+import { Sheet, Icon, Pill } from '@/components/ui';
 import { UserAvatar } from '@/features/bud';
 import { formatTime } from '@/lib/time';
 import { levelFromXp } from '@/lib/xp';
@@ -37,9 +37,9 @@ export function MemberSheet({
     <Sheet open={open} onClose={onClose} title={`In the kitchen · ${members.length}`}>
       <div className="space-y-2 pt-1">
         {isHost && !room.archived && (
-          <p className="rounded-2xl bg-leaf-50 px-3 py-2 text-sm text-leaf-700">
-            🔒 Late joiners only see messages sent after they arrived. Tap “Peek” to see the chat
-            through a guest’s eyes.
+          <p className="sketch-sm bg-mint px-3 py-2 text-sm text-leaf">
+            <Icon name="lock" size={15} className="-mt-0.5 inline" /> Late joiners only see messages
+            sent after they arrived. Tap “Peek” to see the chat through a guest’s eyes.
           </p>
         )}
         {members.map((u, i) => {
@@ -54,8 +54,8 @@ export function MemberSheet({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04 }}
               className={cn(
-                'flex items-center gap-3 rounded-2xl bg-white p-3 shadow-soft ring-1',
-                peeking ? 'ring-2 ring-leaf-400' : 'ring-cream-200',
+                'flex items-center gap-3 sketch-sm bg-paper p-3 ring-1',
+                peeking ? 'ring-2 ring-leaf' : 'ring-cream',
               )}
             >
               <button
@@ -72,7 +72,11 @@ export function MemberSheet({
               <div className="min-w-0 flex-1">
                 <p className="flex items-center gap-1.5 truncate font-display text-lg">
                   {u.id === meId ? 'You' : `${u.firstName} ${u.lastName}`}
-                  {isOwner && <Badge className="bg-saffron-light text-ink">👑 Host</Badge>}
+                  {isOwner && (
+                    <Pill icon="crown" tone="mint">
+                      Host
+                    </Pill>
+                  )}
                 </p>
                 <p className="truncate text-sm text-ink-muted">
                   @{u.username} · Lv {levelFromXp(u.xp)}
@@ -92,11 +96,17 @@ export function MemberSheet({
                     onClose();
                   }}
                   className={cn(
-                    'shrink-0 rounded-full px-3 py-1.5 text-sm',
-                    peeking ? 'bg-leaf-500 text-white' : 'bg-cream-200 text-ink-soft',
+                    'inline-flex shrink-0 items-center gap-1 sketch-pill px-3 py-1.5 text-sm',
+                    peeking ? 'bg-leaf text-white' : 'bg-cream text-ink-soft',
                   )}
                 >
-                  {peeking ? 'Stop' : '👀 Peek'}
+                  {peeking ? (
+                    'Stop'
+                  ) : (
+                    <>
+                      <Icon name="eye" size={16} /> Peek
+                    </>
+                  )}
                 </button>
               )}
             </motion.div>

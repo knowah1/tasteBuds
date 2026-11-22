@@ -4,14 +4,14 @@ import { ACCESSORY_UNLOCK_LEVEL, isAccessoryUnlocked } from '@/lib/xp';
 
 /** Display metadata for the Bud editor and anywhere a Bud part is named. */
 
-export const BUD_TYPE_META: Record<BudType, { label: string; emoji: string }> = {
-  naked: { label: 'Plain Bud', emoji: '🌰' },
-  sprout: { label: 'Sprout', emoji: '🌱' },
-  rosebud: { label: 'Rosebud', emoji: '🌹' },
-  tulip: { label: 'Tulip', emoji: '🌷' },
-  beanSprout: { label: 'Bean Sprout', emoji: '🫘' },
-  mushroom: { label: 'Mushroom', emoji: '🍄' },
-  cactusNub: { label: 'Cactus Nub', emoji: '🌵' },
+export const BUD_TYPE_META: Record<BudType, { label: string }> = {
+  naked: { label: 'Plain Bud' },
+  sprout: { label: 'Sprout' },
+  rosebud: { label: 'Rosebud' },
+  tulip: { label: 'Tulip' },
+  beanSprout: { label: 'Bean Sprout' },
+  mushroom: { label: 'Mushroom' },
+  cactusNub: { label: 'Cactus Nub' },
 };
 
 export const BUD_COLOR_META: Record<BudColor, { label: string }> = {
@@ -29,18 +29,15 @@ export const BUD_COLOR_META: Record<BudColor, { label: string }> = {
 
 export type AccessorySlot = 'head' | 'face' | 'ears' | 'neck' | 'body' | 'hands';
 
-export const ACCESSORY_META: Record<
-  Accessory,
-  { label: string; emoji: string; slot: AccessorySlot }
-> = {
-  apron: { label: 'Apron', emoji: '🥼', slot: 'body' },
-  chefHat: { label: 'Chef hat', emoji: '👨‍🍳', slot: 'head' },
-  beret: { label: 'Beret', emoji: '🎨', slot: 'head' },
-  glasses: { label: 'Glasses', emoji: '👓', slot: 'face' },
-  scarf: { label: 'Scarf', emoji: '🧣', slot: 'neck' },
-  headphones: { label: 'Headphones', emoji: '🎧', slot: 'ears' },
-  toque: { label: 'Toque', emoji: '🧶', slot: 'head' },
-  ovenMitts: { label: 'Oven mitts', emoji: '🧤', slot: 'hands' },
+export const ACCESSORY_META: Record<Accessory, { label: string; slot: AccessorySlot }> = {
+  apron: { label: 'Apron', slot: 'body' },
+  chefHat: { label: 'Chef hat', slot: 'head' },
+  beret: { label: 'Beret', slot: 'head' },
+  glasses: { label: 'Glasses', slot: 'face' },
+  scarf: { label: 'Scarf', slot: 'neck' },
+  headphones: { label: 'Headphones', slot: 'ears' },
+  toque: { label: 'Toque', slot: 'head' },
+  ovenMitts: { label: 'Oven mitts', slot: 'hands' },
 };
 
 /** Editor ordering: by unlock level, so the grid reads as a progression. */
@@ -76,7 +73,7 @@ function pick<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-/** A random look using only what the level allows ("🎲 Surprise me"). */
+/** A random look using only what the level allows ("Surprise me"). */
 export function randomBud(level: number): Bud {
   const unlocked = ACCESSORIES.filter((a) => isAccessoryUnlocked(a, level));
   let bud: Bud = {

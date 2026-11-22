@@ -31,11 +31,11 @@ export function MessageList({
         if (item.kind === 'day') {
           return (
             <div key={item.id} className="flex items-center gap-2 py-3">
-              <span className="h-px flex-1 bg-cream-300" />
+              <span className="h-px flex-1 bg-kraft/40" />
               <span className="text-sm uppercase tracking-wide text-ink-muted">
                 {dayLabel(item.at)}
               </span>
-              <span className="h-px flex-1 bg-cream-300" />
+              <span className="h-px flex-1 bg-kraft/40" />
             </div>
           );
         }
@@ -49,7 +49,7 @@ export function MessageList({
               transition={{ type: 'spring', stiffness: 400, damping: 22 }}
               className="flex justify-center py-1.5"
             >
-              <span className="rounded-full bg-leaf-100 px-3 py-1 text-sm text-leaf-700">
+              <span className="sketch-pill bg-mint px-3 py-1 text-sm text-leaf">
                 {item.message.text}
               </span>
             </motion.div>
@@ -93,11 +93,14 @@ export function MessageList({
                   setSelected(isSelected ? null : m.id);
                 }}
                 className={cn(
-                  'break-words px-3.5 py-2 text-left text-[15px] leading-snug shadow-soft',
-                  mine
-                    ? 'rounded-2xl rounded-br-md bg-mcgill text-white'
-                    : 'rounded-2xl rounded-bl-md bg-white text-ink ring-1 ring-cream-200',
-                  !item.last && (mine ? 'rounded-br-2xl' : 'rounded-bl-2xl'),
+                  'break-words px-3.5 py-2 text-left text-[15px] leading-snug',
+                  mine ? 'bg-tomato text-white' : 'edge-kraft edge-2 bg-paper text-ink',
+                  // The last bubble in a run gets a tucked corner on its speaker's side.
+                  !item.last
+                    ? 'sketch-sm'
+                    : mine
+                      ? '[border-radius:18px_16px_5px_19px/17px_19px_5px_16px]'
+                      : '[border-radius:16px_19px_18px_5px/19px_16px_17px_5px]',
                 )}
               >
                 {m.text}
@@ -124,10 +127,8 @@ export function MessageList({
                         }}
                         aria-label={`Report message from ${sender?.firstName ?? 'someone'}`}
                         className={cn(
-                          'flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-sm transition-colors',
-                          isSelected
-                            ? 'bg-mcgill-light text-mcgill'
-                            : 'text-ink-muted hover:text-mcgill',
+                          'flex items-center gap-0.5 sketch-pill px-1.5 py-0.5 text-sm transition-colors',
+                          isSelected ? 'bg-blush text-tomato' : 'text-ink-muted hover:text-tomato',
                         )}
                       >
                         <Icon name="flag" size={13} />
