@@ -121,32 +121,37 @@ export function ProfileView({
       </Card>
 
       {/* Cuisines as blush pills */}
-      <Card shape={4}>
-        <h3 className="mb-3 font-display text-lg">Cuisines</h3>
-        {user.cuisines.length === 0 ? (
-          <p className="text-sm text-ink-muted">No cuisines yet.</p>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {user.cuisines.map((c, i) => (
-              <motion.div
-                key={c.cuisine}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1, transition: { delay: i * 0.04 } }}
-              >
-                <Badge
-                  className={cn(
-                    'gap-1.5 bg-blush py-1 pl-3 pr-3 text-sm text-tomato',
-                    i % 2 ? 'sketch-pill-2' : 'sketch-pill',
-                  )}
+      <section>
+        <h3 className="mb-2 flex items-center gap-2 px-1 font-display text-xl">
+          Cuisines
+          {user.cuisines.length > 0 && <Badge>{user.cuisines.length}</Badge>}
+        </h3>
+        <Card shape={4}>
+          {user.cuisines.length === 0 ? (
+            <p className="text-sm text-ink-muted">No cuisines yet.</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {user.cuisines.map((c, i) => (
+                <motion.div
+                  key={c.cuisine}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1, transition: { delay: i * 0.04 } }}
                 >
-                  {c.cuisine}
-                  <SkillPips level={c.level} />
-                </Badge>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </Card>
+                  <Badge
+                    className={cn(
+                      'gap-1.5 bg-blush py-1 pl-3 pr-3 text-sm text-tomato',
+                      i % 2 ? 'sketch-pill-2' : 'sketch-pill',
+                    )}
+                  >
+                    {c.cuisine}
+                    <SkillPips level={c.level} />
+                  </Badge>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </Card>
+      </section>
 
       {/* Events */}
       <EventSection
