@@ -1,20 +1,18 @@
-import { useCallback, useRef } from 'react';
+import { lazy, Suspense } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
-import { Button, Chip, Skeleton } from '@/components/ui';
+import { Button, Chip } from '@/components/ui';
 import { TopBar } from '@/app/TopBar';
 import { Screen } from '@/app/Screen';
 import { useStore, type MapFilter } from '@/store';
-import { api } from '@/mock/api';
 import { POST_TYPE_META } from '@/lib/cuisine';
 import { useFakeLoading } from '@/lib/useFakeLoading';
-import { MapArt } from './MapArt';
-import { MapBud } from './MapBud';
-import { MapControls } from './MapControls';
 import { useMapBuds } from './useMapBuds';
-import { usePanZoom } from './usePanZoom';
-import { walkerPosition } from './useWander';
+import { GlobeSkeleton } from './globe/GlobeSkeleton';
+
+/** three.js is big: load the globe in its own chunk behind the skeleton. */
+const GlobeMap = lazy(() => import('./globe/GlobeMap'));
 
 const FILTERS: { id: MapFilter; label: string }[] = [
   { id: 'all', label: '🌍 All' },
@@ -63,15 +61,18 @@ export function MapScreen() {
         ))}
       </div>
 
-      <div className="relative mx-3 mb-3 flex-1 overflow-hidden rounded-blob bg-cream-200 shadow-soft ring-2 ring-road-line">
+      <div className="relative flex-1 overflow-hidden bg-gradient-to-b from-cream to-sky-light">
         {loading ? (
-          <MapSkeleton />
+          <GlobeSkeleton />
         ) : (
-          <MapViewport
-            buds={buds}
-            meId={me?.id}
-            onOpen={(id) => navigate(id === me?.id ? '/profile' : `/user/${id}`)}
-          />
+          <Suspense fallback={<GlobeSkeleton />}>
+            <GlobeMap
+              buds={buds}
+              meId={me?.id}
+              filter={mapFilter}
+              onOpen={(id) => navigate(id === me?.id ? '/profile' : `/user/${id}`)}
+            />
+          </Suspense>
         )}
 
         {!loading && (
@@ -85,8 +86,8 @@ export function MapScreen() {
                 className="rounded-full bg-white/90 px-3 py-1 font-display text-xs font-semibold text-ink-soft shadow-soft backdrop-blur"
               >
                 {mapFilter === 'all'
-                  ? `${others.length} Buds nearby · ${withPosts} cooking something up`
-                  : `${others.length} ${POST_TYPE_META[mapFilter].label} ${others.length === 1 ? 'post' : 'posts'} nearby`}
+                  ? `${others.length} Buds around the world · ${withPosts} cooking`
+                  : `${others.length} ${POST_TYPE_META[mapFilter].label} ${others.length === 1 ? 'post' : 'posts'} right now`}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -119,80 +120,5 @@ export function MapScreen() {
         </AnimatePresence>
       </div>
     </Screen>
-  );
-}
-
-function MapViewport({
-  buds,
-  meId,
-  onOpen,
-}: {
-  buds: ReturnType<typeof useMapBuds>;
-  meId?: string;
-  onOpen: (id: string) => void;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const focus = useCallback(() => {
-    const mine = meId ? walkerPosition(meId) : undefined;
-    if (mine) return mine;
-    const campus = api.zones.find((z) => z.id === 'z_campus') ?? api.zones[0];
-    return { x: campus.x + campus.width / 2, y: campus.y + campus.height / 2 };
-  }, [meId]);
-
-  const { camera, flyTo, zoomBy, onClickCapture } = usePanZoom(ref, focus);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      onClickCapture={onClickCapture}
-      className="absolute inset-0 cursor-grab touch-none select-none overflow-hidden active:cursor-grabbing"
-      role="application"
-      aria-label="Map of McGill and Milton-Parc. Drag to pan, pinch or scroll to zoom."
-    >
-      <motion.div
-        className="absolute left-0 top-0 origin-top-left"
-        style={{ x: camera.tx, y: camera.ty, scale: camera.scale }}
-      >
-        <MapArt />
-      </motion.div>
-
-      <div className="pointer-events-none absolute inset-0">
-        {buds.map((b) => (
-          <MapBud key={b.user.id} info={b} camera={camera} onOpen={onOpen} />
-        ))}
-      </div>
-
-      <MapControls
-        onZoomIn={() => zoomBy(1.4)}
-        onZoomOut={() => zoomBy(1 / 1.4)}
-        onFindMe={
-          meId
-            ? () => {
-                const p = walkerPosition(meId);
-                if (p) flyTo(p.x, p.y, 1.1);
-              }
-            : undefined
-        }
-      />
-    </motion.div>
-  );
-}
-
-function MapSkeleton() {
-  return (
-    <div className="absolute inset-0">
-      <Skeleton className="absolute inset-0 rounded-none" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <motion.span
-          animate={{ y: [0, -8, 0], rotate: [-6, 6, -6] }}
-          transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
-          className="text-4xl"
-        >
-          🌱
-        </motion.span>
-      </div>
-    </div>
   );
 }
