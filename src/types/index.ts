@@ -85,6 +85,8 @@ export interface Bud {
 
 // ─── Users ──────────────────────────────────────────────────────────
 
+export type DegreeLevel = 'undergrad' | 'masters' | 'phd';
+
 export interface User {
   id: ID;
   username: string;
@@ -98,6 +100,9 @@ export interface User {
   /** Seeded/simulated users. The signed-in user is never a bot. */
   isBot?: boolean;
   bio?: string;
+  /** Program of study, e.g. "Software Engineering". Optional; free text allowed. */
+  major?: string;
+  degreeLevel?: DegreeLevel;
   /** Neighbourhood zone the Bud wanders in (never an exact location). */
   zoneId: ID;
 }
