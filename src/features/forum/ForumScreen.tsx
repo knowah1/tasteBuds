@@ -146,7 +146,7 @@ export function ForumScreen() {
               >
                 {filter === 'all' && i === firstResolvedIdx && (
                   <p className="mb-2 mt-3 pl-1 font-display text-sm font-semibold text-ink-muted">
-                    ✓ Resolved · still readable
+                    ✓ Resolved
                   </p>
                 )}
                 <ThreadCard
