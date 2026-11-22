@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { api } from '@/mock/api';
 import { levelProgress } from '@/lib/xp';
-import type { ID } from '@/types';
+import type { Bud, ID, User } from '@/types';
 import type { AppState } from './types';
 import { createSessionSlice, snapshotToState } from './sessionSlice';
 import { createUserSlice } from './userSlice';
@@ -41,6 +41,16 @@ export const useStore = create<AppState>()(
       name: 'tastebuds:ui',
       storage: createJSONStorage(() => localStorage),
       partialize: (s) => ({ mapFilter: s.mapFilter, chatsSegment: s.chatsSegment }),
+      // v1: entity data (users and their Buds) must only ever come from the mock API.
+      // Keep just the UI preferences so an older save can't rehydrate a stale Bud.
+      version: 1,
+      migrate: (persisted) => {
+        const p = (persisted ?? {}) as Partial<Pick<AppState, 'mapFilter' | 'chatsSegment'>>;
+        return {
+          mapFilter: p.mapFilter ?? 'all',
+          chatsSegment: p.chatsSegment ?? 'active',
+        } as AppState;
+      },
     },
   ),
 );
@@ -83,8 +93,29 @@ export function startStoreBridge() {
 
 // ─── Selectors ──────────────────────────────────────────────────────
 
-export const selectUser = (id: ID | undefined) => (s: AppState) =>
-  id ? s.users.find((u) => u.id === id) : undefined;
+export const selectUser =
+  (id: ID | undefined) =>
+  (s: AppState): User | undefined =>
+    id ? s.usersById[id] : undefined;
+
+/** A user's Bud, straight from their user record (the only place it's stored). */
+export const selectUserBud =
+  (id: ID | undefined) =>
+  (s: AppState): Bud | undefined =>
+    id ? s.usersById[id]?.bud : undefined;
+
+/** Re-renders when that user's record is replaced (records are immutable). */
+export function useUser(id: ID | undefined): User | undefined {
+  return useStore(selectUser(id));
+}
+
+/**
+ * Re-renders only when that user's Bud changes: the Bud object keeps its reference
+ * across unrelated updates (XP, cuisines), so this doesn't cause extra renders.
+ */
+export function useUserBud(id: ID | undefined): Bud | undefined {
+  return useStore(selectUserBud(id));
+}
 
 export const selectPost = (id: ID | undefined) => (s: AppState) =>
   id ? s.posts.find((p) => p.id === id) : undefined;
