@@ -297,23 +297,28 @@ export function ComposerSheet() {
  * One look for all four tiles: tinted fill, 2px outline + title in the type's colour,
  * ink description and a white icon tile. Static strings so Tailwind can see them.
  */
-const TYPE_TILE: Record<PostType, { tile: string; accent: string }> = {
+const TYPE_TILE: Record<PostType, { tile: string; accent: string; title: string }> = {
   learn: {
     tile: 'bg-mint border-leaf focus-visible:ring-leaf/40',
     accent: 'text-leaf',
+    title: 'text-leaf',
   },
   teach: {
     // Sage lightened so its weight matches the other three fills.
     tile: 'bg-sage/50 border-leaf focus-visible:ring-leaf/40',
     accent: 'text-leaf',
+    title: 'text-leaf',
   },
   potluck: {
     tile: 'bg-kraft-light border-kraft focus-visible:ring-kraft/50',
     accent: 'text-kraft',
+    // Kraft text on kraft-light is ~1.6:1, so the title uses ink for contrast.
+    title: 'text-ink',
   },
   budmergency: {
     tile: 'bg-blush border-tomato focus-visible:ring-tomato/40',
     accent: 'text-tomato',
+    title: 'text-tomato',
   },
 };
 
@@ -348,7 +353,7 @@ function TypePicker({ selected, onPick }: { selected?: PostType; onPick: (t: Pos
             >
               <Icon name={meta.icon} size={28} />
             </span>
-            <span className={cn('font-display text-xl', look.accent)}>{meta.label}</span>
+            <span className={cn('font-display text-xl', look.title)}>{meta.label}</span>
             <span className="text-sm text-ink">{POST_TYPE_BLURB[type]}</span>
           </motion.button>
         );
