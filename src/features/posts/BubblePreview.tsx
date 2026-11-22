@@ -47,7 +47,6 @@ export function BubblePreview({
       style={{ paddingTop: size * 0.95 }}
     >
       <span className="absolute left-3 top-2.5 text-sm uppercase tracking-wide text-ink-muted">
-        Live preview
       </span>
       <motion.div
         key={popKey}
