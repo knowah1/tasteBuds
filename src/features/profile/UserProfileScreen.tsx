@@ -28,7 +28,12 @@ export function UserProfileScreen() {
       ) : user ? (
         <ProfileView user={user} isMe={isMe} />
       ) : (
-        <EmptyState emoji="🫥" title="Bud not found" body="They may have wandered off." />
+        <EmptyState
+          icon="user"
+          tone="cream"
+          title="Bud not found"
+          body="They may have wandered off."
+        />
       )}
     </Screen>
   );

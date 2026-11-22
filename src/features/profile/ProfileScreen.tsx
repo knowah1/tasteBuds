@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TopBar } from '@/app/TopBar';
 import { Screen } from '@/app/Screen';
-import { Button, Modal, useToast } from '@/components/ui';
+import { Button, Modal, useToast, Icon } from '@/components/ui';
 import { useStore } from '@/store';
 import { useFakeLoading } from '@/lib/useFakeLoading';
 import { ProfileSkeleton } from './ProfileSkeleton';
@@ -37,7 +37,7 @@ function SignOutButton() {
     setBusy(false);
     setConfirming(false);
     navigate('/onboarding', { replace: true });
-    toast.success('Signed out', 'See you soon 🌱');
+    toast.success('Signed out', 'See you soon');
   };
 
   return (
@@ -45,8 +45,14 @@ function SignOutButton() {
       <Button block variant="danger" onClick={() => setConfirming(true)}>
         Sign out
       </Button>
-      <Modal open={confirming} onClose={() => !busy && setConfirming(false)} className="text-center">
-        <p className="text-4xl">👋</p>
+      <Modal
+        open={confirming}
+        onClose={() => !busy && setConfirming(false)}
+        className="text-center"
+      >
+        <div className="sketch-round mx-auto flex h-16 w-16 items-center justify-center bg-mint text-leaf">
+          <Icon name="hand" size={34} />
+        </div>
         <h2 className="mt-2 font-display text-2xl">Sign out?</h2>
         <p className="mt-1 text-sm text-ink-soft">You'll go back to the welcome screen.</p>
         <div className="mt-5 grid grid-cols-2 gap-3">
