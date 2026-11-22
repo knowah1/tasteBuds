@@ -114,6 +114,18 @@ function blocked(db: Db): Set<ID> {
   return new Set(sessionAccount(db)?.blockedUserIds ?? []);
 }
 
+/**
+ * Replaces a user record instead of mutating it, so every store selector that holds the
+ * old object sees a new reference and re-renders (Bud edits, XP, cuisines).
+ */
+function replaceUser(db: Db, userId: ID, patch: (u: User) => Partial<User>): User | undefined {
+  const i = db.users.findIndex((u) => u.id === userId);
+  if (i < 0) return undefined;
+  const next = { ...db.users[i], ...patch(db.users[i]) };
+  db.users = db.users.map((u, j) => (j === i ? next : u));
+  return next;
+}
+
 function displayName(db: Db, userId: ID): string {
   return db.users.find((u) => u.id === userId)?.firstName ?? 'Someone';
 }
@@ -153,8 +165,7 @@ function awardXpIn(
   const user = db.users.find((u) => u.id === userId);
   if (!user || amount <= 0) return undefined;
   const fromLevel = levelFromXp(user.xp);
-  user.xp += amount;
-  const toLevel = levelFromXp(user.xp);
+  const toLevel = levelFromXp(replaceUser(db, userId, (u) => ({ xp: u.xp + amount }))!.xp);
   const event: XPEvent = { id: uid('xp'), userId, reason, amount, label, createdAt: Date.now() };
   db.xpEvents.push(event);
   const unlocked = unlocksBetween(fromLevel, toLevel);
@@ -425,12 +436,15 @@ export interface ProfilePatch {
 
 export function updateProfile(patch: ProfilePatch): Promise<User> {
   const user = mutate((db) => {
-    const u = requireMe(db);
-    if (patch.cuisines) u.cuisines = patch.cuisines;
-    if (patch.bud) u.bud = patch.bud;
-    if (patch.bio !== undefined) u.bio = patch.bio.slice(0, 150);
-    checkDayMilestones(db, u);
-    return { ...u };
+    const { id } = requireMe(db);
+    replaceUser(db, id, () => ({
+      ...(patch.cuisines && { cuisines: [...patch.cuisines] }),
+      // Copy so the caller's object can never be mutated into the record later.
+      ...(patch.bud && { bud: { ...patch.bud, accessories: [...patch.bud.accessories] } }),
+      ...(patch.bio !== undefined && { bio: patch.bio.slice(0, 150) }),
+    }));
+    checkDayMilestones(db, requireMe(db));
+    return { ...requireMe(db) };
   });
   return delay(user);
 }
