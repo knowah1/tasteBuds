@@ -127,10 +127,12 @@ export function ReportSheet({ open, onClose, targetType, targetId }: ReportSheet
       setSavedUsername(username);
       setSaved(report);
       setStep('done');
-      toast.success('Report saved', 'Contact McGill directly from the next screen.');
+      // One toast, so the confirmation screen stays visible.
       if (alsoBlock && canBlock && targetUserId) {
         await blockUser(targetUserId);
-        toast.success(`@${username} blocked`, 'Their Bud, posts and messages are hidden.');
+        toast.success(`@${username} blocked`, 'Report saved too.');
+      } else {
+        toast.success('Report saved', 'Reach McGill directly below.');
       }
     } catch {
       toast.error('Couldn’t save the report', 'Please try again.');

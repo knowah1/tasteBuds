@@ -31,7 +31,7 @@ export function handoffFor(reason: ReportReason, urgent: boolean): McGillHandoff
   };
 }
 
-const TARGET_LABEL: Record<ReportTargetType, string> = {
+export const TARGET_LABEL: Record<ReportTargetType, string> = {
   user: 'Profile',
   post: 'Post',
   message: 'Chat message',

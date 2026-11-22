@@ -73,12 +73,14 @@ export function CallLink({
   contact: PhoneContact;
   tone?: 'paper' | 'tomato' | 'blush';
 }) {
+  // "Call 911" already shows its number; the others get it on the second line.
+  const showNumber = !contact.label.includes(contact.display);
   return (
     <ContactLink
       href={telHref(contact)}
       icon={<PhoneIcon size={20} />}
-      label={`${contact.label} · ${contact.display}`}
-      note={contact.note}
+      label={contact.label}
+      note={showNumber ? `${contact.display} · ${contact.note}` : contact.note}
       tone={tone}
     />
   );

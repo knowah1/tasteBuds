@@ -2,7 +2,7 @@ import { Pill } from '@/components/ui';
 import { useStore } from '@/store';
 import { selectAnyUser } from '@/store/safetySlice';
 import type { Report } from '@/types';
-import { formatReportTime } from './handoff';
+import { TARGET_LABEL, formatReportTime } from './handoff';
 
 /** Reports the signed-in user has filed (Demo Panel). Saved locally only. */
 export function MyReportsList() {
@@ -44,7 +44,7 @@ function ReportRow({ report }: { report: Report }) {
         </p>
       )}
       <p className="mt-1 font-body text-sm text-ink-muted">
-        {formatReportTime(report.createdAt)} · {report.targetType} · saved locally
+        {formatReportTime(report.createdAt)} · {TARGET_LABEL[report.targetType]} · saved locally
       </p>
     </li>
   );
