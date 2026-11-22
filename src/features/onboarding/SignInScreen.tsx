@@ -31,9 +31,8 @@ export function SignInScreen() {
         toast.success(`Welcome back, ${user.firstName}! 🌱`);
         navigate('/', { replace: true });
       } else {
-        // Unverified email or no cuisines yet: finish those onboarding steps first.
-        // TODO(Track A): the multi-step flow on feat/onboarding resumes from the API
-        // state (verify → cuisines → Bud); main's placeholder screen can't resume yet.
+        // Unverified email or no cuisines yet: OnboardingScreen derives the right step
+        // (verify → cuisines → Bud) from `me` / `account`.
         toast.success(`Welcome back, ${user.firstName}! 🌱`, 'Let’s finish setting up your Bud.');
         navigate('/onboarding', { replace: true });
       }
@@ -110,7 +109,7 @@ export function SignInScreen() {
       <p className="mt-auto pt-8 text-center text-ink-soft">
         New here?{' '}
         <Link
-          to="/onboarding"
+          to="/onboarding?start=account"
           className="inline-flex min-h-[44px] items-center font-display font-semibold text-mcgill"
         >
           Create an account
